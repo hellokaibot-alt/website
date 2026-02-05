@@ -207,10 +207,119 @@
             color: var(--text-primary);
             transition: all var(--transition);
             user-select: none;
+            position: relative;
+            min-height: 32px;
         }
 
         .folder-header:hover {
             background: var(--bg-tertiary);
+        }
+        
+        .folder-header:hover .folder-actions {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .folder-actions {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            margin-left: auto;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.15s ease, visibility 0.15s ease;
+        }
+        
+        .folder-action-btn {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-size: 14px;
+            transition: all var(--transition);
+            background: transparent;
+            border: none;
+            padding: 0;
+        }
+        
+        .folder-action-btn:hover {
+            background: rgba(0, 0, 0, 0.1);
+            color: var(--text-primary);
+        }
+        
+        [data-theme="dark"] .folder-action-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .folder-action-btn.add-page::before {
+            content: '+';
+            font-size: 18px;
+            font-weight: 300;
+        }
+        
+        .folder-action-btn.more-menu::before {
+            content: '⋯';
+            font-size: 14px;
+            letter-spacing: -2px;
+        }
+        
+        .folder-dropdown {
+            position: absolute;
+            right: 0;
+            top: 100%;
+            margin-top: 4px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: 0 4px 20px var(--shadow);
+            min-width: 180px;
+            z-index: 1000;
+            padding: 4px;
+            display: none;
+        }
+        
+        .folder-dropdown.show {
+            display: block;
+        }
+        
+        .folder-dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 13px;
+            color: var(--text-primary);
+            transition: background var(--transition);
+        }
+        
+        .folder-dropdown-item:hover {
+            background: var(--bg-secondary);
+        }
+        
+        .folder-dropdown-item.delete {
+            color: var(--danger);
+        }
+        
+        .folder-dropdown-item.delete:hover {
+            background: rgba(255, 59, 48, 0.1);
+        }
+        
+        .folder-dropdown-divider {
+            height: 1px;
+            background: var(--border);
+            margin: 4px 0;
+        }
+        
+        .folder-dropdown-icon {
+            width: 16px;
+            text-align: center;
+            font-size: 14px;
         }
 
         .folder-header.active {
@@ -1715,6 +1824,103 @@
                 }
             }
             
+            addFolderToFavorites(id) {
+                const folder = this.data.folders.find(f => f.id === id);
+                if (folder) {
+                    if (!this.data.settings.favoriteFolders) {
+                        this.data.settings.favoriteFolders = [];
+                    }
+                    if (!this.data.settings.favoriteFolders.includes(id)) {
+                        this.data.settings.favoriteFolders.push(id);
+                        this.saveData();
+                        this.showToast('Added to favorites', 'success');
+                    } else {
+                        this.showToast('Already in favorites', 'info');
+                    }
+                }
+            }
+            
+            duplicateFolder(id) {
+                const folder = this.data.folders.find(f => f.id === id);
+                if (folder && !this.isSystemFolder(id)) {
+                    // Create duplicate folder
+                    const newFolder = {
+                        id: 'folder_' + Date.now(),
+                        name: folder.name + ' (Copy)',
+                        parentId: folder.parentId,
+                        created: new Date().toISOString()
+                    };
+                    this.data.folders.push(newFolder);
+                    
+                    // Duplicate notes in this folder
+                    const notesToDuplicate = this.data.notes.filter(n => n.folderId === id);
+                    notesToDuplicate.forEach(note => {
+                        const newNote = {
+                            id: 'note_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+                            title: note.title,
+                            content: note.content,
+                            folderId: newFolder.id,
+                            tags: [...note.tags],
+                            created: new Date().toISOString(),
+                            updated: new Date().toISOString()
+                        };
+                        this.data.notes.push(newNote);
+                    });
+                    
+                    // Recursively duplicate child folders
+                    const childFolders = this.data.folders.filter(f => f.parentId === id);
+                    this.duplicateChildFolders(id, newFolder.id);
+                    
+                    this.saveData();
+                    this.render();
+                    this.showToast('Folder duplicated', 'success');
+                }
+            }
+            
+            duplicateChildFolders(parentId, newParentId) {
+                const childFolders = this.data.folders.filter(f => f.parentId === parentId);
+                childFolders.forEach(child => {
+                    const newChild = {
+                        id: 'folder_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+                        name: child.name,
+                        parentId: newParentId,
+                        created: new Date().toISOString()
+                    };
+                    this.data.folders.push(newChild);
+                    
+                    // Duplicate notes
+                    const notesToDuplicate = this.data.notes.filter(n => n.folderId === child.id);
+                    notesToDuplicate.forEach(note => {
+                        const newNote = {
+                            id: 'note_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+                            title: note.title,
+                            content: note.content,
+                            folderId: newChild.id,
+                            tags: [...note.tags],
+                            created: new Date().toISOString(),
+                            updated: new Date().toISOString()
+                        };
+                        this.data.notes.push(newNote);
+                    });
+                    
+                    // Recurse
+                    this.duplicateChildFolders(child.id, newChild.id);
+                });
+            }
+            
+            renameFolder(id) {
+                const folder = this.data.folders.find(f => f.id === id);
+                if (folder) {
+                    const newName = prompt('Enter new folder name:', folder.name);
+                    if (newName && newName.trim()) {
+                        folder.name = newName.trim();
+                        this.saveData();
+                        this.render();
+                        this.showToast('Folder renamed', 'success');
+                    }
+                }
+            }
+            
             deleteFolder(id) {
                 if (this.isSystemFolder(id)) {
                     this.showToast('Cannot delete system folders', 'error');
@@ -1759,7 +1965,7 @@
             createNote(title, folderId = 'root') {
                 const note = {
                     id: 'note_' + Date.now(),
-                    title: title.trim() || 'Untitled Note',
+                    title: title?.trim() || 'Untitled Note',
                     content: '',
                     folderId: folderId,
                     tags: [],
@@ -1985,6 +2191,29 @@
                                 <span class="folder-icon">📁</span>
                                 <span class="folder-name">${this.escapeHtml(folder.name)}</span>
                                 <span class="folder-count">${noteCount}</span>
+                                <div class="folder-actions">
+                                    <button class="folder-action-btn add-page" title="Add a page inside"></button>
+                                    <button class="folder-action-btn more-menu" title="More options"></button>
+                                    <div class="folder-dropdown" id="dropdown-${folder.id}">
+                                        <div class="folder-dropdown-item" data-action="favorite">
+                                            <span class="folder-dropdown-icon">⭐</span>
+                                            <span>Add to Favorites</span>
+                                        </div>
+                                        <div class="folder-dropdown-item" data-action="duplicate">
+                                            <span class="folder-dropdown-icon">📋</span>
+                                            <span>Duplicate</span>
+                                        </div>
+                                        <div class="folder-dropdown-item" data-action="rename">
+                                            <span class="folder-dropdown-icon">✏️</span>
+                                            <span>Rename</span>
+                                        </div>
+                                        <div class="folder-dropdown-divider"></div>
+                                        <div class="folder-dropdown-item delete" data-action="delete">
+                                            <span class="folder-dropdown-icon">🗑️</span>
+                                            <span>Move to Trash</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         `;
                         
@@ -2013,6 +2242,59 @@
                         header.addEventListener('contextmenu', (e) => {
                             e.preventDefault();
                             this.showContextMenu(e, 'folder', folder.id);
+                        });
+                        
+                        // Add page button (plus icon)
+                        const addPageBtn = li.querySelector('.folder-action-btn.add-page');
+                        if (addPageBtn) {
+                            addPageBtn.addEventListener('click', (e) => {
+                                e.stopPropagation();
+                                this.createNote('', folder.id);
+                            });
+                        }
+                        
+                        // More menu button (three dots)
+                        const moreMenuBtn = li.querySelector('.folder-action-btn.more-menu');
+                        const dropdown = li.querySelector(`#dropdown-${folder.id}`);
+                        
+                        if (moreMenuBtn && dropdown) {
+                            moreMenuBtn.addEventListener('click', (e) => {
+                                e.stopPropagation();
+                                // Close other dropdowns
+                                document.querySelectorAll('.folder-dropdown.show').forEach(d => {
+                                    if (d !== dropdown) d.classList.remove('show');
+                                });
+                                dropdown.classList.toggle('show');
+                            });
+                            
+                            // Handle dropdown item clicks
+                            dropdown.querySelectorAll('.folder-dropdown-item').forEach(item => {
+                                item.addEventListener('click', (e) => {
+                                    e.stopPropagation();
+                                    const action = item.dataset.action;
+                                    dropdown.classList.remove('show');
+                                    
+                                    switch(action) {
+                                        case 'favorite':
+                                            this.addFolderToFavorites(folder.id);
+                                            break;
+                                        case 'duplicate':
+                                            this.duplicateFolder(folder.id);
+                                            break;
+                                        case 'rename':
+                                            this.renameFolder(folder.id);
+                                            break;
+                                        case 'delete':
+                                            this.deleteFolder(folder.id);
+                                            break;
+                                    }
+                                });
+                            });
+                        }
+                        
+                        // Close dropdown when clicking outside
+                        document.addEventListener('click', () => {
+                            if (dropdown) dropdown.classList.remove('show');
                         });
                         
                         // Drag and drop for folders
