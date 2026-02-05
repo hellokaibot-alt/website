@@ -359,6 +359,18 @@
             background: var(--bg-tertiary);
             color: var(--text-primary);
         }
+        
+        .folder-item.drag-over-top {
+            border-top: 2px solid var(--accent);
+        }
+        
+        .folder-item.drag-over-bottom {
+            border-bottom: 2px solid var(--accent);
+        }
+        
+        .folder-header.dragging {
+            opacity: 0.5;
+        }
 
         .folder-toggle {
             width: 16px;
@@ -1736,6 +1748,7 @@
                 this.currentFolder = 'root';
                 this.contextMenuTarget = null;
                 this.draggedNote = null;
+                this.draggedFolder = null;
                 this.db = null;
                 
                 this.init();
@@ -1864,6 +1877,67 @@
                     this.render();
                     this.showToast('Folder renamed', 'success');
                 }
+            }
+            
+            moveFolder(folderId, newParentId) {
+                const folder = this.data.folders.find(f => f.id === folderId);
+                if (folder && !this.isSystemFolder(folderId)) {
+                    // Prevent moving into itself or its descendants
+                    if (newParentId === folderId || this.getChildFolderIds(folderId).includes(newParentId)) {
+                        this.showToast('Cannot move folder into itself', 'error');
+                        return;
+                    }
+                    folder.parentId = newParentId;
+                    this.saveData();
+                    this.render();
+                    this.showToast('Folder moved', 'success');
+                }
+            }
+            
+            reorderFolder(draggedFolderId, targetFolderId, insertBefore) {
+                const draggedFolder = this.data.folders.find(f => f.id === draggedFolderId);
+                const targetFolder = this.data.folders.find(f => f.id === targetFolderId);
+                
+                if (!draggedFolder || !targetFolder) return;
+                
+                // Only reorder if same parent
+                if (draggedFolder.parentId !== targetFolder.parentId) {
+                    // Move to same parent as target
+                    draggedFolder.parentId = targetFolder.parentId;
+                }
+                
+                // Get folders with same parent
+                const siblings = this.data.folders.filter(f => f.parentId === targetFolder.parentId);
+                const draggedIndex = siblings.findIndex(f => f.id === draggedFolderId);
+                const targetIndex = siblings.findIndex(f => f.id === targetFolderId);
+                
+                if (draggedIndex === -1 || targetIndex === -1) return;
+                
+                // Remove dragged folder from current position
+                siblings.splice(draggedIndex, 1);
+                
+                // Calculate new index
+                let newIndex = targetIndex;
+                if (draggedIndex < targetIndex && !insertBefore) {
+                    newIndex = targetIndex;
+                } else if (draggedIndex > targetIndex && insertBefore) {
+                    newIndex = targetIndex;
+                } else if (draggedIndex < targetIndex && insertBefore) {
+                    newIndex = targetIndex - 1;
+                } else if (draggedIndex > targetIndex && !insertBefore) {
+                    newIndex = targetIndex + 1;
+                }
+                
+                // Insert at new position
+                siblings.splice(newIndex, 0, draggedFolder);
+                
+                // Update main array to match new order
+                const otherFolders = this.data.folders.filter(f => f.parentId !== targetFolder.parentId);
+                this.data.folders = [...otherFolders, ...siblings];
+                
+                this.saveData();
+                this.render();
+                this.showToast('Folder reordered', 'success');
             }
             
             addFolderToFavorites(id) {
@@ -2466,7 +2540,65 @@
                             if (this.draggedNote) {
                                 this.moveNote(this.draggedNote, folder.id);
                                 this.draggedNote = null;
+                            } else if (this.draggedFolder && this.draggedFolder !== folder.id) {
+                                // Move folder as child of target folder
+                                this.moveFolder(this.draggedFolder, folder.id);
+                                this.draggedFolder = null;
                             }
+                        });
+                        
+                        // Folder reordering drag events
+                        li.draggable = true;
+                        
+                        li.addEventListener('dragstart', (e) => {
+                            this.draggedFolder = folder.id;
+                            li.classList.add('dragging');
+                            e.dataTransfer.effectAllowed = 'move';
+                        });
+                        
+                        li.addEventListener('dragend', () => {
+                            li.classList.remove('dragging');
+                            document.querySelectorAll('.folder-item').forEach(item => {
+                                item.classList.remove('drag-over-top', 'drag-over-bottom');
+                            });
+                            this.draggedFolder = null;
+                        });
+                        
+                        li.addEventListener('dragover', (e) => {
+                            e.preventDefault();
+                            if (!this.draggedFolder || this.draggedFolder === folder.id) return;
+                            
+                            const rect = li.getBoundingClientRect();
+                            const midY = rect.top + rect.height / 2;
+                            
+                            // Remove previous indicators
+                            li.classList.remove('drag-over-top', 'drag-over-bottom');
+                            
+                            // Add indicator based on mouse position
+                            if (e.clientY < midY) {
+                                li.classList.add('drag-over-top');
+                            } else {
+                                li.classList.add('drag-over-bottom');
+                            }
+                        });
+                        
+                        li.addEventListener('dragleave', () => {
+                            li.classList.remove('drag-over-top', 'drag-over-bottom');
+                        });
+                        
+                        li.addEventListener('drop', (e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            li.classList.remove('drag-over-top', 'drag-over-bottom');
+                            
+                            if (!this.draggedFolder || this.draggedFolder === folder.id) return;
+                            
+                            const rect = li.getBoundingClientRect();
+                            const midY = rect.top + rect.height / 2;
+                            const insertBefore = e.clientY < midY;
+                            
+                            this.reorderFolder(this.draggedFolder, folder.id, insertBefore);
+                            this.draggedFolder = null;
                         });
                         
                         // Render children
