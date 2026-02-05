@@ -2521,111 +2521,67 @@
                         
                         // Drag and drop: Header = move as child, List item = reorder
                         
+                        // SIMPLE DRAG AND DROP - Reorder only
+                        
                         // Make folder draggable
                         li.draggable = true;
                         
                         li.addEventListener('dragstart', (e) => {
                             this.draggedFolder = folder.id;
-                            li.classList.add('dragging');
+                            li.style.opacity = '0.5';
                             e.dataTransfer.effectAllowed = 'move';
                         });
                         
                         li.addEventListener('dragend', () => {
-                            li.classList.remove('dragging');
+                            li.style.opacity = '1';
                             document.querySelectorAll('.folder-item').forEach(item => {
-                                item.classList.remove('drag-over-top', 'drag-over-bottom');
-                            });
-                            document.querySelectorAll('.folder-header').forEach(h => {
-                                h.classList.remove('drag-over');
+                                item.style.borderTop = '';
+                                item.style.borderBottom = '';
                             });
                             this.draggedFolder = null;
                         });
                         
-                        // Header drop zone - move as child
-                        header.addEventListener('dragover', (e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            if (!this.draggedFolder || this.draggedFolder === folder.id) return;
-                            header.classList.add('drag-over');
-                        });
-                        
-                        header.addEventListener('dragleave', (e) => {
-                            e.stopPropagation();
-                            header.classList.remove('drag-over');
-                        });
-                        
-                        header.addEventListener('drop', (e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            header.classList.remove('drag-over');
-                            
-                            if (this.draggedNote) {
-                                // Move note to this folder
-                                this.moveNote(this.draggedNote, folder.id);
-                                this.draggedNote = null;
-                            } else if (this.draggedFolder && this.draggedFolder !== folder.id) {
-                                // Check if we're dropping on the header (make child) or between (reorder)
-                                // If the event came from the header, make it a child
-                                this.moveFolder(this.draggedFolder, folder.id);
-                                this.draggedFolder = null;
-                            }
-                        });
-                        
-                        // List item drop zone - reorder between siblings
                         li.addEventListener('dragover', (e) => {
                             e.preventDefault();
                             if (!this.draggedFolder || this.draggedFolder === folder.id) return;
                             
-                            // Clear other indicators first
-                            document.querySelectorAll('.folder-item').forEach(item => {
-                                if (item !== li) {
-                                    item.classList.remove('drag-over-top', 'drag-over-bottom');
-                                }
-                            });
-                            document.querySelectorAll('.folder-header').forEach(h => {
-                                h.classList.remove('drag-over');
-                            });
-                            
                             const rect = li.getBoundingClientRect();
                             const midY = rect.top + rect.height / 2;
                             
-                            // Remove previous indicators
-                            li.classList.remove('drag-over-top', 'drag-over-bottom');
-                            
-                            // Add indicator based on mouse position
                             if (e.clientY < midY) {
-                                li.classList.add('drag-over-top');
+                                li.style.borderTop = '2px solid var(--accent)';
+                                li.style.borderBottom = '';
                             } else {
-                                li.classList.add('drag-over-bottom');
+                                li.style.borderTop = '';
+                                li.style.borderBottom = '2px solid var(--accent)';
                             }
                         });
                         
-                        li.addEventListener('dragleave', (e) => {
-                            // Only remove if we're actually leaving the element
-                            if (!li.contains(e.relatedTarget)) {
-                                li.classList.remove('drag-over-top', 'drag-over-bottom');
-                            }
+                        li.addEventListener('dragleave', () => {
+                            li.style.borderTop = '';
+                            li.style.borderBottom = '';
                         });
                         
                         li.addEventListener('drop', (e) => {
                             e.preventDefault();
                             e.stopPropagation();
                             
-                            li.classList.remove('drag-over-top', 'drag-over-bottom');
+                            li.style.borderTop = '';
+                            li.style.borderBottom = '';
                             
                             if (!this.draggedFolder || this.draggedFolder === folder.id) return;
                             
                             const draggedFolder = this.data.folders.find(f => f.id === this.draggedFolder);
                             if (!draggedFolder) return;
                             
-                            const rect = li.getBoundingClientRect();
-                            const midY = rect.top + rect.height / 2;
-                            const insertBefore = e.clientY < midY;
-                            
-                            // If different parent, move to target's parent first
+                            // Move to same parent as target
                             if (draggedFolder.parentId !== folder.parentId) {
                                 draggedFolder.parentId = folder.parentId;
                             }
+                            
+                            const rect = li.getBoundingClientRect();
+                            const midY = rect.top + rect.height / 2;
+                            const insertBefore = e.clientY < midY;
                             
                             this.reorderFolder(this.draggedFolder, folder.id, insertBefore);
                             this.draggedFolder = null;
