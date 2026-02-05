@@ -2391,14 +2391,27 @@
                 this.renderFolderTree();
                 this.renderTagsCloud();
                 this.updateActiveStates();
+                
+                // Debug: Log folder state
+                console.log('Folders:', this.data.folders.map(f => ({id: f.id, name: f.name, parentId: f.parentId})));
             }
             
             renderFolderTree() {
                 const tree = document.getElementById('folderTree');
+                if (!tree) {
+                    console.error('folderTree element not found!');
+                    return;
+                }
                 tree.innerHTML = '';
+                
+                console.log('Rendering folders:', this.data.folders.length);
                 
                 const renderFolder = (parentId, level = 0) => {
                     const folders = this.data.folders.filter(f => f.parentId === parentId);
+                    console.log(`Found ${folders.length} folders with parent ${parentId}`);
+                    
+                    if (folders.length === 0) return null;
+                    
                     const ul = document.createElement('ul');
                     ul.className = level === 0 ? 'folder-tree' : 'folder-children';
                     if (level > 0) ul.style.paddingLeft = '16px';
@@ -2647,7 +2660,14 @@
                     return ul;
                 };
                 
-                tree.appendChild(renderFolder('root'));
+                const rootUl = renderFolder('root');
+                if (rootUl) {
+                    tree.appendChild(rootUl);
+                    console.log('Folder tree rendered successfully');
+                } else {
+                    console.log('No root folders found');
+                    tree.innerHTML = '<div style="padding: 20px; color: var(--text-tertiary); text-align: center;">No folders found</div>';
+                }
             }
             
             getChildFolderIds(parentId) {
