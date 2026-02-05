@@ -2342,8 +2342,9 @@
                         
                         // Click to toggle expand/collapse (if has children) or select
                         header.addEventListener('click', (e) => {
-                            // Ignore clicks on action buttons
-                            if (e.target.closest('.folder-actions')) return;
+                            // Ignore clicks on buttons
+                            if (e.target.classList.contains('folder-action-btn') || 
+                                e.target.closest('.folder-dropdown')) return;
                             
                             if (hasChildren) {
                                 // Toggle collapse
