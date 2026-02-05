@@ -178,6 +178,34 @@
         .section-toggle.collapsed {
             transform: rotate(-90deg);
         }
+        
+        .section-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .section-action-btn {
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 300;
+            color: var(--text-tertiary);
+            background: transparent;
+            border: none;
+            padding: 0;
+            transition: all var(--transition);
+        }
+        
+        .section-action-btn:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
 
         .section-content {
             padding-left: 4px;
@@ -1423,7 +1451,10 @@
                 <div class="sidebar-section">
                     <div class="section-header" data-section="folders">
                         <span>Folders</span>
-                        <span class="section-toggle">▼</span>
+                        <div class="section-actions">
+                            <button class="section-action-btn add-folder" id="addFolderBtn" title="Add new folder">+</button>
+                            <span class="section-toggle">▼</span>
+                        </div>
                     </div>
                     <div class="section-content" id="foldersSection">
                         <ul class="folder-tree" id="folderTree"></ul>
@@ -2962,6 +2993,15 @@
                     this.populateFolderSelect();
                     document.getElementById('newNoteModal').classList.add('active');
                     document.getElementById('newNoteTitle').focus();
+                });
+                
+                // Add new folder
+                document.getElementById('addFolderBtn').addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const name = prompt('Enter folder name:');
+                    if (name && name.trim()) {
+                        this.createFolder(name.trim(), 'root');
+                    }
                 });
                 
                 document.getElementById('emptyNewNoteBtn').addEventListener('click', () => {
