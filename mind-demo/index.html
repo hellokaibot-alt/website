@@ -2187,17 +2187,6 @@
                     </div>
                 </div>
 
-                <!-- Bookmarks Section -->
-                <div class="sidebar-section" id="bookmarksSectionContainer" style="display: none;">
-                    <div class="section-header" data-section="bookmarks">
-                        <span>Bookmarks</span>
-                        <span class="section-toggle">▼</span>
-                    </div>
-                    <div class="section-content" id="bookmarksSection">
-                        <ul class="bookmark-list" id="bookmarkList"></ul>
-                    </div>
-                </div>
-
                 <!-- Favorites Section -->
                 <div class="sidebar-section" id="favoritesSectionContainer" style="display: none;">
                     <div class="section-header" data-section="favorites">
@@ -2621,11 +2610,6 @@
                         <span class="note-menu-icon"><i class="ph ph-arrows-left-right"></i></span>
                         <span>Full Width</span>
                         <span class="note-menu-toggle-indicator" id="fullWidthToggle">○</span>
-                    </div>
-                    <div class="note-menu-toggle" data-toggle="bookmark" id="bookmarkToggle">
-                        <span class="note-menu-icon"><i class="ph ph-bookmark"></i></span>
-                        <span>Bookmark</span>
-                        <span class="note-menu-toggle-indicator" id="bookmarkIndicator">○</span>
                     </div>
                     <div class="note-menu-item" id="versionHistoryBtn">
                         <span class="note-menu-icon"><i class="ph ph-clock-counter-clockwise"></i></span>
@@ -3294,31 +3278,6 @@
                 }
             }
 
-            renderBookmarks() {
-                const bookmarksContainer = document.getElementById('bookmarksSectionContainer');
-                const bookmarkList = document.getElementById('bookmarkList');
-                const bookmarkedNotes = this.data.notes.filter(n => n.bookmarked);
-
-                if (bookmarkedNotes.length === 0) {
-                    bookmarksContainer.style.display = 'none';
-                    return;
-                }
-
-                bookmarksContainer.style.display = 'block';
-                bookmarkList.innerHTML = '';
-
-                bookmarkedNotes.forEach(note => {
-                    const li = document.createElement('li');
-                    li.className = 'bookmark-item';
-                    li.innerHTML = `
-                        <i class="ph ph-bookmark"></i>
-                        <span class="bookmark-title">${this.escapeHtml(note.title || 'Untitled Note')}</span>
-                    `;
-                    li.addEventListener('click', () => this.selectNote(note.id));
-                    bookmarkList.appendChild(li);
-                });
-            }
-
             renderClippedPages() {
                 const clippedContainer = document.getElementById('clippedSectionContainer');
                 const clippedList = document.getElementById('clippedList');
@@ -3681,7 +3640,6 @@
                     });
                     const smallTextToggle = document.getElementById('smallTextToggle');
                     const fullWidthToggle = document.getElementById('fullWidthToggle');
-                    const bookmarkIndicator = document.getElementById('bookmarkIndicator');
                     if (smallTextToggle) {
                         smallTextToggle.textContent = note.smallText ? '●' : '○';
                         smallTextToggle.classList.toggle('on', !!note.smallText);
@@ -3689,10 +3647,6 @@
                     if (fullWidthToggle) {
                         fullWidthToggle.textContent = note.fullWidth ? '●' : '○';
                         fullWidthToggle.classList.toggle('on', !!note.fullWidth);
-                    }
-                    if (bookmarkIndicator) {
-                        bookmarkIndicator.textContent = note.bookmarked ? '●' : '○';
-                        bookmarkIndicator.classList.toggle('on', !!note.bookmarked);
                     }
                 }
 
@@ -3817,7 +3771,6 @@
             // ==================== RENDERING ====================
 
             render() {
-                this.renderBookmarks();
                 this.renderClippedPages();
                 this.renderFavorites();
                 this.renderFolderTree();
@@ -5436,15 +5389,6 @@
                                     this.currentNote.fullWidth = isOn;
                                     this.saveData();
                                 }
-                            } else if (toggleType === 'bookmark') {
-                                if (!this.currentNote) return;
-                                const isBookmarked = !this.currentNote.bookmarked;
-                                this.currentNote.bookmarked = isBookmarked;
-                                indicator.textContent = isBookmarked ? '●' : '○';
-                                indicator.classList.toggle('on', isBookmarked);
-                                this.saveData();
-                                this.renderBookmarks();
-                                this.showToast(isBookmarked ? 'Bookmark added' : 'Bookmark removed', 'success');
                             }
                         });
                     });
