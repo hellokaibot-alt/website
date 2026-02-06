@@ -5165,6 +5165,14 @@
                 // Show modal
                 document.getElementById('importWizardModal').classList.add('active');
                 
+                // Setup close buttons
+                document.getElementById('closeImportWizard').onclick = () => {
+                    document.getElementById('importWizardModal').classList.remove('active');
+                };
+                document.getElementById('cancelImportWizard').onclick = () => {
+                    document.getElementById('importWizardModal').classList.remove('active');
+                };
+                
                 // Setup step 1 listeners
                 document.querySelectorAll('.import-source-option').forEach(option => {
                     option.onclick = () => {
