@@ -2355,41 +2355,78 @@
             }
             
             showMoreMenu() {
+                if (!this.currentNote) return;
+                
                 const actions = [
-                    'Clip Web Page',
-                    'Toggle Bookmark',
-                    'Version History',
-                    'Full Width',
-                    'Small Text',
-                    'Delete Note'
+                    '📋 Duplicate',
+                    '✂️ Move to Trash',
+                    '───────────────',
+                    this.currentNote.bookmarked ? '🔖 Remove Bookmark' : '🔖 Add to Favorites',
+                    '🌐 Clip Web Page',
+                    '───────────────',
+                    '📊 Version History',
+                    '📥 Import',
+                    '📤 Export'
                 ];
                 
-                const choice = prompt('Choose action:\n' + actions.map((a, i) => `${i + 1}. ${a}`).join('\n'));
+                const choice = prompt('Note Options:\n\n' + actions.map((a, i) => a.startsWith('─') ? a : `${i + 1}. ${a}`).join('\n'));
                 if (!choice) return;
                 
-                switch(choice.trim()) {
-                    case '1':
-                        const url = prompt('Enter URL to clip:');
-                        if (url) this.clipWebpage(url);
+                // Handle numeric choices
+                const numChoice = parseInt(choice.trim());
+                
+                switch(numChoice) {
+                    case 1:
+                        this.duplicateCurrentNote();
                         break;
-                    case '2':
-                        this.toggleBookmark();
-                        break;
-                    case '3':
-                        this.showVersionHistory();
-                        break;
-                    case '4':
-                        document.getElementById('editorContent').classList.toggle('full-width');
-                        break;
-                    case '5':
-                        document.getElementById('wysiwygEditor').classList.toggle('small-text');
-                        break;
-                    case '6':
-                        if (confirm('Delete this note?')) {
+                    case 2:
+                        if (confirm('Move this note to trash?')) {
                             this.deleteNote(this.currentNote?.id);
                         }
                         break;
+                    case 3:
+                        // Skip separator
+                        break;
+                    case 4:
+                        this.toggleBookmark();
+                        break;
+                    case 5:
+                        const url = prompt('Enter URL to clip:');
+                        if (url) this.clipWebpage(url);
+                        break;
+                    case 6:
+                        // Skip separator
+                        break;
+                    case 7:
+                        this.showVersionHistory();
+                        break;
+                    case 8:
+                        this.openImportModal();
+                        break;
+                    case 9:
+                        this.exportData();
+                        break;
                 }
+            }
+            
+            duplicateCurrentNote() {
+                if (!this.currentNote) return;
+                
+                const newNote = {
+                    id: 'note_' + Date.now(),
+                    title: this.currentNote.title + ' (Copy)',
+                    content: this.currentNote.content,
+                    folderId: this.currentNote.folderId,
+                    tags: [...this.currentNote.tags],
+                    createdAt: Date.now(),
+                    updatedAt: Date.now(),
+                    versions: []
+                };
+                
+                this.data.notes.push(newNote);
+                this.saveData();
+                this.openNote(newNote.id);
+                this.render();
             }
             
             showSettingsMenu() {
