@@ -6015,8 +6015,10 @@
                             </div>
                         `).join('');
                         
-                        tagAutocomplete.style.display = 'block';
+                        tagAutocomplete.style.cssText = 'display: block !important; position: absolute; top: 100%; left: 0; right: 0; z-index: 99999; background: var(--bg-primary); border: 2px solid var(--accent); border-radius: 4px; max-height: 200px; overflow-y: auto;';
                         activeAutocompleteIndex = 0;
+                        
+                        console.log('Showing autocomplete with', matches.length, 'matches');
                         
                         // Add click handlers
                         tagAutocomplete.querySelectorAll('.tag-autocomplete-item').forEach(item => {
