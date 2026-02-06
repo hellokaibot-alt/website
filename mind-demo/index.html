@@ -5987,13 +5987,17 @@
                 let tagAutocomplete = document.getElementById('tagAutocomplete');
                 let activeAutocompleteIndex = -1;
 
-                // Create autocomplete dropdown if not exists
-                if (!tagAutocomplete) {
-                    tagAutocomplete = document.createElement('div');
-                    tagAutocomplete.id = 'tagAutocomplete';
-                    tagAutocomplete.className = 'tag-autocomplete';
-                    document.body.appendChild(tagAutocomplete);
+                // Remove old autocomplete if exists (we'll create fresh one in body)
+                if (tagAutocomplete) {
+                    tagAutocomplete.remove();
                 }
+                
+                // Create autocomplete dropdown fresh in body
+                tagAutocomplete = document.createElement('div');
+                tagAutocomplete.id = 'tagAutocomplete';
+                tagAutocomplete.className = 'tag-autocomplete';
+                document.body.appendChild(tagAutocomplete);
+                console.log('Created autocomplete in body:', tagAutocomplete, 'parent:', tagAutocomplete.parentNode.tagName);
 
                 function showAutocomplete(matches) {
                     const rect = tagInput.getBoundingClientRect();
