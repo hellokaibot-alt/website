@@ -2767,19 +2767,6 @@
                     <div class="editor-content">
                         <input type="text" class="note-title-input" id="noteTitle" placeholder="Note Title">
                         
-                        <!-- AI Summary Section -->
-                        <div id="noteSummarySection" style="margin: 8px 0 12px 0; display: none;">
-                            <div style="display: flex; align-items: flex-start; gap: 8px;">
-                                <i class="ph ph-text-t" style="color: var(--accent); margin-top: 2px;"></i>
-                                <div style="flex: 1;">
-                                    <div id="noteSummaryText" style="font-size: 13px; color: var(--text-secondary); font-style: italic; line-height: 1.5;"></div>
-                                    <button id="regenerateSummaryBtn" style="background: none; border: none; color: var(--accent); font-size: 11px; cursor: pointer; padding: 0; margin-top: 4px;">
-                                        <i class="ph ph-arrows-clockwise"></i> Regenerate
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        
                         <div class="note-meta">
                             <div class="note-meta-item">
                                 <span><i class="ph ph-calendar-blank"></i></span>
@@ -2801,7 +2788,39 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="wysiwyg-editor" id="wysiwygEditor" contenteditable="true"></div>
+                        
+                        <!-- Note Tabs -->
+                        <div class="note-tabs" style="display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 16px;">
+                            <button class="note-tab active" data-tab="note" style="padding: 8px 16px; background: transparent; border: none; border-bottom: 2px solid var(--accent); color: var(--text-primary); font-size: 13px; cursor: pointer;">
+                                <i class="ph ph-file-text"></i> Note
+                            </button>
+                            <button class="note-tab" data-tab="summary" style="padding: 8px 16px; background: transparent; border: none; border-bottom: 2px solid transparent; color: var(--text-secondary); font-size: 13px; cursor: pointer;">
+                                <i class="ph ph-text-t"></i> Summary
+                            </button>
+                            <button class="note-tab" data-tab="tasks" style="padding: 8px 16px; background: transparent; border: none; border-bottom: 2px solid transparent; color: var(--text-secondary); font-size: 13px; cursor: pointer;">
+                                <i class="ph ph-check-square"></i> Tasks
+                            </button>
+                        </div>
+                        
+                        <!-- Tab Content -->
+                        <div class="note-tab-content" id="noteTabContent">
+                            <div class="wysiwyg-editor" id="wysiwygEditor" contenteditable="true"></div>
+                        </div>
+                        
+                        <div class="note-tab-content" id="summaryTabContent" style="display: none;">
+                            <div id="summaryContent" style="padding: 16px; color: var(--text-secondary); font-size: 14px; line-height: 1.6;">
+                                <p style="font-style: italic; color: var(--text-tertiary);">Start typing in the Note tab to generate a summary...</p>
+                            </div>
+                        </div>
+                        
+                        <div class="note-tab-content" id="tasksTabContent" style="display: none;">
+                            <div id="tasksContent" style="padding: 8px 0;">
+                                <div class="tasks-list" id="tasksList"></div>
+                                <button class="btn btn-secondary" id="addTaskBtn" style="margin-top: 12px; font-size: 12px; padding: 6px 12px;">
+                                    <i class="ph ph-plus"></i> Add Task
+                                </button>
+                            </div>
+                        </div>
                     </div>
                     
                     <!-- Selection Toolbar -->
@@ -4192,12 +4211,8 @@
                 // Update tags
                 this.renderNoteTags();
 
-                // Display summary if exists
-                if (note.metadata?.summary) {
-                    this.displayNoteSummary(note.metadata.summary);
-                } else {
-                    this.hideNoteSummary();
-                }
+                // Reset to Note tab
+                this.switchNoteTab('note');
 
                 // Apply font preference
                 const editor = document.getElementById('wysiwygEditor');
@@ -4655,17 +4670,201 @@ Respond with ONLY a JSON array of tag strings, like: ["tag1", "tag2", "tag3"]`;
                 return summary;
             }
 
-            displayNoteSummary(summary) {
-                const section = document.getElementById('noteSummarySection');
-                const textEl = document.getElementById('noteSummaryText');
-                
-                textEl.textContent = summary;
-                section.style.display = 'block';
+            // ==================== NOTE TABS ====================
+            
+            switchNoteTab(tabName) {
+                // Update tab buttons
+                document.querySelectorAll('.note-tab').forEach(tab => {
+                    if (tab.dataset.tab === tabName) {
+                        tab.classList.add('active');
+                        tab.style.borderBottomColor = 'var(--accent)';
+                        tab.style.color = 'var(--text-primary)';
+                    } else {
+                        tab.classList.remove('active');
+                        tab.style.borderBottomColor = 'transparent';
+                        tab.style.color = 'var(--text-secondary)';
+                    }
+                });
+
+                // Hide all content
+                document.getElementById('noteTabContent').style.display = 'none';
+                document.getElementById('summaryTabContent').style.display = 'none';
+                document.getElementById('tasksTabContent').style.display = 'none';
+
+                // Show selected content
+                if (tabName === 'note') {
+                    document.getElementById('noteTabContent').style.display = 'block';
+                } else if (tabName === 'summary') {
+                    document.getElementById('summaryTabContent').style.display = 'block';
+                    this.renderSummaryTab();
+                } else if (tabName === 'tasks') {
+                    document.getElementById('tasksTabContent').style.display = 'block';
+                    this.renderTasks();
+                }
             }
 
-            hideNoteSummary() {
-                const section = document.getElementById('noteSummarySection');
-                section.style.display = 'none';
+            async autoGenerateSummary() {
+                if (!this.currentNote) return;
+                
+                const content = document.getElementById('wysiwygEditor').innerText.trim();
+                if (!content || content.length < 50) return; // Need enough content
+
+                // Check if AI provider is configured
+                const provider = document.querySelector('input[name="aiProvider"]:checked')?.value || 'webllm';
+                const isConfigured = this.isAiProviderConfigured(provider);
+                
+                if (!isConfigured) return; // Silently skip if not configured
+
+                try {
+                    const summary = this.generateDemoSummary(content);
+                    
+                    // Store summary
+                    if (!this.currentNote.metadata) this.currentNote.metadata = {};
+                    this.currentNote.metadata.summary = summary;
+                    this.currentNote.metadata.summaryGeneratedAt = new Date().toISOString();
+                    this.saveData();
+                    
+                    // Update summary tab if visible
+                    if (document.getElementById('summaryTabContent').style.display !== 'none') {
+                        this.renderSummaryTab();
+                    }
+                } catch (error) {
+                    console.error('Auto-summary error:', error);
+                }
+            }
+
+            renderSummaryTab() {
+                const container = document.getElementById('summaryContent');
+                
+                if (!this.currentNote?.metadata?.summary) {
+                    container.innerHTML = `
+                        <p style="font-style: italic; color: var(--text-tertiary);">
+                            <i class="ph ph-info"></i> Start typing in the Note tab to generate a summary...
+                        </p>
+                    `;
+                    return;
+                }
+
+                const summary = this.currentNote.metadata.summary;
+                // Convert summary to bullet points if it's not already
+                const bulletPoints = summary.split('. ').filter(s => s.trim().length > 10);
+                
+                container.innerHTML = `
+                    <div style="margin-bottom: 12px;">
+                        <small style="color: var(--text-tertiary);">
+                            <i class="ph ph-clock"></i> Generated ${new Date(this.currentNote.metadata.summaryGeneratedAt).toLocaleString()}
+                        </small>
+                    </div>
+                    <ul style="margin: 0; padding-left: 20px; color: var(--text-primary);">
+                        ${bulletPoints.map(point => `
+                            <li style="margin-bottom: 12px;">${point.trim().replace(/\.$/, '')}</li>
+                        `).join('')}
+                    </ul>
+                `;
+            }
+
+            // ==================== TASKS ====================
+            
+            addTask(text = '') {
+                if (!this.currentNote) return;
+                
+                if (!this.currentNote.tasks) this.currentNote.tasks = [];
+                
+                const task = {
+                    id: 'task_' + Date.now(),
+                    text: text || '',
+                    completed: false,
+                    createdAt: Date.now()
+                };
+                
+                this.currentNote.tasks.push(task);
+                this.saveData();
+                this.renderTasks();
+                
+                // Focus the new task input
+                setTimeout(() => {
+                    const input = document.querySelector(`[data-task-id="${task.id}"] .task-input`);
+                    if (input) input.focus();
+                }, 0);
+            }
+
+            toggleTask(taskId) {
+                if (!this.currentNote?.tasks) return;
+                
+                const task = this.currentNote.tasks.find(t => t.id === taskId);
+                if (task) {
+                    task.completed = !task.completed;
+                    this.saveData();
+                    this.renderTasks();
+                }
+            }
+
+            updateTaskText(taskId, text) {
+                if (!this.currentNote?.tasks) return;
+                
+                const task = this.currentNote.tasks.find(t => t.id === taskId);
+                if (task) {
+                    task.text = text;
+                    this.saveData();
+                }
+            }
+
+            deleteTask(taskId) {
+                if (!this.currentNote?.tasks) return;
+                
+                this.currentNote.tasks = this.currentNote.tasks.filter(t => t.id !== taskId);
+                this.saveData();
+                this.renderTasks();
+            }
+
+            renderTasks() {
+                const container = document.getElementById('tasksList');
+                
+                if (!this.currentNote) {
+                    container.innerHTML = '';
+                    return;
+                }
+
+                const tasks = this.currentNote.tasks || [];
+                
+                if (tasks.length === 0) {
+                    container.innerHTML = `
+                        <div style="padding: 32px; text-align: center; color: var(--text-tertiary);">
+                            <i class="ph ph-check-circle" style="font-size: 32px; margin-bottom: 12px; display: block;"></i>
+                            No tasks yet. Click "Add Task" to get started.
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = tasks.map(task => `
+                    <div class="task-item" data-task-id="${task.id}" style="display: flex; align-items: flex-start; gap: 12px; padding: 12px; background: var(--bg-tertiary); border-radius: var(--radius); margin-bottom: 8px;">
+                        <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''} 
+                            style="margin-top: 2px; width: 18px; height: 18px; cursor: pointer; accent-color: var(--accent);">
+                        <input type="text" class="task-input" value="${this.escapeHtml(task.text)}" 
+                            placeholder="Task description..."
+                            style="flex: 1; background: transparent; border: none; color: var(--text-primary); font-size: 14px; outline: none; text-decoration: ${task.completed ? 'line-through' : 'none'}; opacity: ${task.completed ? '0.6' : '1'};">
+                        <button class="task-delete" style="background: none; border: none; color: var(--text-tertiary); cursor: pointer; padding: 4px; opacity: 0; transition: opacity 0.2s;">
+                            <i class="ph ph-trash"></i>
+                        </button>
+                    </div>
+                `).join('');
+
+                // Add event listeners
+                container.querySelectorAll('.task-item').forEach(item => {
+                    const taskId = item.dataset.taskId;
+                    const checkbox = item.querySelector('.task-checkbox');
+                    const input = item.querySelector('.task-input');
+                    const deleteBtn = item.querySelector('.task-delete');
+
+                    checkbox.addEventListener('change', () => this.toggleTask(taskId));
+                    input.addEventListener('input', (e) => this.updateTaskText(taskId, e.target.value));
+                    deleteBtn.addEventListener('click', () => this.deleteTask(taskId));
+
+                    // Show delete button on hover
+                    item.addEventListener('mouseenter', () => deleteBtn.style.opacity = '1');
+                    item.addEventListener('mouseleave', () => deleteBtn.style.opacity = '0');
+                });
             }
 
             // ==================== RENDERING ====================
@@ -6499,7 +6698,25 @@ Respond with ONLY a JSON array of tag strings, like: ["tag1", "tag2", "tag3"]`;
 
                 // AI Summarize button
                 document.getElementById('summarizeBtn').addEventListener('click', () => this.summarizeNoteWithAi());
-                document.getElementById('regenerateSummaryBtn').addEventListener('click', () => this.summarizeNoteWithAi());
+
+                // Note Tabs
+                document.querySelectorAll('.note-tab').forEach(tab => {
+                    tab.addEventListener('click', () => this.switchNoteTab(tab.dataset.tab));
+                });
+
+                // Add Task button
+                document.getElementById('addTaskBtn').addEventListener('click', () => this.addTask());
+
+                // Auto-generate summary on typing (debounced)
+                let summaryDebounceTimer;
+                document.getElementById('wysiwygEditor').addEventListener('input', () => {
+                    if (!this.currentNote) return;
+                    
+                    clearTimeout(summaryDebounceTimer);
+                    summaryDebounceTimer = setTimeout(() => {
+                        this.autoGenerateSummary();
+                    }, 5000); // 5 seconds after typing stops
+                });
 
                 // Context menu
                 document.getElementById('ctxRename').addEventListener('click', () => {
