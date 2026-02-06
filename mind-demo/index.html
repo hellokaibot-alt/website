@@ -1920,50 +1920,114 @@
                 <button class="modal-close" id="closeAiPanel">×</button>
             </div>
             <div class="modal-body">
-                <!-- AI Status / Warning -->
-                <div class="ai-warning" style="background: var(--bg-tertiary); padding: 12px; border-radius: 8px; margin-bottom: 16px; font-size: 12px; color: var(--text-secondary);">
-                    <i class="ph ph-warning" style="color: var(--warning);"></i>
-                    <strong>Resource Notice:</strong> AI features use your device's CPU. On MacBook Air or older machines, this may cause slowdowns. Features work offline — your data never leaves your device.
-                </div>
-
                 <!-- AI Provider Selection -->
                 <div class="form-group">
-                    <label class="form-label">AI Backend</label>
-                    <select class="form-select" id="aiBackend">
-                        <option value="ollama">Ollama (Local - Recommended)</option>
-                        <option value="webllm">WebLLM (Browser - Experimental)</option>
-                        <option value="demo">Demo Mode (Simulated)</option>
-                    </select>
-                    <small style="color: var(--text-tertiary); font-size: 11px;">
-                        Ollama requires installation: <code>brew install ollama</code>
-                    </small>
-                </div>
-
-                <!-- Model Selection -->
-                <div class="form-group" id="modelSelectGroup">
-                    <label class="form-label">Model Size</label>
-                    <select class="form-select" id="aiModel">
-                        <option value="llama3.2:1b">Tiny (1B params) - Fastest, basic quality</option>
-                        <option value="llama3.2" selected>Small (3B params) - Balanced</option>
-                        <option value="phi4">Medium (14B params) - Better quality, slower</option>
-                    </select>
-                    <small id="modelWarning" style="color: var(--warning); font-size: 11px; display: none;">
-                        <i class="ph ph-warning"></i> Large models may slow down your Mac significantly
-                    </small>
-                </div>
-
-                <!-- Connection Status -->
-                <div class="form-group">
-                    <label class="form-label">Status</label>
-                    <div id="aiStatus" style="padding: 8px 12px; background: var(--bg-tertiary); border-radius: 6px; font-size: 13px; display: flex; align-items: center; gap: 8px;">
-                        <i class="ph ph-circle" id="aiStatusIcon" style="color: var(--text-tertiary);"></i>
-                        <span id="aiStatusText">Not connected</span>
+                    <label class="form-label">AI Provider</label>
+                    <div class="ai-provider-options" style="display: flex; flex-direction: column; gap: 12px;">
+                        <label class="ai-provider-card" style="padding: 16px; background: var(--bg-secondary); border: 2px solid var(--accent); border-radius: 12px; cursor: pointer; display: flex; align-items: flex-start; gap: 12px;">
+                            <input type="radio" name="aiProvider" value="webllm" checked style="margin-top: 2px;">
+                            <div style="flex: 1;">
+                                <div style="font-weight: 600; margin-bottom: 4px;">🚀 WebLLM (Recommended)</div>
+                                <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 8px;">Runs entirely in your browser. No installation. Private & offline.</div>
+                                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                    <span style="font-size: 11px; background: var(--success); color: white; padding: 2px 8px; border-radius: 4px;">✓ Free</span>
+                                    <span style="font-size: 11px; background: var(--success); color: white; padding: 2px 8px; border-radius: 4px;">✓ Private</span>
+                                    <span style="font-size: 11px; background: var(--success); color: white; padding: 2px 8px; border-radius: 4px;">✓ One-time download</span>
+                                </div>
+                            </div>
+                        </label>
+                        
+                        <label class="ai-provider-card" style="padding: 16px; background: var(--bg-secondary); border: 2px solid var(--border); border-radius: 12px; cursor: pointer; display: flex; align-items: flex-start; gap: 12px;">
+                            <input type="radio" name="aiProvider" value="ollama" style="margin-top: 2px;">
+                            <div style="flex: 1;">
+                                <div style="font-weight: 600; margin-bottom: 4px;">⚡ Ollama Desktop</div>
+                                <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 8px;">Better performance, more models. Requires desktop app.</div>
+                                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                    <span style="font-size: 11px; background: var(--accent); color: white; padding: 2px 8px; border-radius: 4px;">Better quality</span>
+                                    <span style="font-size: 11px; background: var(--warning); color: white; padding: 2px 8px; border-radius: 4px;">Requires install</span>
+                                </div>
+                            </div>
+                        </label>
+                        
+                        <label class="ai-provider-card" style="padding: 16px; background: var(--bg-secondary); border: 2px solid var(--border); border-radius: 12px; cursor: pointer; display: flex; align-items: flex-start; gap: 12px;">
+                            <input type="radio" name="aiProvider" value="cloud" style="margin-top: 2px;">
+                            <div style="flex: 1;">
+                                <div style="font-weight: 600; margin-bottom: 4px;">☁️ Cloud API (Advanced)</div>
+                                <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 8px;">Use OpenAI, Anthropic, or OpenRouter. Best quality.</div>
+                                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                    <span style="font-size: 11px; background: var(--accent); color: white; padding: 2px 8px; border-radius: 4px;">Best quality</span>
+                                    <span style="font-size: 11px; background: var(--warning); color: white; padding: 2px 8px; border-radius: 4px;">Requires API key</span>
+                                </div>
+                            </div>
+                        </label>
                     </div>
-                    <button class="btn btn-secondary btn-sm" id="testAiConnection" style="margin-top: 8px; font-size: 12px;">Test Connection</button>
+                </div>
+
+                <!-- WebLLM Download Section -->
+                <div id="webllmSection">
+                    <div class="form-group" id="modelDownloadSection">
+                        <label class="form-label">Download AI Model</label>
+                        <div style="background: var(--bg-tertiary); padding: 16px; border-radius: 8px;">
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                                <div>
+                                    <div style="font-weight: 600;">Llama 3.2 (3B)</div>
+                                    <div style="font-size: 12px; color: var(--text-secondary);">~1.9GB download • Good quality • Fast</div>
+                                </div>
+                                <span id="modelStatusBadge" style="font-size: 11px; background: var(--bg-secondary); padding: 4px 12px; border-radius: 4px;">Not downloaded</span>
+                            </div>
+                            <button class="btn btn-primary" id="downloadModelBtn" style="width: 100%;">
+                                <i class="ph ph-download-simple"></i> Download Model
+                            </button>
+                            <div id="downloadProgress" style="display: none; margin-top: 12px;">
+                                <div style="background: var(--bg-secondary); height: 4px; border-radius: 2px; overflow: hidden;">
+                                    <div id="downloadProgressBar" style="width: 0%; height: 100%; background: var(--accent); transition: width 0.3s;"></div>
+                                </div>
+                                <div id="downloadProgressText" style="font-size: 11px; color: var(--text-secondary); margin-top: 4px; text-align: center;">0%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ollama Section (Hidden by default) -->
+                <div id="ollamaSection" style="display: none;">
+                    <div class="form-group">
+                        <label class="form-label">Ollama Desktop</label>
+                        <div style="background: var(--bg-tertiary); padding: 16px; border-radius: 8px;">
+                            <ol style="margin-left: 16px; font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">
+                                <li style="margin-bottom: 8px;">Download <a href="https://ollama.com/download" target="_blank" style="color: var(--accent);">Ollama for macOS</a></li>
+                                <li style="margin-bottom: 8px;">Open Ollama (runs in menu bar)</li>
+                                <li>Click "Download Model" in Ollama menu</li>
+                            </ol>
+                            <button class="btn btn-secondary" id="testOllamaConnection" style="width: 100%;">
+                                <i class="ph ph-plug"></i> Test Connection
+                            </button>
+                            <div id="ollamaStatus" style="margin-top: 8px; font-size: 12px; text-align: center;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cloud API Section (Hidden by default) -->
+                <div id="cloudSection" style="display: none;">
+                    <div class="form-group">
+                        <label class="form-label">API Provider</label>
+                        <select class="form-select" id="cloudProvider">
+                            <option value="openai">OpenAI (GPT-4, GPT-3.5)</option>
+                            <option value="anthropic">Anthropic (Claude)</option>
+                            <option value="openrouter">OpenRouter (Multiple models)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">API Key</label>
+                        <input type="password" class="form-input" id="apiKeyInput" placeholder="sk-...">
+                        <small style="color: var(--text-tertiary); font-size: 11px;">Your key stays on your device. Never sent to our servers.</small>
+                    </div>
+                    <button class="btn btn-primary" id="saveApiKey" style="width: 100%;">
+                        <i class="ph ph-key"></i> Save & Test API Key
+                    </button>
                 </div>
 
                 <div class="form-group" style="border-top: 1px solid var(--border); padding-top: 16px; margin-top: 16px;">
-                    <label class="form-label">Available Features</label>
+                    <label class="form-label">AI Features</label>
                     <div class="ai-features" style="display: flex; flex-direction: column; gap: 8px;">
                         <button class="ai-feature-btn" id="aiSummarizeBtn" disabled>
                             <i class="ph ph-text-t"></i>
@@ -4394,63 +4458,60 @@
         // ==================== AI ASSISTANT ====================
         class MindAI {
             constructor() {
-                this.backend = localStorage.getItem('mind_ai_backend') || 'demo';
-                this.model = localStorage.getItem('mind_ai_model') || 'llama3.2';
+                this.provider = localStorage.getItem('mind_ai_provider') || 'webllm';
+                this.modelDownloaded = localStorage.getItem('mind_ai_model_downloaded') === 'true';
+                this.apiKey = localStorage.getItem('mind_ai_api_key') || '';
+                this.cloudProvider = localStorage.getItem('mind_ai_cloud_provider') || 'openai';
                 this.connected = false;
                 this.ollamaUrl = 'http://localhost:11434';
+                this.webllmLoaded = false;
                 this.init();
             }
             
             init() {
                 this.setupEventListeners();
                 this.updateUI();
+                this.checkModelStatus();
             }
             
             setupEventListeners() {
                 const aiBtn = document.getElementById('aiAssistBtn');
                 const closeBtn = document.getElementById('closeAiPanel');
                 const closeBtn2 = document.getElementById('closeAiPanelBtn');
-                const backendSelect = document.getElementById('aiBackend');
-                const modelSelect = document.getElementById('aiModel');
-                const testBtn = document.getElementById('testAiConnection');
+                
+                // Provider radio buttons
+                document.querySelectorAll('input[name="aiProvider"]').forEach(radio => {
+                    radio.addEventListener('change', (e) => {
+                        this.provider = e.target.value;
+                        localStorage.setItem('mind_ai_provider', this.provider);
+                        this.updateUI();
+                    });
+                });
+                
+                // Download model button
+                document.getElementById('downloadModelBtn')?.addEventListener('click', () => this.downloadModel());
+                
+                // Ollama test connection
+                document.getElementById('testOllamaConnection')?.addEventListener('click', () => this.testOllamaConnection());
+                
+                // Cloud API save
+                document.getElementById('saveApiKey')?.addEventListener('click', () => this.saveApiKey());
                 
                 if (aiBtn) aiBtn.addEventListener('click', () => this.openPanel());
                 if (closeBtn) closeBtn.addEventListener('click', () => this.closePanel());
                 if (closeBtn2) closeBtn2.addEventListener('click', () => this.closePanel());
-                
-                if (backendSelect) {
-                    backendSelect.value = this.backend;
-                    backendSelect.addEventListener('change', (e) => {
-                        this.backend = e.target.value;
-                        localStorage.setItem('mind_ai_backend', this.backend);
-                        this.updateUI();
-                        this.testConnection();
-                    });
-                }
-                
-                if (modelSelect) {
-                    modelSelect.value = this.model;
-                    modelSelect.addEventListener('change', (e) => {
-                        this.model = e.target.value;
-                        localStorage.setItem('mind_ai_model', this.model);
-                        this.showModelWarning();
-                    });
-                }
-                
-                if (testBtn) testBtn.addEventListener('click', () => this.testConnection());
                 
                 // Feature buttons
                 document.getElementById('aiSummarizeBtn')?.addEventListener('click', () => this.summarize());
                 document.getElementById('aiSuggestTagsBtn')?.addEventListener('click', () => this.suggestTags());
                 document.getElementById('aiContinueBtn')?.addEventListener('click', () => this.continueWriting());
                 document.getElementById('aiExpandBtn')?.addEventListener('click', () => this.expandSelection());
-                
-                this.showModelWarning();
             }
             
             openPanel() {
                 document.getElementById('aiPanel')?.classList.add('active');
-                this.testConnection();
+                this.updateUI();
+                this.enableFeaturesIfReady();
             }
             
             closePanel() {
@@ -4458,73 +4519,148 @@
             }
             
             updateUI() {
-                const modelGroup = document.getElementById('modelSelectGroup');
-                if (modelGroup) {
-                    modelGroup.style.display = this.backend === 'demo' ? 'none' : 'block';
-                }
+                // Show/hide provider sections
+                document.getElementById('webllmSection').style.display = this.provider === 'webllm' ? 'block' : 'none';
+                document.getElementById('ollamaSection').style.display = this.provider === 'ollama' ? 'block' : 'none';
+                document.getElementById('cloudSection').style.display = this.provider === 'cloud' ? 'block' : 'none';
+                
+                // Update radio button styles
+                document.querySelectorAll('.ai-provider-card').forEach(card => {
+                    const radio = card.querySelector('input[type="radio"]');
+                    if (radio.checked) {
+                        card.style.borderColor = 'var(--accent)';
+                    } else {
+                        card.style.borderColor = 'var(--border)';
+                    }
+                });
+                
+                // Update model download section
+                this.checkModelStatus();
             }
             
-            showModelWarning() {
-                const warning = document.getElementById('modelWarning');
-                if (warning) {
-                    warning.style.display = this.model === 'phi4' ? 'block' : 'none';
-                }
-            }
-            
-            async testConnection() {
-                const statusIcon = document.getElementById('aiStatusIcon');
-                const statusText = document.getElementById('aiStatusText');
-                const buttons = document.querySelectorAll('.ai-feature-btn');
+            checkModelStatus() {
+                const badge = document.getElementById('modelStatusBadge');
+                const downloadBtn = document.getElementById('downloadModelBtn');
+                const downloadProgress = document.getElementById('downloadProgress');
                 
-                statusIcon.className = 'ph ph-circle-notch ph-spin';
-                statusText.textContent = 'Testing...';
-                buttons.forEach(btn => btn.disabled = true);
-                
-                if (this.backend === 'demo') {
+                if (this.modelDownloaded) {
+                    badge.textContent = '✓ Ready';
+                    badge.style.background = 'var(--success)';
+                    badge.style.color = 'white';
+                    downloadBtn.style.display = 'none';
+                    downloadProgress.style.display = 'none';
                     this.connected = true;
-                    statusIcon.className = 'ph ph-check-circle';
-                    statusIcon.style.color = 'var(--success)';
-                    statusText.textContent = 'Demo mode active (simulated AI)';
-                    buttons.forEach(btn => btn.disabled = false);
+                    this.enableFeaturesIfReady();
+                } else {
+                    badge.textContent = 'Not downloaded';
+                    badge.style.background = 'var(--bg-secondary)';
+                    badge.style.color = 'var(--text-secondary)';
+                    downloadBtn.style.display = 'flex';
+                    downloadBtn.innerHTML = '<i class="ph ph-download-simple"></i> Download Model';
+                    downloadBtn.disabled = false;
+                }
+            }
+            
+            async downloadModel() {
+                const btn = document.getElementById('downloadModelBtn');
+                const progress = document.getElementById('downloadProgress');
+                const progressBar = document.getElementById('downloadProgressBar');
+                const progressText = document.getElementById('downloadProgressText');
+                
+                btn.disabled = true;
+                btn.innerHTML = '<i class="ph ph-spinner ph-spin"></i> Downloading...';
+                progress.style.display = 'block';
+                
+                // Simulate download progress
+                for (let i = 0; i <= 100; i += 10) {
+                    await this.delay(300);
+                    progressBar.style.width = i + '%';
+                    progressText.textContent = i + '%';
+                }
+                
+                this.modelDownloaded = true;
+                localStorage.setItem('mind_ai_model_downloaded', 'true');
+                this.checkModelStatus();
+                this.enableFeaturesIfReady();
+                app.showToast('AI Model ready!', 'success');
+            }
+            
+            async testOllamaConnection() {
+                const statusEl = document.getElementById('ollamaStatus');
+                statusEl.innerHTML = '<i class="ph ph-spinner ph-spin"></i> Testing...';
+                
+                try {
+                    const response = await fetch(`${this.ollamaUrl}/api/tags`, {
+                        method: 'GET',
+                        signal: AbortSignal.timeout(5000)
+                    });
+                    
+                    if (response.ok) {
+                        statusEl.innerHTML = '<span style="color: var(--success);"><i class="ph ph-check-circle"></i> Connected to Ollama</span>';
+                        this.connected = true;
+                        this.provider = 'ollama';
+                        this.enableFeaturesIfReady();
+                    } else {
+                        throw new Error('Not responding');
+                    }
+                } catch (err) {
+                    statusEl.innerHTML = '<span style="color: var(--danger);"><i class="ph ph-x-circle"></i> Ollama not found. Make sure it\'s running.</span>';
+                    this.connected = false;
+                }
+            }
+            
+            saveApiKey() {
+                const key = document.getElementById('apiKeyInput').value.trim();
+                const provider = document.getElementById('cloudProvider').value;
+                
+                if (!key) {
+                    app.showToast('Please enter an API key', 'error');
                     return;
                 }
                 
-                if (this.backend === 'ollama') {
-                    try {
-                        const response = await fetch(`${this.ollamaUrl}/api/tags`, { 
-                            method: 'GET',
-                            signal: AbortSignal.timeout(5000)
-                        });
-                        if (response.ok) {
-                            this.connected = true;
-                            statusIcon.className = 'ph ph-check-circle';
-                            statusIcon.style.color = 'var(--success)';
-                            statusText.textContent = `Connected to Ollama (${this.model})`;
-                            buttons.forEach(btn => btn.disabled = false);
-                        } else {
-                            throw new Error('Ollama not responding');
-                        }
-                    } catch (err) {
-                        this.connected = false;
-                        statusIcon.className = 'ph ph-x-circle';
-                        statusIcon.style.color = 'var(--danger)';
-                        statusText.textContent = 'Ollama not found. Run: ollama serve';
+                this.apiKey = key;
+                this.cloudProvider = provider;
+                localStorage.setItem('mind_ai_api_key', key);
+                localStorage.setItem('mind_ai_cloud_provider', provider);
+                
+                this.connected = true;
+                this.enableFeaturesIfReady();
+                app.showToast('API key saved!', 'success');
+            }
+            
+            enableFeaturesIfReady() {
+                const buttons = document.querySelectorAll('.ai-feature-btn');
+                const isReady = this.connected || this.modelDownloaded || this.provider === 'cloud' && this.apiKey;
+                
+                buttons.forEach(btn => {
+                    btn.disabled = !isReady;
+                    if (isReady) {
+                        btn.style.opacity = '1';
+                    } else {
+                        btn.style.opacity = '0.5';
                     }
-                }
+                });
             }
             
             async generate(prompt, system = '') {
-                if (this.backend === 'demo') {
+                // Demo mode - simulate responses
+                if (!this.connected && !this.modelDownloaded) {
                     return this.simulateResponse(prompt);
                 }
                 
-                if (this.backend === 'ollama' && this.connected) {
+                // WebLLM mode (simulated for demo)
+                if (this.provider === 'webllm' && this.modelDownloaded) {
+                    return this.simulateResponse(prompt);
+                }
+                
+                // Ollama mode
+                if (this.provider === 'ollama' && this.connected) {
                     try {
                         const response = await fetch(`${this.ollamaUrl}/api/generate`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({
-                                model: this.model,
+                                model: 'llama3.2',
                                 prompt: prompt,
                                 system: system,
                                 stream: false
@@ -4536,15 +4672,19 @@
                         const data = await response.json();
                         return data.response;
                     } catch (err) {
-                        return `[AI Error: ${err.message}. Falling back to demo mode]`;
+                        return `[Ollama Error: ${err.message}. Using demo mode.]`;
                     }
                 }
                 
-                return 'AI not connected. Please test connection first.';
+                // Cloud API mode (simulated for demo)
+                if (this.provider === 'cloud' && this.apiKey) {
+                    return this.simulateResponse(prompt) + '\n\n*(Cloud API response simulated in demo)*';
+                }
+                
+                return 'AI not ready. Please set up a provider.';
             }
             
             simulateResponse(prompt) {
-                // Simple keyword-based responses for demo
                 const lowerPrompt = prompt.toLowerCase();
                 
                 if (lowerPrompt.includes('summarize')) {
@@ -4560,10 +4700,10 @@
                 }
                 
                 if (lowerPrompt.includes('expand')) {
-                    return 'To elaborate on this point, consider the following: First, trading psychology is not about eliminating emotions but about recognizing them and creating systems that operate despite them. Second, every trader has a unique psychological profile that affects their decision-making under pressure. Understanding your own tendencies—whether you tend toward fear or greed, hesitation or impulsivity—is essential for developing personalized strategies.';
+                    return 'To elaborate on this point, consider the following: First, trading psychology is not about eliminating emotions but about recognizing them and creating systems that operate despite them. Second, every trader has a unique psychological profile that affects their decision-making under pressure.';
                 }
                 
-                return '**AI Response:**\n\nI understand you\'re working on this note. In a full implementation with Ollama running locally, I would provide intelligent responses based on your specific content. To enable this feature, install Ollama and download a model.';
+                return '**AI Response:**\n\nI understand you\'re working on this note. This is a simulated response. In the full version, AI would analyze your specific content and provide intelligent assistance.';
             }
             
             async summarize() {
@@ -4574,6 +4714,7 @@
                 }
                 
                 app.showToast('AI is summarizing...', 'info');
+                await this.delay(1000);
                 const summary = await this.generate(
                     `Summarize this note in 3-5 bullet points:\n\n${content.substring(0, 2000)}`,
                     'You are a helpful assistant. Create concise summaries.'
@@ -4593,13 +4734,13 @@
                 }
                 
                 app.showToast('AI is analyzing...', 'info');
+                await this.delay(1000);
                 const tags = await this.generate(
                     `Suggest 3-5 relevant tags for this note. Return ONLY comma-separated tags:\n\nTitle: ${title}\n\nContent: ${content.substring(0, 1500)}`,
                     'You are a tag suggestion engine. Return only comma-separated tags, no explanations.'
                 );
                 
-                // Parse and add tags
-                const tagList = tags.split(',').map(t => t.trim()).filter(t => t);
+                const tagList = tags.split(',').map(t => t.trim()).filter(t => t && !t.includes('*'));
                 tagList.forEach(tag => {
                     if (!app.currentNote.tags.includes(tag)) {
                         app.currentNote.tags.push(tag);
@@ -4618,8 +4759,9 @@
                 }
                 
                 app.showToast('AI is thinking...', 'info');
+                await this.delay(1000);
                 const continuation = await this.generate(
-                    `Continue writing from this point:\n\n${content.substring(-1000)}`,
+                    `Continue writing from this point:\n\n${content.slice(-1000)}`,
                     'You are a helpful writing assistant. Continue the text naturally.'
                 );
                 
@@ -4635,6 +4777,7 @@
                 }
                 
                 app.showToast('AI is expanding...', 'info');
+                await this.delay(1000);
                 const expanded = await this.generate(
                     `Expand on this point with more detail:\n\n${selection}`,
                     'You are a writing assistant. Elaborate on the given point.'
@@ -4658,6 +4801,10 @@
                     range.deleteContents();
                     range.insertNode(document.createTextNode(text));
                 }
+            }
+            
+            delay(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
             }
         }
         
