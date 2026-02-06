@@ -6628,6 +6628,7 @@
                             toolbar.classList.add('visible');
                         } else {
                             toolbar.classList.remove('visible');
+                            toolbar.style.display = 'none';
                         }
                     }, 0);
                 });
@@ -6636,6 +6637,7 @@
                 document.addEventListener('mousedown', (e) => {
                     if (!toolbar.contains(e.target)) {
                         toolbar.classList.remove('visible');
+                        toolbar.style.display = 'none';
                     }
                 });
 
