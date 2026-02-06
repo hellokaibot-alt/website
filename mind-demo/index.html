@@ -1913,50 +1913,111 @@
                 const folder = this.data.folders.find(f => f.id === folderId);
                 if (!folder) return;
                 
+                const isFavorite = this.data.settings.favoriteFolders?.includes(folderId);
+                
                 const actions = [
-                    'Add subfolder',
-                    'Rename folder',
-                    'Delete folder',
-                    folder.id !== 'root' ? 'Move to root' : null
-                ].filter(Boolean);
+                    isFavorite ? '⭐️ Remove from Favorites' : '⭐️ Add to Favorites',
+                    '📋 Duplicate',
+                    '✏️ Rename',
+                    '🗑 Move to Trash'
+                ];
                 
                 const choice = prompt(`Folder: ${folder.name}\n\n${actions.map((a, i) => `${i + 1}. ${a}`).join('\n')}`);
                 if (!choice) return;
                 
                 switch(choice.trim()) {
                     case '1':
-                        this.createSubfolder(folderId);
+                        this.toggleFolderFavorite(folderId);
                         break;
                     case '2':
-                        this.renameFolder(folderId);
+                        this.duplicateFolder(folderId);
                         break;
                     case '3':
-                        if (confirm(`Delete "${folder.name}" and all its contents?`)) {
-                            this.deleteFolder(folderId);
-                        }
+                        this.renameFolder(folderId);
                         break;
                     case '4':
-                        if (folder.id !== 'root') {
-                            folder.parentId = null;
-                            this.saveData();
-                            this.render();
+                        if (confirm(`Move "${folder.name}" to trash?`)) {
+                            this.deleteFolder(folderId);
                         }
                         break;
                 }
             }
             
-            createSubfolder(parentId) {
-                const name = prompt('Subfolder name:');
-                if (!name?.trim()) return;
+            toggleFolderFavorite(folderId) {
+                if (!this.data.settings.favoriteFolders) {
+                    this.data.settings.favoriteFolders = [];
+                }
                 
-                const folder = {
+                const index = this.data.settings.favoriteFolders.indexOf(folderId);
+                if (index > -1) {
+                    this.data.settings.favoriteFolders.splice(index, 1);
+                } else {
+                    this.data.settings.favoriteFolders.push(folderId);
+                }
+                
+                this.saveData();
+                this.render();
+            }
+            
+            duplicateFolder(folderId) {
+                const folder = this.data.folders.find(f => f.id === folderId);
+                if (!folder) return;
+                
+                const newFolder = {
                     id: 'folder_' + Date.now(),
-                    name: name.trim(),
-                    parentId: parentId,
+                    name: folder.name + ' (Copy)',
+                    parentId: folder.parentId,
                     createdAt: Date.now()
                 };
                 
-                this.data.folders.push(folder);
+                this.data.folders.push(newFolder);
+                
+                // Duplicate notes in this folder
+                const notesToDuplicate = this.data.notes.filter(n => n.folderId === folderId);
+                notesToDuplicate.forEach(note => {
+                    this.data.notes.push({
+                        id: 'note_' + Date.now() + Math.random(),
+                        title: note.title,
+                        content: note.content,
+                        folderId: newFolder.id,
+                        tags: [...note.tags],
+                        createdAt: Date.now(),
+                        updatedAt: Date.now(),
+                        versions: []
+                    });
+                });
+                
+                // Recursively duplicate subfolders
+                const duplicateChildren = (oldParentId, newParentId) => {
+                    const children = this.data.folders.filter(f => f.parentId === oldParentId);
+                    children.forEach(child => {
+                        const childCopy = {
+                            id: 'folder_' + Date.now() + Math.random(),
+                            name: child.name,
+                            parentId: newParentId,
+                            createdAt: Date.now()
+                        };
+                        this.data.folders.push(childCopy);
+                        
+                        const childNotes = this.data.notes.filter(n => n.folderId === child.id);
+                        childNotes.forEach(note => {
+                            this.data.notes.push({
+                                id: 'note_' + Date.now() + Math.random(),
+                                title: note.title,
+                                content: note.content,
+                                folderId: childCopy.id,
+                                tags: [...note.tags],
+                                createdAt: Date.now(),
+                                updatedAt: Date.now(),
+                                versions: []
+                            });
+                        });
+                        
+                        duplicateChildren(child.id, childCopy.id);
+                    });
+                };
+                duplicateChildren(folderId, newFolder.id);
+                
                 this.saveData();
                 this.render();
             }
@@ -1977,11 +2038,20 @@
                 // Delete all notes in this folder
                 this.data.notes = this.data.notes.filter(n => n.folderId !== folderId);
                 
+                // Remove from favorites if present
+                if (this.data.settings.favoriteFolders) {
+                    this.data.settings.favoriteFolders = this.data.settings.favoriteFolders.filter(id => id !== folderId);
+                }
+                
                 // Recursively delete subfolders
                 const deleteSubfolders = (parentId) => {
                     const children = this.data.folders.filter(f => f.parentId === parentId);
                     children.forEach(child => {
                         this.data.notes = this.data.notes.filter(n => n.folderId !== child.id);
+                        // Remove child from favorites too
+                        if (this.data.settings.favoriteFolders) {
+                            this.data.settings.favoriteFolders = this.data.settings.favoriteFolders.filter(id => id !== child.id);
+                        }
                         deleteSubfolders(child.id);
                     });
                     this.data.folders = this.data.folders.filter(f => f.parentId !== parentId);
