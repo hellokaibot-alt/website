@@ -2562,7 +2562,6 @@
                     </div>
                     <div class="toolbar-group" style="margin-left: auto;">
                         <button class="toolbar-btn" id="aiSuggestBtn" title="Suggest Edits"><i class="ph ph-sparkle"></i></button>
-                        <button class="toolbar-btn" id="aiPanelBtn" title="AI Settings" style="color: var(--accent);"><i class="ph ph-robot"></i></button>
                         <button class="toolbar-btn" id="moreBtn" title="More"><i class="ph ph-dots-three"></i></button>
                     </div>
                 </div>
@@ -2767,6 +2766,15 @@
                         <option value="dark">Dark</option>
                         <option value="auto">Auto (System)</option>
                     </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">AI Settings</label>
+                    <button class="btn btn-secondary" id="aiSettingsBtn" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                        <i class="ph ph-robot"></i> Configure AI
+                    </button>
+                    <small style="color: var(--text-tertiary); font-size: 11px; display: block; margin-top: 8px;">
+                        Set up WebLLM, Ollama, or Cloud AI providers
+                    </small>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Data Management</label>
@@ -5668,7 +5676,13 @@
                 // Import Wizard
                 this.setupImportWizardListeners();
 
-                // AI Panel
+                // AI Panel - opened from Settings
+                document.getElementById('aiSettingsBtn')?.addEventListener('click', () => {
+                    document.getElementById('settingsModal').classList.remove('active');
+                    document.getElementById('aiPanelModal').classList.add('active');
+                });
+
+                // AI Panel setup (for the panel itself, not the button)
                 this.setupAiPanelListeners();
 
                 // Handle internal link clicks
@@ -6121,14 +6135,6 @@
             // ==================== AI PANEL ====================
 
             setupAiPanelListeners() {
-                // AI Panel button in toolbar
-                const aiBtn = document.getElementById('aiPanelBtn');
-                if (aiBtn) {
-                    aiBtn.addEventListener('click', () => {
-                        document.getElementById('aiPanelModal').classList.add('active');
-                    });
-                }
-
                 // Close panel
                 document.getElementById('closeAiPanel')?.addEventListener('click', () => {
                     document.getElementById('aiPanelModal').classList.remove('active');
