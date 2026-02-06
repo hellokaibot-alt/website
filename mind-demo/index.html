@@ -1366,13 +1366,14 @@
         .selection-toolbar {
             position: absolute;
             display: none;
-            background: var(--bg-primary);
+            background: var(--bg-secondary);
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            padding: 6px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            padding: 6px 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
             z-index: 1000;
-            gap: 4px;
+            gap: 2px;
+            align-items: center;
         }
 
         .selection-toolbar.visible {
@@ -1384,13 +1385,15 @@
             border: none;
             background: transparent;
             color: var(--text-secondary);
-            font-size: 13px;
+            font-size: 14px;
             cursor: pointer;
             border-radius: var(--radius-sm);
             display: flex;
             align-items: center;
-            gap: 4px;
+            justify-content: center;
             transition: all var(--transition);
+            min-width: 32px;
+            height: 32px;
         }
 
         .selection-toolbar-btn:hover {
@@ -1400,6 +1403,9 @@
 
         .selection-toolbar-btn.ai {
             color: var(--accent);
+            font-weight: 500;
+            padding: 6px 12px;
+            gap: 6px;
         }
 
         .selection-toolbar-btn.ai:hover {
@@ -2780,6 +2786,26 @@
                     </button>
                     <button class="selection-toolbar-btn" data-command="underline" title="Underline">
                         <i class="ph ph-text-underline"></i>
+                    </button>
+                    <button class="selection-toolbar-btn" data-command="strikeThrough" title="Strikethrough">
+                        <i class="ph ph-text-strikethrough"></i>
+                    </button>
+                    <span class="selection-toolbar-divider"></span>
+                    <button class="selection-toolbar-btn" data-command="formatBlock" data-value="H1" title="Heading 1">
+                        <i class="ph ph-text-h-one"></i>
+                    </button>
+                    <button class="selection-toolbar-btn" data-command="formatBlock" data-value="H2" title="Heading 2">
+                        <i class="ph ph-text-h-two"></i>
+                    </button>
+                    <button class="selection-toolbar-btn" data-command="formatBlock" data-value="H3" title="Heading 3">
+                        <i class="ph ph-text-h-three"></i>
+                    </button>
+                    <span class="selection-toolbar-divider"></span>
+                    <button class="selection-toolbar-btn" data-command="insertUnorderedList" title="Bullet List">
+                        <i class="ph ph-list-bullets"></i>
+                    </button>
+                    <button class="selection-toolbar-btn" data-command="insertOrderedList" title="Numbered List">
+                        <i class="ph ph-list-numbers"></i>
                     </button>
                     <span class="selection-toolbar-divider"></span>
                     <button class="selection-toolbar-btn ai" id="askAiSelectionBtn" title="Ask AI">
@@ -6477,6 +6503,7 @@
             setupSelectionToolbar() {
                 const toolbar = document.getElementById('selectionToolbar');
                 const editor = document.getElementById('wysiwygEditor');
+                const editorWrapper = document.getElementById('editorContentWrapper');
                 let currentSelection = null;
                 let currentRange = null;
 
@@ -6490,19 +6517,35 @@
                             currentSelection = text;
                             currentRange = selection.getRangeAt(0).cloneRange();
 
-                            // Position toolbar above selection
+                            // Position toolbar right next to selection
                             const rect = currentRange.getBoundingClientRect();
+                            const editorRect = editor.getBoundingClientRect();
+                            const wrapperRect = editorWrapper.getBoundingClientRect();
+
+                            // Calculate position relative to the editor wrapper
+                            let left = rect.left - wrapperRect.left + (rect.width / 2);
+                            let top = rect.top - wrapperRect.top - 50; // Position above selection
+
+                            // Get toolbar dimensions after making it visible briefly
+                            toolbar.style.visibility = 'hidden';
+                            toolbar.style.display = 'flex';
                             const toolbarRect = toolbar.getBoundingClientRect();
+                            toolbar.style.display = '';
+                            toolbar.style.visibility = '';
 
-                            let left = rect.left + (rect.width / 2) - (toolbarRect.width / 2);
-                            let top = rect.top - toolbarRect.height - 10;
+                            // Center horizontally on the selection
+                            left = left - (toolbarRect.width / 2);
 
-                            // Keep within viewport
-                            left = Math.max(10, Math.min(left, window.innerWidth - toolbarRect.width - 10));
-                            top = Math.max(10, top);
+                            // Ensure it stays within editor bounds
+                            left = Math.max(10, Math.min(left, wrapperRect.width - toolbarRect.width - 10));
+
+                            // If too close to top, show below instead
+                            if (top < 10) {
+                                top = rect.bottom - wrapperRect.top + 10;
+                            }
 
                             toolbar.style.left = left + 'px';
-                            toolbar.style.top = top + window.scrollY + 'px';
+                            toolbar.style.top = top + 'px';
                             toolbar.classList.add('visible');
                         } else {
                             toolbar.classList.remove('visible');
@@ -6521,8 +6564,10 @@
                 toolbar.querySelectorAll('[data-command]').forEach(btn => {
                     btn.addEventListener('click', (e) => {
                         e.preventDefault();
+                        e.stopPropagation();
                         const command = btn.dataset.command;
-                        document.execCommand(command, false, null);
+                        const value = btn.dataset.value || null;
+                        document.execCommand(command, false, value);
                         toolbar.classList.remove('visible');
                     });
                 });
@@ -6530,6 +6575,7 @@
                 // Ask AI button
                 document.getElementById('askAiSelectionBtn').addEventListener('click', (e) => {
                     e.preventDefault();
+                    e.stopPropagation();
                     toolbar.classList.remove('visible');
                     this.openAiSelectionModal(currentSelection, currentRange);
                 });
