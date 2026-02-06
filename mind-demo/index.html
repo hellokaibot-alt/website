@@ -2319,6 +2319,206 @@
                 </div>
             </div>
 
+            <!-- Import Wizard Modal -->
+            <div class="modal-overlay" id="importWizardModal">
+                <div class="modal" style="max-width: 600px;">
+                    <div class="modal-header">
+                        <div class="modal-title"><i class="ph ph-upload-simple"></i> Import from Notion/Obsidian</div>
+                        <button class="modal-close" id="closeImportWizard">&times;</button>
+                    </div>
+                    <div class="modal-body" id="importWizardBody">
+                        <!-- Step 1: Choose Source -->
+                        <div id="importStep1">
+                            <div class="form-group">
+                                <label class="form-label">Select your current tool</label>
+                                <div style="display: flex; gap: 16px; margin-top: 12px;">
+                                    <div class="import-source-option" data-source="notion" style="flex: 1; padding: 24px; border: 2px solid var(--border); border-radius: var(--radius); cursor: pointer; text-align: center; transition: all 0.2s;">
+                                        <div style="font-size: 32px; margin-bottom: 8px;">📄</div>
+                                        <div style="font-weight: 600;">Notion</div>
+                                        <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">Export as Markdown</div>
+                                    </div>
+                                    <div class="import-source-option" data-source="obsidian" style="flex: 1; padding: 24px; border: 2px solid var(--border); border-radius: var(--radius); cursor: pointer; text-align: center; transition: all 0.2s;">
+                                        <div style="font-size: 32px; margin-bottom: 8px;">📝</div>
+                                        <div style="font-weight: 600;">Obsidian</div>
+                                        <div style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">Vault ZIP export</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 2: Instructions -->
+                        <div id="importStep2" style="display: none;">
+                            <div class="form-group">
+                                <label class="form-label">Export Instructions</label>
+                                <div id="exportInstructions" style="padding: 16px; background: var(--bg-tertiary); border-radius: var(--radius); font-size: 13px; line-height: 1.6;">
+                                </div>
+                            </div>
+                            <div class="form-group" style="text-align: center; margin-top: 24px;">
+                                <button class="btn btn-primary" id="goToImportStep3">I've Exported My Data</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 3: Upload -->
+                        <div id="importStep3" style="display: none;">
+                            <div class="form-group">
+                                <label class="form-label">Upload your export file</label>
+                                <div id="importDropZone" style="border: 2px dashed var(--border); border-radius: var(--radius); padding: 48px; text-align: center; cursor: pointer;">
+                                    <i class="ph ph-cloud-arrow-up" style="font-size: 48px; color: var(--accent);"></i>
+                                    <p style="margin-top: 16px; color: var(--text-secondary);">Drop ZIP or Markdown files here</p>
+                                    <p style="font-size: 12px; color: var(--text-tertiary);">or click to browse</p>
+                                    <input type="file" id="importFileInput" accept=".zip,.md,.markdown" style="display: none;">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" style="display: flex; align-items: center; gap: 8px;">
+                                    <input type="checkbox" id="importFolders" checked>
+                                    Import folder structure
+                                </label>
+                                <label class="form-label" style="display: flex; align-items: center; gap: 8px;">
+                                    <input type="checkbox" id="importTags" checked>
+                                    Extract tags from YAML frontmatter
+                                </label>
+                                <label class="form-label" style="display: flex; align-items: center; gap: 8px;">
+                                    <input type="checkbox" id="convertLinks" checked>
+                                    Convert wiki-links to regular links
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 4: Progress -->
+                        <div id="importStep4" style="display: none;">
+                            <div class="form-group">
+                                <label class="form-label">Importing...</label>
+                                <div style="padding: 24px; text-align: center;">
+                                    <div id="importProgressText" style="margin-bottom: 16px;">Reading files...</div>
+                                    <div style="width: 100%; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden;">
+                                        <div id="importProgressBar" style="width: 0%; height: 100%; background: var(--accent); transition: width 0.3s;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer" id="importWizardFooter">
+                        <button class="btn btn-secondary" id="backImportStep" style="display: none;">Back</button>
+                        <button class="btn btn-secondary" id="cancelImportWizard">Cancel</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Panel Modal -->
+            <div class="modal-overlay" id="aiPanelModal">
+                <div class="modal" style="max-width: 500px;">
+                    <div class="modal-header">
+                        <div class="modal-title"><i class="ph ph-sparkle"></i> Mind AI</div>
+                        <button class="modal-close" id="closeAiPanel">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div style="padding: 12px; background: #fef3c7; border: 1px solid #fbbf24; border-radius: var(--radius); margin-bottom: 20px; font-size: 13px;">
+                            <strong>⚡ AI features are simulated in demo mode.</strong> For real AI, connect a provider below.
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">AI Provider</label>
+                            <div style="display: flex; flex-direction: column; gap: 12px;">
+                                <label class="ai-provider-option" style="padding: 16px; border: 2px solid var(--accent); border-radius: var(--radius); cursor: pointer; display: flex; align-items: flex-start; gap: 12px;">
+                                    <input type="radio" name="aiProvider" value="webllm" checked style="margin-top: 2px;">
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: 600; margin-bottom: 4px;">🚀 WebLLM (Recommended)</div>
+                                        <div style="font-size: 13px; color: var(--text-secondary);">Runs in browser. No installation. One-time 1.9GB download.</div>
+                                    </div>
+                                </label>
+                                <label class="ai-provider-option" style="padding: 16px; border: 2px solid var(--border); border-radius: var(--radius); cursor: pointer; display: flex; align-items: flex-start; gap: 12px;">
+                                    <input type="radio" name="aiProvider" value="ollama" style="margin-top: 2px;">
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: 600; margin-bottom: 4px;">⚡ Ollama Desktop</div>
+                                        <div style="font-size: 13px; color: var(--text-secondary);">Better performance. Requires desktop app.</div>
+                                    </div>
+                                </label>
+                                <label class="ai-provider-option" style="padding: 16px; border: 2px solid var(--border); border-radius: var(--radius); cursor: pointer; display: flex; align-items: flex-start; gap: 12px;">
+                                    <input type="radio" name="aiProvider" value="cloud" style="margin-top: 2px;">
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: 600; margin-bottom: 4px;">☁️ Cloud API</div>
+                                        <div style="font-size: 13px; color: var(--text-secondary);">OpenAI/Anthropic. Requires API key.</div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div id="webllmSection">
+                            <div class="form-group">
+                                <label class="form-label">Model Size</label>
+                                <select class="form-select" id="webllmModel">
+                                    <option value="tiny">Tiny (1B) - Fast, basic quality</option>
+                                    <option value="small" selected>Small (3B) - Balanced (1.9GB)</option>
+                                    <option value="medium">Medium (14B) - Better quality</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-primary" id="downloadWebllmModel" style="width: 100%;">
+                                <i class="ph ph-download"></i> Download Model
+                            </button>
+                        </div>
+                        
+                        <div id="ollamaSection" style="display: none;">
+                            <div class="form-group">
+                                <label class="form-label">Ollama Status</label>
+                                <div id="ollamaStatus" style="padding: 12px; background: var(--bg-tertiary); border-radius: var(--radius); font-size: 13px;">
+                                    Not connected. Install Ollama desktop app.
+                                </div>
+                            </div>
+                            <button class="btn btn-secondary" id="testOllamaConnection" style="width: 100%;">
+                                <i class="ph ph-plugs"></i> Test Connection
+                            </button>
+                        </div>
+                        
+                        <div id="cloudSection" style="display: none;">
+                            <div class="form-group">
+                                <label class="form-label">API Key</label>
+                                <input type="password" class="form-input" id="cloudApiKey" placeholder="sk-...">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Provider</label>
+                                <select class="form-select" id="cloudProvider">
+                                    <option value="openai">OpenAI</option>
+                                    <option value="anthropic">Anthropic</option>
+                                    <option value="openrouter">OpenRouter</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group" style="margin-top: 24px;">
+                            <label class="form-label">AI Features</label>
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <div class="ai-feature-item" style="display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--bg-tertiary); border-radius: var(--radius);">
+                                    <i class="ph ph-text-t" style="color: var(--accent);"></i>
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: 500;">Summarize Note</div>
+                                        <div style="font-size: 12px; color: var(--text-secondary);">Condense long content into key points</div>
+                                    </div>
+                                </div>
+                                <div class="ai-feature-item" style="display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--bg-tertiary); border-radius: var(--radius);">
+                                    <i class="ph ph-tag" style="color: var(--accent);"></i>
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: 500;">Suggest Tags</div>
+                                        <div style="font-size: 12px; color: var(--text-secondary);">Auto-generate relevant tags</div>
+                                    </div>
+                                </div>
+                                <div class="ai-feature-item" style="display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--bg-tertiary); border-radius: var(--radius);">
+                                    <i class="ph ph-pencil-simple" style="color: var(--accent);"></i>
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: 500;">Continue Writing</div>
+                                        <div style="font-size: 12px; color: var(--text-secondary);">Complete your thoughts</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" id="closeAiPanelBtn">Close</button>
+                        <button class="btn btn-primary" id="saveAiSettings">Save Settings</button>
+                    </div>
+                </div>
+            </div>
+
             <div class="editor-container" id="editorContainer">
                 <div class="empty-state" id="emptyState">
                     <div class="empty-state-icon"><i class="ph ph-brain ph-xl"></i></div>
@@ -2359,6 +2559,7 @@
                     </div>
                     <div class="toolbar-group" style="margin-left: auto;">
                         <button class="toolbar-btn" id="aiSuggestBtn" title="Suggest Edits"><i class="ph ph-sparkle"></i></button>
+                        <button class="toolbar-btn" id="aiPanelBtn" title="AI Settings" style="color: var(--accent);"><i class="ph ph-robot"></i></button>
                         <button class="toolbar-btn" id="moreBtn" title="More"><i class="ph ph-dots-three"></i></button>
                     </div>
                 </div>
@@ -5461,6 +5662,12 @@
                 document.getElementById('cancelVersionRestore').addEventListener('click', () => this.closeVersionHistory());
                 document.getElementById('confirmVersionRestore').addEventListener('click', () => this.restoreVersion());
 
+                // Import Wizard
+                this.setupImportWizardListeners();
+
+                // AI Panel
+                this.setupAiPanelListeners();
+
                 // Handle internal link clicks
                 document.getElementById('wysiwygEditor').addEventListener('click', (e) => {
                     if (e.target.tagName === 'A' && e.target.classList.contains('internal-link')) {
@@ -5726,6 +5933,244 @@
             closeVersionHistory() {
                 document.getElementById('versionHistoryPanel').classList.remove('open');
                 this.selectedVersionIndex = undefined;
+            }
+
+            // ==================== IMPORT WIZARD ====================
+
+            setupImportWizardListeners() {
+                // Open wizard
+                const importBtn = document.getElementById('importBtn');
+                if (importBtn) {
+                    importBtn.addEventListener('click', () => {
+                        document.getElementById('importWizardModal').classList.add('active');
+                        this.showImportStep(1);
+                    });
+                }
+
+                // Close wizard
+                document.getElementById('closeImportWizard')?.addEventListener('click', () => {
+                    document.getElementById('importWizardModal').classList.remove('active');
+                });
+
+                document.getElementById('cancelImportWizard')?.addEventListener('click', () => {
+                    document.getElementById('importWizardModal').classList.remove('active');
+                });
+
+                // Step 1: Source selection
+                document.querySelectorAll('.import-source-option').forEach(option => {
+                    option.addEventListener('click', () => {
+                        this.importSource = option.dataset.source;
+                        this.showImportStep(2);
+                    });
+                });
+
+                // Step 2: Continue to upload
+                document.getElementById('goToImportStep3')?.addEventListener('click', () => {
+                    this.showImportStep(3);
+                });
+
+                document.getElementById('backImportStep')?.addEventListener('click', () => {
+                    this.showImportStep(1);
+                });
+
+                // Step 3: File upload
+                const dropZone = document.getElementById('importDropZone');
+                const fileInput = document.getElementById('importFileInput');
+
+                if (dropZone && fileInput) {
+                    dropZone.addEventListener('click', () => fileInput.click());
+
+                    dropZone.addEventListener('dragover', (e) => {
+                        e.preventDefault();
+                        dropZone.style.borderColor = 'var(--accent)';
+                    });
+
+                    dropZone.addEventListener('dragleave', () => {
+                        dropZone.style.borderColor = 'var(--border)';
+                    });
+
+                    dropZone.addEventListener('drop', (e) => {
+                        e.preventDefault();
+                        dropZone.style.borderColor = 'var(--border)';
+                        if (e.dataTransfer.files.length) {
+                            this.handleImportFile(e.dataTransfer.files[0]);
+                        }
+                    });
+
+                    fileInput.addEventListener('change', (e) => {
+                        if (e.target.files.length) {
+                            this.handleImportFile(e.target.files[0]);
+                        }
+                    });
+                }
+            }
+
+            showImportStep(step) {
+                document.getElementById('importStep1').style.display = step === 1 ? 'block' : 'none';
+                document.getElementById('importStep2').style.display = step === 2 ? 'block' : 'none';
+                document.getElementById('importStep3').style.display = step === 3 ? 'block' : 'none';
+                document.getElementById('importStep4').style.display = step === 4 ? 'block' : 'none';
+
+                document.getElementById('backImportStep').style.display = step > 1 && step < 4 ? 'inline-flex' : 'none';
+
+                if (step === 2 && this.importSource) {
+                    const instructions = document.getElementById('exportInstructions');
+                    if (this.importSource === 'notion') {
+                        instructions.innerHTML = `
+                            <strong>Notion Export Instructions:</strong><br><br>
+                            1. In Notion, go to Settings & Members → Settings<br>
+                            2. Click "Export all workspace content"<br>
+                            3. Choose "Markdown & CSV" format<br>
+                            4. Include subpages: ✅ Yes<br>
+                            5. Download the ZIP file<br><br>
+                            <em>Your folder structure and pages will be preserved.</em>
+                        `;
+                    } else if (this.importSource === 'obsidian') {
+                        instructions.innerHTML = `
+                            <strong>Obsidian Export Instructions:</strong><br><br>
+                            1. Your Obsidian vault is already in Markdown format<br>
+                            2. Simply ZIP your vault folder (usually in Documents/Obsidian/)<br>
+                            3. Or export specific folders from Obsidian's File menu<br><br>
+                            <em>Your folder structure, tags, and wiki-links will be preserved.</em>
+                        `;
+                    }
+                }
+            }
+
+            handleImportFile(file) {
+                this.showImportStep(4);
+                
+                // Simulate import progress
+                const progressBar = document.getElementById('importProgressBar');
+                const progressText = document.getElementById('importProgressText');
+                
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += 10;
+                    progressBar.style.width = progress + '%';
+                    
+                    if (progress < 30) {
+                        progressText.textContent = 'Reading files...';
+                    } else if (progress < 60) {
+                        progressText.textContent = 'Parsing Markdown...';
+                    } else if (progress < 90) {
+                        progressText.textContent = 'Creating folders and notes...';
+                    } else {
+                        progressText.textContent = 'Finishing up...';
+                    }
+                    
+                    if (progress >= 100) {
+                        clearInterval(interval);
+                        this.simulateImportSuccess();
+                    }
+                }, 200);
+            }
+
+            simulateImportSuccess() {
+                // Create sample imported data for demo
+                const folders = [
+                    { id: 'folder_imported_1', name: 'Trading Notes', parentId: null },
+                    { id: 'folder_imported_2', name: 'Psychology', parentId: null },
+                    { id: 'folder_imported_3', name: 'Strategies', parentId: null }
+                ];
+                
+                const notes = [
+                    {
+                        id: 'note_imported_1',
+                        title: 'My Trading Rules',
+                        content: '<h1>My Trading Rules</h1><p>1. Never risk more than 2% per trade</p><p>2. Always use stop losses</p><p>3. Take profits at 3R</p>',
+                        folderId: 'folder_imported_1',
+                        tags: ['rules', 'discipline'],
+                        createdAt: Date.now(),
+                        updatedAt: Date.now()
+                    },
+                    {
+                        id: 'note_imported_2',
+                        title: 'Dealing with FOMO',
+                        content: '<h1>Dealing with FOMO</h1><p>Fear of missing out is a common emotion in trading...</p>',
+                        folderId: 'folder_imported_2',
+                        tags: ['psychology', 'emotions'],
+                        createdAt: Date.now(),
+                        updatedAt: Date.now()
+                    },
+                    {
+                        id: 'note_imported_3',
+                        title: 'US100 Strategy',
+                        content: '<h1>US100 Strategy</h1><p>Best entry times: 9:30-10:30 AM EST</p>',
+                        folderId: 'folder_imported_3',
+                        tags: ['strategy', 'us100'],
+                        createdAt: Date.now(),
+                        updatedAt: Date.now()
+                    }
+                ];
+                
+                folders.forEach(f => this.data.folders.push(f));
+                notes.forEach(n => this.data.notes.push(n));
+                this.saveData();
+                this.render();
+                
+                setTimeout(() => {
+                    document.getElementById('importWizardModal').classList.remove('active');
+                    alert('Import complete! 3 folders and 3 notes imported successfully.');
+                }, 500);
+            }
+
+            // ==================== AI PANEL ====================
+
+            setupAiPanelListeners() {
+                // AI Panel button in toolbar
+                const aiBtn = document.getElementById('aiPanelBtn');
+                if (aiBtn) {
+                    aiBtn.addEventListener('click', () => {
+                        document.getElementById('aiPanelModal').classList.add('active');
+                    });
+                }
+
+                // Close panel
+                document.getElementById('closeAiPanel')?.addEventListener('click', () => {
+                    document.getElementById('aiPanelModal').classList.remove('active');
+                });
+
+                document.getElementById('closeAiPanelBtn')?.addEventListener('click', () => {
+                    document.getElementById('aiPanelModal').classList.remove('active');
+                });
+
+                // Provider selection
+                document.querySelectorAll('input[name="aiProvider"]').forEach(radio => {
+                    radio.addEventListener('change', (e) => {
+                        document.getElementById('webllmSection').style.display = e.target.value === 'webllm' ? 'block' : 'none';
+                        document.getElementById('ollamaSection').style.display = e.target.value === 'ollama' ? 'block' : 'none';
+                        document.getElementById('cloudSection').style.display = e.target.value === 'cloud' ? 'block' : 'none';
+                    });
+                });
+
+                // Download WebLLM model
+                document.getElementById('downloadWebllmModel')?.addEventListener('click', () => {
+                    alert('In demo mode, AI features work with simulated responses. In production, this would download the 1.9GB model to your browser.');
+                });
+
+                // Test Ollama connection
+                document.getElementById('testOllamaConnection')?.addEventListener('click', async () => {
+                    try {
+                        const response = await fetch('http://localhost:11434/api/tags');
+                        if (response.ok) {
+                            document.getElementById('ollamaStatus').textContent = '✅ Connected! Ollama is running.';
+                            document.getElementById('ollamaStatus').style.color = 'var(--success)';
+                        }
+                    } catch (e) {
+                        document.getElementById('ollamaStatus').textContent = '❌ Not connected. Please install and start Ollama.';
+                        document.getElementById('ollamaStatus').style.color = 'var(--danger)';
+                    }
+                });
+
+                // Save settings
+                document.getElementById('saveAiSettings')?.addEventListener('click', () => {
+                    const provider = document.querySelector('input[name="aiProvider"]:checked')?.value || 'webllm';
+                    this.data.settings.aiProvider = provider;
+                    this.saveData();
+                    document.getElementById('aiPanelModal').classList.remove('active');
+                    alert('AI settings saved! AI features are ready to use in demo mode.');
+                });
             }
         }
 
