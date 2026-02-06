@@ -2773,7 +2773,23 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="wysiwyg-editor" id="wysiwygEditor" contenteditable="true"></div>
+                        
+                        <!-- Note Tabs -->
+                        <div class="note-tabs" style="display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 16px;">
+                            <button class="note-tab active" data-tab="note" style="padding: 8px 16px; background: transparent; border: none; border-bottom: 2px solid var(--accent); color: var(--text-primary); font-size: 13px; cursor: pointer;">Note</button>
+                            <button class="note-tab" data-tab="summary" style="padding: 8px 16px; background: transparent; border: none; border-bottom: 2px solid transparent; color: var(--text-secondary); font-size: 13px; cursor: pointer;">Summary</button>
+                            <button class="note-tab" data-tab="tasks" style="padding: 8px 16px; background: transparent; border: none; border-bottom: 2px solid transparent; color: var(--text-secondary); font-size: 13px; cursor: pointer;">Tasks</button>
+                        </div>
+                        <div class="note-tab-content" id="noteTabContent">
+                            <div class="wysiwyg-editor" id="wysiwygEditor" contenteditable="true"></div>
+                        </div>
+                        <div class="note-tab-content" id="summaryTabContent" style="display: none;">
+                            <div id="summaryContent" style="padding: 16px; color: var(--text-secondary);"><p>No summary yet. Start typing in the Note tab...</p></div>
+                        </div>
+                        <div class="note-tab-content" id="tasksTabContent" style="display: none;">
+                            <div id="tasksList" style="padding: 8px 0;"></div>
+                            <button class="btn btn-secondary" id="addFirstTaskBtn" style="margin-top: 12px; font-size: 12px; padding: 6px 12px;"><i class="ph ph-plus"></i> Add First Task</button>
+                        </div>
                     </div>
                     
                     <!-- Selection Toolbar -->
@@ -6574,6 +6590,144 @@
 
                 // Selection Toolbar
                 this.setupSelectionToolbar();
+
+                // Note Tabs
+                document.querySelectorAll('.note-tab').forEach(tab => {
+                    tab.addEventListener('click', () => this.switchNoteTab(tab.dataset.tab));
+                });
+
+                // Add First Task button
+                document.getElementById('addFirstTaskBtn')?.addEventListener('click', () => this.addTask());
+            }
+
+            switchNoteTab(tabName) {
+                // Update tab buttons
+                document.querySelectorAll('.note-tab').forEach(tab => {
+                    if (tab.dataset.tab === tabName) {
+                        tab.classList.add('active');
+                        tab.style.borderBottomColor = 'var(--accent)';
+                        tab.style.color = 'var(--text-primary)';
+                    } else {
+                        tab.classList.remove('active');
+                        tab.style.borderBottomColor = 'transparent';
+                        tab.style.color = 'var(--text-secondary)';
+                    }
+                });
+
+                // Hide all content
+                document.getElementById('noteTabContent').style.display = 'none';
+                document.getElementById('summaryTabContent').style.display = 'none';
+                document.getElementById('tasksTabContent').style.display = 'none';
+
+                // Show selected content
+                if (tabName === 'note') {
+                    document.getElementById('noteTabContent').style.display = 'block';
+                } else if (tabName === 'summary') {
+                    document.getElementById('summaryTabContent').style.display = 'block';
+                } else if (tabName === 'tasks') {
+                    document.getElementById('tasksTabContent').style.display = 'block';
+                    this.renderTasks();
+                }
+            }
+
+            addTask(text = '') {
+                if (!this.currentNote) return;
+                if (!this.currentNote.tasks) this.currentNote.tasks = [];
+                
+                const task = {
+                    id: 'task_' + Date.now(),
+                    text: text || '',
+                    completed: false,
+                    createdAt: Date.now()
+                };
+                
+                this.currentNote.tasks.push(task);
+                this.saveData();
+                this.renderTasks();
+                
+                // Focus the new task input
+                setTimeout(() => {
+                    const input = document.querySelector(`[data-task-id="${task.id}"] .task-title-input`);
+                    if (input) input.focus();
+                }, 0);
+            }
+
+            toggleTask(taskId) {
+                if (!this.currentNote?.tasks) return;
+                const task = this.currentNote.tasks.find(t => t.id === taskId);
+                if (task) {
+                    task.completed = !task.completed;
+                    this.saveData();
+                    this.renderTasks();
+                }
+            }
+
+            updateTaskTitle(taskId, text) {
+                if (!this.currentNote?.tasks) return;
+                const task = this.currentNote.tasks.find(t => t.id === taskId);
+                if (task) {
+                    task.text = text;
+                    this.saveData();
+                }
+            }
+
+            deleteTask(taskId) {
+                if (!this.currentNote?.tasks) return;
+                this.currentNote.tasks = this.currentNote.tasks.filter(t => t.id !== taskId);
+                this.saveData();
+                this.renderTasks();
+            }
+
+            renderTasks() {
+                const container = document.getElementById('tasksList');
+                if (!this.currentNote) {
+                    container.innerHTML = '';
+                    return;
+                }
+
+                const tasks = this.currentNote.tasks || [];
+                
+                if (tasks.length === 0) {
+                    container.innerHTML = '';
+                    return;
+                }
+
+                container.innerHTML = tasks.map(task => `
+                    <div class="task-item" data-task-id="${task.id}" style="display: flex; align-items: flex-start; gap: 12px; padding: 12px; background: var(--bg-tertiary); border-radius: var(--radius); margin-bottom: 8px;">
+                        <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''} 
+                            style="margin-top: 2px; width: 18px; height: 18px; cursor: pointer; accent-color: var(--accent);">
+                        <input type="text" class="task-title-input" value="${this.escapeHtml(task.text)}" 
+                            placeholder="Task..."
+                            style="flex: 1; background: transparent; border: none; color: var(--text-primary); font-size: 14px; outline: none; text-decoration: ${task.completed ? 'line-through' : 'none'}; opacity: ${task.completed ? '0.6' : '1'};">
+                        <button class="task-delete" style="background: none; border: none; color: var(--text-tertiary); cursor: pointer; padding: 4px; opacity: 0; transition: opacity 0.2s;">
+                            <i class="ph ph-trash"></i>
+                        </button>
+                    </div>
+                `).join('');
+
+                // Add event listeners
+                container.querySelectorAll('.task-item').forEach(item => {
+                    const taskId = item.dataset.taskId;
+                    const checkbox = item.querySelector('.task-checkbox');
+                    const titleInput = item.querySelector('.task-title-input');
+                    const deleteBtn = item.querySelector('.task-delete');
+
+                    checkbox.addEventListener('change', () => this.toggleTask(taskId));
+                    titleInput.addEventListener('input', (e) => this.updateTaskTitle(taskId, e.target.value));
+                    deleteBtn.addEventListener('click', () => this.deleteTask(taskId));
+
+                    // Return key creates new task
+                    titleInput.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            this.addTask();
+                        }
+                    });
+
+                    // Show delete button on hover
+                    item.addEventListener('mouseenter', () => deleteBtn.style.opacity = '1');
+                    item.addEventListener('mouseleave', () => deleteBtn.style.opacity = '0');
+                });
             }
 
             setupSelectionToolbar() {
