@@ -2254,7 +2254,7 @@
                 </div>
                 <div class="header-right">
                     <span class="header-title" id="headerTitle">Select a note</span>
-                    <button class="btn btn-icon" id="themeBtn" title="Toggle Theme"><i class="ph ph-moon"></i></button>
+                    <button class="btn btn-icon" id="themeBtn" title="Toggle Theme" style="color: var(--text-secondary);"><i class="ph ph-moon"></i></button>
                 </div>
             </header>
 
@@ -3057,6 +3057,7 @@
                 if (themeBtn) {
                     themeBtn.innerHTML = isDark ? '<i class="ph ph-sun"></i>' : '<i class="ph ph-moon"></i>';
                     themeBtn.title = isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+                    themeBtn.style.color = 'var(--text-secondary)';
                 }
             }
 
@@ -3640,7 +3641,7 @@
                 // Populate fields
                 document.getElementById('noteTitle').value = note.title;
                 document.getElementById('wysiwygEditor').innerHTML = note.content;
-                document.getElementById('headerTitle').textContent = 'Editing';
+                document.getElementById('headerTitle').textContent = '';
 
                 // Update date
                 const date = new Date(note.updatedAt);
