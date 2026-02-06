@@ -2867,8 +2867,7 @@
                 this.data = {
                     folders: [
                         { id: 'root', name: 'All Notes', parentId: null },
-                        { id: 'inbox', name: 'Inbox', parentId: null },
-                        { id: 'archive', name: 'Archive', parentId: null }
+                        { id: 'inbox', name: 'Inbox', parentId: null }
                     ],
                     notes: [],
                     tags: [],
@@ -3644,7 +3643,7 @@
             }
 
             isSystemFolder(id) {
-                return ['root', 'inbox', 'archive'].includes(id);
+                return ['root', 'inbox'].includes(id);
             }
 
             getFolderPath(folderId) {
@@ -5416,8 +5415,7 @@
                     this.data = {
                         folders: [
                             { id: 'root', name: 'All Notes', parentId: null },
-                            { id: 'inbox', name: 'Inbox', parentId: null },
-                            { id: 'archive', name: 'Archive', parentId: null }
+                            { id: 'inbox', name: 'Inbox', parentId: null }
                         ],
                         notes: [],
                         tags: [],
