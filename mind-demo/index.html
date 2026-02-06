@@ -1181,6 +1181,9 @@
                 document.getElementById('importFileInput')?.addEventListener('change', (e) => {
                     if (e.target.files[0]) this.handleImport(e.target.files[0]);
                 });
+                
+                // Settings button
+                document.getElementById('settingsBtn')?.addEventListener('click', () => this.showSettingsMenu());
             }
             
             openNewNoteModal() {
@@ -1916,6 +1919,47 @@
                         }
                         break;
                 }
+            }
+            
+            showSettingsMenu() {
+                const actions = [
+                    'Import from Notion/Obsidian',
+                    'Toggle Theme (Light/Dark)',
+                    'Export All Data',
+                    'Clear All Data'
+                ];
+                
+                const choice = prompt('Settings:\n' + actions.map((a, i) => `${i + 1}. ${a}`).join('\n'));
+                if (!choice) return;
+                
+                switch(choice.trim()) {
+                    case '1':
+                        this.openImportModal();
+                        break;
+                    case '2':
+                        this.toggleTheme();
+                        break;
+                    case '3':
+                        this.exportData();
+                        break;
+                    case '4':
+                        if (confirm('Delete ALL data? This cannot be undone.')) {
+                            localStorage.removeItem('mind_data');
+                            location.reload();
+                        }
+                        break;
+                }
+            }
+            
+            exportData() {
+                const data = JSON.stringify(this.data, null, 2);
+                const blob = new Blob([data], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `mind-backup-${new Date().toISOString().split('T')[0]}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
             }
             
             showVersionHistory() {
