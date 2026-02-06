@@ -6501,7 +6501,6 @@
             setupSelectionToolbar() {
                 const toolbar = document.getElementById('selectionToolbar');
                 const editor = document.getElementById('wysiwygEditor');
-                const editorWrapper = document.getElementById('editorContentWrapper');
                 let currentSelection = null;
                 let currentRange = null;
 
@@ -6515,31 +6514,31 @@
                             currentSelection = text;
                             currentRange = selection.getRangeAt(0).cloneRange();
 
-                            // Position toolbar right next to selection
+                            // Get the start of the selection (first line)
                             const rect = currentRange.getBoundingClientRect();
                             const editorRect = editor.getBoundingClientRect();
-                            const wrapperRect = editorWrapper.getBoundingClientRect();
 
-                            // Calculate position relative to the editor wrapper
-                            let left = rect.left - wrapperRect.left + (rect.width / 2);
-                            let top = rect.top - wrapperRect.top - 50; // Position above selection
+                            // Position toolbar at the start of the line, above the text
+                            // Similar to Notion - inline at the beginning of the selection
+                            let left = rect.left - editorRect.left;
+                            let top = rect.top - editorRect.top - 45; // Just above the line
 
-                            // Get toolbar dimensions after making it visible briefly
+                            // Get toolbar dimensions
                             toolbar.style.visibility = 'hidden';
                             toolbar.style.display = 'flex';
                             const toolbarRect = toolbar.getBoundingClientRect();
                             toolbar.style.display = '';
                             toolbar.style.visibility = '';
 
-                            // Center horizontally on the selection
-                            left = left - (toolbarRect.width / 2);
+                            // Keep within editor bounds horizontally
+                            if (left + toolbarRect.width > editorRect.width - 10) {
+                                left = editorRect.width - toolbarRect.width - 10;
+                            }
+                            left = Math.max(0, left);
 
-                            // Ensure it stays within editor bounds
-                            left = Math.max(10, Math.min(left, wrapperRect.width - toolbarRect.width - 10));
-
-                            // If too close to top, show below instead
-                            if (top < 10) {
-                                top = rect.bottom - wrapperRect.top + 10;
+                            // If too close to top of editor, show below instead
+                            if (top < 5) {
+                                top = rect.bottom - editorRect.top + 10;
                             }
 
                             toolbar.style.left = left + 'px';
