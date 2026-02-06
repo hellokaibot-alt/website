@@ -2662,7 +2662,7 @@
                     </button>
                 </div>
 
-                <div class="editor-toolbar hidden" id="editorToolbar">
+                <div class="editor-toolbar hidden" id="editorToolbar" style="display: none !important;">
                     <div class="toolbar-group">
                         <button class="toolbar-btn" data-command="bold" title="Bold"><i class="ph ph-text-b"></i></button>
                         <button class="toolbar-btn" data-command="italic" title="Italic"><i class="ph ph-text-italic"></i></button>
@@ -2686,10 +2686,6 @@
                     </div>
                     <div class="toolbar-group">
                         <button class="toolbar-btn" data-command="removeFormat" title="Clear Formatting"><i class="ph ph-text-t-slash"></i></button>
-                    </div>
-                    <div class="toolbar-group" style="margin-left: auto;">
-                        <button class="toolbar-btn" id="aiSuggestBtn" title="Suggest Edits"><i class="ph ph-sparkle"></i></button>
-                        <button class="toolbar-btn" id="moreBtn" title="More"><i class="ph ph-dots-three"></i></button>
                     </div>
                 </div>
 
@@ -2790,6 +2786,7 @@
                             <button class="note-tab active" data-tab="note" style="padding: 8px 16px; background: transparent; border: none; border-bottom: 2px solid var(--accent); color: var(--text-primary); font-size: 13px; cursor: pointer;">Note</button>
                             <button class="note-tab" data-tab="summary" style="padding: 8px 16px; background: transparent; border: none; border-bottom: 2px solid transparent; color: var(--text-secondary); font-size: 13px; cursor: pointer;">Summary</button>
                             <button class="note-tab" data-tab="tasks" style="padding: 8px 16px; background: transparent; border: none; border-bottom: 2px solid transparent; color: var(--text-secondary); font-size: 13px; cursor: pointer;">Tasks</button>
+                            <button class="toolbar-btn" id="moreBtn" title="More" style="margin-left: auto; padding: 8px; background: transparent; border: none; color: var(--text-secondary); cursor: pointer;"><i class="ph ph-dots-three"></i></button>
                         </div>
                         <div class="note-tab-content" id="noteTabContent">
                             <!-- Template Selector -->
