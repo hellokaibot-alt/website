@@ -2777,7 +2777,7 @@
                                     <input type="text" class="tag-input" id="tagInput" placeholder="Add tag...">
                                     <div class="tag-autocomplete" id="tagAutocomplete" style="display: none;"></div>
                                 </div>
-                                <button class="btn btn-secondary" id="suggestTagsBtn" title="AI Suggest Tags" style="padding: 4px 8px; font-size: 11px; margin-left: 4px;">
+                                <button class="btn btn-secondary" id="suggestTagsBtn" title="AI Suggest Tags" style="padding: 4px 8px; font-size: 11px; margin-left: 4px; background: transparent; border: 1px solid var(--border); color: var(--text-secondary);">
                                     <i class="ph ph-sparkle"></i> Suggest
                                 </button>
                             </div>
@@ -4497,10 +4497,13 @@ Respond with ONLY a JSON array of tag strings, like: ["tag1", "tag2", "tag3"]`;
                     modal.innerHTML = `
                         <div class="modal" style="max-width: 400px;">
                             <div class="modal-header">
-                                <div class="modal-title"><i class="ph ph-sparkle"></i> AI Suggested Tags</div>
+                                <div class="modal-title"><i class="ph ph-sparkle"></i> Suggested Tags</div>
                                 <button class="modal-close" onclick="document.getElementById('tagSuggestionsModal').classList.remove('active')">&times;</button>
                             </div>
                             <div class="modal-body">
+                                <div style="background: var(--bg-tertiary); padding: 10px 12px; border-radius: var(--radius); margin-bottom: 16px; font-size: 12px; color: var(--text-secondary);">
+                                    <i class="ph ph-info"></i> <strong>Demo mode:</strong> Tags are suggested based on keywords found in your note. Real AI integration coming soon.
+                                </div>
                                 <p style="margin-bottom: 16px; color: var(--text-secondary); font-size: 13px;">Click tags to add them to this note:</p>
                                 <div id="tagSuggestionsList" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
                             </div>
