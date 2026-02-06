@@ -1532,6 +1532,35 @@
             white-space: nowrap;
         }
 
+        .task-checkbox {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--text-tertiary);
+            border-radius: 3px;
+            background: transparent;
+            cursor: pointer;
+            margin-top: 2px;
+            position: relative;
+        }
+
+        .task-checkbox:checked {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .task-checkbox:checked::after {
+            content: '';
+            position: absolute;
+            left: 5px;
+            top: 1px;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
         .tag-autocomplete-item:hover,
         .tag-autocomplete-item.active {
             background: var(--bg-hover);
@@ -7053,7 +7082,7 @@
                 container.innerHTML = tasks.map(task => `
                     <div class="task-item" data-task-id="${task.id}" style="display: flex; align-items: flex-start; gap: 12px; padding: 12px; border-bottom: 1px solid var(--border); margin-bottom: 8px;">
                         <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''} 
-                            style="margin-top: 2px; width: 18px; height: 18px; cursor: pointer; accent-color: var(--accent); filter: ${task.completed ? 'none' : 'grayscale(100%)'};">
+                            class="task-checkbox" ${task.completed ? 'checked' : ''}>
                         <input type="text" class="task-title-input" value="${this.escapeHtml(task.text)}" 
                             placeholder="Task..."
                             style="flex: 1; background: transparent; border: none; color: var(--text-primary); font-size: 14px; outline: none; text-decoration: ${task.completed ? 'line-through' : 'none'}; opacity: ${task.completed ? '0.6' : '1'};">
