@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Mind — Demo Mode</title>
-    <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.0.3/src/all.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* ==================== NOTION-INSPIRED THEME ==================== */
         :root {
@@ -817,10 +817,10 @@
     <!-- Demo Banner -->
     <div class="demo-banner">
         <div class="demo-banner-content">
-            <i class="ph ph-clock"></i>
+            <i class="fa-solid fa-clock"></i>
             <span>Demo Mode — Resets every hour</span>
             <span class="demo-reset-timer" id="demoResetTimer"></span>
-            <a href="/" class="demo-banner-link"><i class="ph ph-arrow-left"></i> Back to Website</a>
+            <a href="/" class="demo-banner-link"><i class="fa-solid fa-arrow-left"></i> Back to Website</a>
         </div>
     </div>
 
@@ -833,7 +833,7 @@
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="logo">
-                    <div class="logo-icon"><i class="ph ph-brain"></i></div>
+                    <div class="logo-icon"><i class="fa-solid fa-brain"></i></div>
                     <span>Mind</span>
                 </div>
             </div>
@@ -848,10 +848,10 @@
 
             <div class="sidebar-actions">
                 <button class="btn btn-primary" id="newNoteBtn">
-                    <i class="ph ph-plus"></i> New Note
+                    <i class="fa-solid fa-plus"></i> New Note
                 </button>
                 <button class="btn btn-icon" id="settingsBtn">
-                    <i class="ph ph-gear"></i>
+                    <i class="fa-solid fa-gear"></i>
                 </button>
             </div>
         </aside>
@@ -861,11 +861,11 @@
             <!-- Tabs Bar -->
             <div class="tabs-bar hidden" id="tabsBar">
                 <div class="sidebar-toggle-tab" id="sidebarToggleTab">
-                    <i class="ph ph-sidebar"></i>
+                    <i class="fa-solid fa-columns"></i>
                 </div>
                 <div class="tabs-container" id="tabsContainer"></div>
                 <div class="new-tab-btn" id="newTabBtn">
-                    <i class="ph ph-plus"></i>
+                    <i class="fa-solid fa-plus"></i>
                 </div>
             </div>
 
@@ -873,7 +873,7 @@
             <header class="main-header">
                 <div class="header-left">
                     <button class="btn btn-icon hide-desktop" id="menuBtn">
-                        <i class="ph ph-list"></i>
+                        <i class="fa-solid fa-list"></i>
                     </button>
                     <div class="breadcrumb" id="breadcrumb">
                         <span>All Notes</span>
@@ -882,13 +882,13 @@
                 <div class="header-right">
                     <span class="header-title" id="headerTitle">Select a note</span>
                     <button class="btn btn-icon" id="themeBtn" title="Toggle theme">
-                        <i class="ph ph-moon"></i>
+                        <i class="fa-solid fa-moon"></i>
                     </button>
                     <button class="btn btn-icon hide-mobile" id="focusBtn" title="Focus mode">
-                        <i class="ph ph-corners-out"></i>
+                        <i class="fa-solid fa-expand"></i>
                     </button>
                     <button class="btn btn-icon" id="moreBtn" title="More options">
-                        <i class="ph ph-dots-three"></i>
+                        <i class="fa-solid fa-ellipsis-vertical"></i>
                     </button>
                 </div>
             </header>
@@ -897,23 +897,23 @@
             <div class="editor-container" id="editorContainer">
                 <!-- Empty State -->
                 <div class="empty-state" id="emptyState">
-                    <div class="empty-state-icon"><i class="ph ph-brain"></i></div>
+                    <div class="empty-state-icon"><i class="fa-solid fa-brain"></i></div>
                     <div class="empty-state-title">Welcome to Mind</div>
                     <div class="empty-state-desc">
                         Your private, offline knowledge base.<br>
                         Create your first note to get started.
                     </div>
                     <button class="btn btn-primary" id="emptyNewNoteBtn">
-                        <i class="ph ph-plus"></i> Create First Note
+                        <i class="fa-solid fa-plus"></i> Create First Note
                     </button>
                 </div>
 
                 <!-- Editor Toolbar -->
                 <div class="editor-toolbar hidden" id="editorToolbar">
                     <div class="toolbar-group">
-                        <button class="toolbar-btn" data-command="bold" title="Bold"><i class="ph ph-text-b"></i></button>
-                        <button class="toolbar-btn" data-command="italic" title="Italic"><i class="ph ph-text-italic"></i></button>
-                        <button class="toolbar-btn" data-command="underline" title="Underline"><i class="ph ph-text-underline"></i></button>
+                        <button class="toolbar-btn" data-command="bold" title="Bold"><i class="fa-solid fa-bold"></i></button>
+                        <button class="toolbar-btn" data-command="italic" title="Italic"><i class="fa-solid fa-italic"></i></button>
+                        <button class="toolbar-btn" data-command="underline" title="Underline"><i class="fa-solid fa-underline"></i></button>
                     </div>
                     <div class="toolbar-group">
                         <button class="toolbar-btn" data-command="formatBlock" data-value="H1" title="Heading 1">H1</button>
@@ -921,16 +921,16 @@
                         <button class="toolbar-btn" data-command="formatBlock" data-value="H3" title="Heading 3">H3</button>
                     </div>
                     <div class="toolbar-group">
-                        <button class="toolbar-btn" data-command="insertUnorderedList" title="Bullet list"><i class="ph ph-list-bullets"></i></button>
-                        <button class="toolbar-btn" data-command="insertOrderedList" title="Numbered list"><i class="ph ph-list-numbers"></i></button>
+                        <button class="toolbar-btn" data-command="insertUnorderedList" title="Bullet list"><i class="fa-solid fa-list-ul"></i></button>
+                        <button class="toolbar-btn" data-command="insertOrderedList" title="Numbered list"><i class="fa-solid fa-list-ol"></i></button>
                     </div>
                     <div class="toolbar-group">
                         <button class="toolbar-btn ai-btn" id="aiAssistBtn">
-                            <i class="ph ph-sparkle"></i> AI
+                            <i class="fa-solid fa-wand-magic-sparkles"></i> AI
                         </button>
                     </div>
                     <div class="toolbar-group">
-                        <button class="toolbar-btn" id="moreOptionsBtn" title="More"><i class="ph ph-dots-three"></i></button>
+                        <button class="toolbar-btn" id="moreOptionsBtn" title="More"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                     </div>
                 </div>
 
@@ -940,11 +940,11 @@
                         <input type="text" class="note-title-input" id="noteTitle" placeholder="Note Title">
                         <div class="note-meta">
                             <div class="note-meta-item">
-                                <i class="ph ph-calendar-blank"></i>
+                                <i class="fa-solid fa-calendar"></i>
                                 <span id="noteDate">Created today</span>
                             </div>
                             <div class="note-meta-item">
-                                <i class="ph ph-tag"></i>
+                                <i class="fa-solid fa-tag"></i>
                                 <div class="note-tags-input" id="noteTagsInput">
                                     <input type="text" class="tag-input" id="tagInput" placeholder="Add tag...">
                                 </div>
@@ -961,19 +961,19 @@
     <nav class="mobile-nav">
         <div class="mobile-nav-items">
             <div class="mobile-nav-item active" data-view="notes">
-                <div class="mobile-nav-icon"><i class="ph ph-notebook"></i></div>
+                <div class="mobile-nav-icon"><i class="fa-solid fa-book"></i></div>
                 <span>Notes</span>
             </div>
             <div class="mobile-nav-item" data-view="folders">
-                <div class="mobile-nav-icon"><i class="ph ph-folder"></i></div>
+                <div class="mobile-nav-icon"><i class="fa-solid fa-folder"></i></div>
                 <span>Folders</span>
             </div>
             <div class="mobile-nav-item" data-view="tags">
-                <div class="mobile-nav-icon"><i class="ph ph-tag"></i></div>
+                <div class="mobile-nav-icon"><i class="fa-solid fa-tag"></i></div>
                 <span>Tags</span>
             </div>
             <div class="mobile-nav-item" data-view="search">
-                <div class="mobile-nav-icon"><i class="ph ph-magnifying-glass"></i></div>
+                <div class="mobile-nav-icon"><i class="fa-solid fa-magnifying-glass"></i></div>
                 <span>Search</span>
             </div>
         </div>
@@ -1007,7 +1007,7 @@
     <div class="modal-overlay" id="aiModal">
         <div class="modal" style="max-width: 500px;">
             <div class="modal-header">
-                <div class="modal-title"><i class="ph ph-sparkle"></i> Mind AI</div>
+                <div class="modal-title"><i class="fa-solid fa-wand-magic-sparkles"></i> Mind AI</div>
                 <button class="modal-close" id="closeAiModal">&times;</button>
             </div>
             <div class="modal-body">
@@ -1034,13 +1034,13 @@
                     <label class="form-label">AI Features</label>
                     <div style="display: flex; flex-direction: column; gap: 8px;">
                         <button class="btn" id="aiSummarizeBtn" style="justify-content: flex-start; text-align: left;">
-                            <i class="ph ph-text-t"></i> Summarize Note
+                            <i class="fa-solid fa-font"></i> Summarize Note
                         </button>
                         <button class="btn" id="aiSuggestTagsBtn" style="justify-content: flex-start; text-align: left;">
-                            <i class="ph ph-tag"></i> Suggest Tags
+                            <i class="fa-solid fa-tag"></i> Suggest Tags
                         </button>
                         <button class="btn" id="aiContinueBtn" style="justify-content: flex-start; text-align: left;">
-                            <i class="ph ph-pencil-simple"></i> Continue Writing
+                            <i class="fa-solid fa-pen"></i> Continue Writing
                         </button>
                     </div>
                 </div>
@@ -1055,7 +1055,7 @@
     <div class="modal-overlay" id="importModal">
         <div class="modal" style="max-width: 500px;">
             <div class="modal-header">
-                <div class="modal-title"><i class="ph ph-upload-simple"></i> Import from Notion/Obsidian</div>
+                <div class="modal-title"><i class="fa-solid fa-upload"></i> Import from Notion/Obsidian</div>
                 <button class="modal-close" id="closeImportModal">&times;</button>
             </div>
             <div class="modal-body">
@@ -1069,7 +1069,7 @@
                 <div class="form-group">
                     <label class="form-label">Upload ZIP File</label>
                     <div id="dropZone" style="border: 2px dashed var(--border); border-radius: 8px; padding: 32px; text-align: center; cursor: pointer;">
-                        <i class="ph ph-cloud-arrow-up" style="font-size: 32px; color: var(--accent); margin-bottom: 8px;"></i>
+                        <i class="fa-solid fa-cloud-upload" style="font-size: 32px; color: var(--accent); margin-bottom: 8px;"></i>
                         <p style="color: var(--text-secondary);">Drop ZIP file here or click to browse</p>
                         <input type="file" id="importFileInput" accept=".zip" style="display: none;">
                     </div>
@@ -1325,7 +1325,7 @@
                     return `
                         <div class="tab ${isActive ? 'active' : ''}" data-note-id="${noteId}" draggable="true">
                             <span>${this.escapeHtml(note.title || 'Untitled')}</span>
-                            <i class="ph ph-x tab-close" data-note-id="${noteId}"></i>
+                            <i class="fa-solid fa-x tab-close" data-note-id="${noteId}"></i>
                         </div>
                     `;
                 }).join('');
@@ -1389,7 +1389,7 @@
                     this.currentNote.tags.forEach(tag => {
                         const tagEl = document.createElement('span');
                         tagEl.className = 'tag';
-                        tagEl.innerHTML = `${this.escapeHtml(tag)} <i class="ph ph-x" data-tag="${tag}"></i>`;
+                        tagEl.innerHTML = `${this.escapeHtml(tag)} <i class="fa-solid fa-xmark" data-tag="${tag}"></i>`;
                         container.insertBefore(tagEl, input);
                         
                         tagEl.querySelector('i').addEventListener('click', () => this.removeTag(tag));
@@ -1437,7 +1437,7 @@
                                 <ul class="bookmark-list" style="list-style: none; padding: 4px 0;">
                                     ${bookmarkedNotes.map(note => `
                                         <li class="bookmark-item" data-note-id="${note.id}" style="padding: 6px 16px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 14px;">
-                                            <i class="ph ph-bookmark" style="color: var(--accent);"></i>
+                                            <i class="fa-solid fa-bookmark" style="color: var(--accent);"></i>
                                             <span style="flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${this.escapeHtml(note.title || 'Untitled')}</span>
                                         </li>
                                     `).join('')}
@@ -1460,7 +1460,7 @@
                                 <ul class="bookmark-list" style="list-style: none; padding: 4px 0;">
                                     ${clippedNotes.map(note => `
                                         <li class="bookmark-item" data-note-id="${note.id}" style="padding: 6px 16px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 14px;">
-                                            <i class="ph ph-globe" style="color: var(--accent);"></i>
+                                            <i class="fa-solid fa-globe" style="color: var(--accent);"></i>
                                             <span style="flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${this.escapeHtml(note.title || 'Clipped Page')}</span>
                                         </li>
                                     `).join('')}
@@ -1485,7 +1485,7 @@
                                         return folder ? `
                                             <li class="folder-item">
                                                 <div class="folder-header ${this.currentFolder === folder.id ? 'active' : ''}" data-folder="${folder.id}">
-                                                    <i class="ph ph-star"></i>
+                                                    <i class="fa-solid fa-star"></i>
                                                     <span class="folder-name">${this.escapeHtml(folder.name)}</span>
                                                 </div>
                                             </li>
@@ -1504,7 +1504,7 @@
                             <span>Folders</span>
                             <div class="section-actions">
                                 <button class="btn btn-icon" id="addFolderBtn" style="padding: 2px 6px; font-size: 12px;">
-                                    <i class="ph ph-plus"></i>
+                                    <i class="fa-solid fa-plus"></i>
                                 </button>
                                 <span class="section-toggle">▼</span>
                             </div>
@@ -1585,7 +1585,7 @@
                                      draggable="true"
                                      style="padding-left: ${8 + level * 16}px">
                                     ${hasChildren ? `<span class="folder-toggle ${isCollapsed ? 'collapsed' : ''}">▼</span>` : '<span class="folder-toggle" style="visibility: hidden;">▼</span>'}
-                                    <i class="ph ph-folder"></i>
+                                    <i class="fa-solid fa-folder"></i>
                                     <span class="folder-name">${this.escapeHtml(folder.name)}</span>
                                     ${noteCount > 0 ? `<span class="folder-count">${noteCount}</span>` : ''}
                                 </div>
@@ -1767,10 +1767,10 @@
                 
                 if (theme === 'dark' || (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                     document.documentElement.setAttribute('data-theme', 'dark');
-                    if (themeBtn) themeBtn.innerHTML = '<i class="ph ph-sun"></i>';
+                    if (themeBtn) themeBtn.innerHTML = '<i class="fa-solid fa-sun"></i>';
                 } else {
                     document.documentElement.removeAttribute('data-theme');
-                    if (themeBtn) themeBtn.innerHTML = '<i class="ph ph-moon"></i>';
+                    if (themeBtn) themeBtn.innerHTML = '<i class="fa-solid fa-moon"></i>';
                 }
             }
             
@@ -2007,13 +2007,13 @@
                 if (isFocus) {
                     sidebar.classList.add('collapsed');
                     tabsBar.classList.add('hidden');
-                    document.getElementById('focusBtn').innerHTML = '<i class="ph ph-corners-in"></i>';
+                    document.getElementById('focusBtn').innerHTML = '<i class="fa-solid fa-compress"></i>';
                 } else {
                     sidebar.classList.remove('collapsed');
                     if (this.openTabs.length > 0) {
                         tabsBar.classList.remove('hidden');
                     }
-                    document.getElementById('focusBtn').innerHTML = '<i class="ph ph-corners-out"></i>';
+                    document.getElementById('focusBtn').innerHTML = '<i class="fa-solid fa-expand"></i>';
                 }
             }
             
