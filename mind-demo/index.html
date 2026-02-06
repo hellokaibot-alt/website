@@ -1424,6 +1424,7 @@
             max-width: 800px;
             margin: 0 auto;
             min-height: 100%;
+            position: relative;
         }
 
         .note-title-input {
@@ -2774,43 +2775,43 @@
                         </div>
                         <div class="wysiwyg-editor" id="wysiwygEditor" contenteditable="true"></div>
                     </div>
-                </div>
-
-                <!-- Selection Toolbar -->
-                <div class="selection-toolbar" id="selectionToolbar">
-                    <button class="selection-toolbar-btn" data-command="bold" title="Bold">
-                        <i class="ph ph-text-b"></i>
-                    </button>
-                    <button class="selection-toolbar-btn" data-command="italic" title="Italic">
-                        <i class="ph ph-text-italic"></i>
-                    </button>
-                    <button class="selection-toolbar-btn" data-command="underline" title="Underline">
-                        <i class="ph ph-text-underline"></i>
-                    </button>
-                    <button class="selection-toolbar-btn" data-command="strikeThrough" title="Strikethrough">
-                        <i class="ph ph-text-strikethrough"></i>
-                    </button>
-                    <span class="selection-toolbar-divider"></span>
-                    <button class="selection-toolbar-btn" data-command="formatBlock" data-value="H1" title="Heading 1">
-                        <i class="ph ph-text-h-one"></i>
-                    </button>
-                    <button class="selection-toolbar-btn" data-command="formatBlock" data-value="H2" title="Heading 2">
-                        <i class="ph ph-text-h-two"></i>
-                    </button>
-                    <button class="selection-toolbar-btn" data-command="formatBlock" data-value="H3" title="Heading 3">
-                        <i class="ph ph-text-h-three"></i>
-                    </button>
-                    <span class="selection-toolbar-divider"></span>
-                    <button class="selection-toolbar-btn" data-command="insertUnorderedList" title="Bullet List">
-                        <i class="ph ph-list-bullets"></i>
-                    </button>
-                    <button class="selection-toolbar-btn" data-command="insertOrderedList" title="Numbered List">
-                        <i class="ph ph-list-numbers"></i>
-                    </button>
-                    <span class="selection-toolbar-divider"></span>
-                    <button class="selection-toolbar-btn ai" id="askAiSelectionBtn" title="Ask AI">
-                        <i class="ph ph-sparkle"></i> Ask AI
-                    </button>
+                    
+                    <!-- Selection Toolbar -->
+                    <div class="selection-toolbar" id="selectionToolbar">
+                        <button class="selection-toolbar-btn" data-command="bold" title="Bold">
+                            <i class="ph ph-text-b"></i>
+                        </button>
+                        <button class="selection-toolbar-btn" data-command="italic" title="Italic">
+                            <i class="ph ph-text-italic"></i>
+                        </button>
+                        <button class="selection-toolbar-btn" data-command="underline" title="Underline">
+                            <i class="ph ph-text-underline"></i>
+                        </button>
+                        <button class="selection-toolbar-btn" data-command="strikeThrough" title="Strikethrough">
+                            <i class="ph ph-text-strikethrough"></i>
+                        </button>
+                        <span class="selection-toolbar-divider"></span>
+                        <button class="selection-toolbar-btn" data-command="formatBlock" data-value="H1" title="Heading 1">
+                            <i class="ph ph-text-h-one"></i>
+                        </button>
+                        <button class="selection-toolbar-btn" data-command="formatBlock" data-value="H2" title="Heading 2">
+                            <i class="ph ph-text-h-two"></i>
+                        </button>
+                        <button class="selection-toolbar-btn" data-command="formatBlock" data-value="H3" title="Heading 3">
+                            <i class="ph ph-text-h-three"></i>
+                        </button>
+                        <span class="selection-toolbar-divider"></span>
+                        <button class="selection-toolbar-btn" data-command="insertUnorderedList" title="Bullet List">
+                            <i class="ph ph-list-bullets"></i>
+                        </button>
+                        <button class="selection-toolbar-btn" data-command="insertOrderedList" title="Numbered List">
+                            <i class="ph ph-list-numbers"></i>
+                        </button>
+                        <span class="selection-toolbar-divider"></span>
+                        <button class="selection-toolbar-btn ai" id="askAiSelectionBtn" title="Ask AI">
+                            <i class="ph ph-sparkle"></i> Ask AI
+                        </button>
+                    </div>
                 </div>
 
                 <div class="backlinks-panel hidden" id="backlinksPanel">
@@ -3596,7 +3597,8 @@
 
                     const header = li.querySelector('.folder-header');
                     header.addEventListener('click', (e) => {
-                        if (e.target.classList.contains('folder-toggle')) {
+                        // Use closest to handle clicks on the arrow text inside the toggle
+                        if (e.target.closest('.folder-toggle') && hasChildren) {
                             // Toggle collapse - use appropriate state
                             if (useFavoritesState) {
                                 const currentExpanded = !!this.data.settings.favoritesExpanded?.[folder.id];
@@ -6505,6 +6507,7 @@
             setupSelectionToolbar() {
                 const toolbar = document.getElementById('selectionToolbar');
                 const editor = document.getElementById('wysiwygEditor');
+                const editorContent = document.querySelector('.editor-content');
                 let currentSelection = null;
                 let currentRange = null;
 
@@ -6520,7 +6523,7 @@
 
                             // Get the start of the selection (first line)
                             const rect = currentRange.getBoundingClientRect();
-                            const editorRect = editor.getBoundingClientRect();
+                            const contentRect = editorContent.getBoundingClientRect();
 
                             // Create a range at the very start of the selection for precise positioning
                             const startRange = document.createRange();
@@ -6535,8 +6538,9 @@
                             const startRect = startRange.getBoundingClientRect();
 
                             // Position toolbar at the start of the line, above the text
-                            let left = startRect.left - editorRect.left;
-                            let top = startRect.top - editorRect.top - 48; // 48px above the line
+                            // Position relative to editor-content which is the toolbar's positioned parent
+                            let left = startRect.left - contentRect.left;
+                            let top = startRect.top - contentRect.top - 48; // 48px above the line
 
                             // Get toolbar dimensions
                             toolbar.style.visibility = 'hidden';
@@ -6546,14 +6550,14 @@
                             toolbar.style.visibility = '';
 
                             // Keep within editor bounds horizontally
-                            if (left + toolbarRect.width > editorRect.width - 20) {
-                                left = editorRect.width - toolbarRect.width - 20;
+                            if (left + toolbarRect.width > contentRect.width - 20) {
+                                left = contentRect.width - toolbarRect.width - 20;
                             }
                             left = Math.max(10, left);
 
                             // If too close to top of editor, show below instead
                             if (top < 10) {
-                                top = rect.bottom - editorRect.top + 10;
+                                top = rect.bottom - contentRect.top + 10;
                             }
 
                             toolbar.style.left = left + 'px';
