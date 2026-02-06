@@ -784,6 +784,24 @@
         @media (min-width: 769px) {
             .hide-desktop { display: none !important; }
         }
+
+        /* Focus Mode */
+        body.focus-mode .sidebar {
+            display: none;
+        }
+
+        body.focus-mode .tabs-bar {
+            display: none !important;
+        }
+
+        body.focus-mode .main-header {
+            opacity: 0.3;
+            transition: opacity 0.3s;
+        }
+
+        body.focus-mode .main-header:hover {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -1135,6 +1153,9 @@
                 // Theme
                 document.getElementById('themeBtn')?.addEventListener('click', () => this.toggleTheme());
                 
+                // Focus mode
+                document.getElementById('focusBtn')?.addEventListener('click', () => this.toggleFocusMode());
+                
                 // Mobile menu
                 document.getElementById('menuBtn')?.addEventListener('click', () => this.toggleSidebar());
                 document.getElementById('sidebarOverlay')?.addEventListener('click', () => this.closeSidebar());
@@ -1184,6 +1205,19 @@
                 
                 // Settings button
                 document.getElementById('settingsBtn')?.addEventListener('click', () => this.showSettingsMenu());
+                
+                // New Tab button
+                document.getElementById('newTabBtn')?.addEventListener('click', () => this.openNewNoteModal());
+                
+                // Toolbar formatting buttons
+                document.querySelectorAll('.toolbar-btn[data-command]').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const command = btn.dataset.command;
+                        const value = btn.dataset.value || null;
+                        document.execCommand(command, false, value);
+                        document.getElementById('wysiwygEditor').focus();
+                    });
+                });
             }
             
             openNewNoteModal() {
@@ -1720,10 +1754,14 @@
             
             applyTheme() {
                 const theme = this.data.settings.theme;
+                const themeBtn = document.getElementById('themeBtn');
+                
                 if (theme === 'dark' || (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                     document.documentElement.setAttribute('data-theme', 'dark');
+                    if (themeBtn) themeBtn.innerHTML = '<i class="ph ph-sun"></i>';
                 } else {
                     document.documentElement.removeAttribute('data-theme');
+                    if (themeBtn) themeBtn.innerHTML = '<i class="ph ph-moon"></i>';
                 }
             }
             
@@ -1948,6 +1986,25 @@
                             location.reload();
                         }
                         break;
+                }
+            }
+            
+            toggleFocusMode() {
+                document.body.classList.toggle('focus-mode');
+                const sidebar = document.getElementById('sidebar');
+                const tabsBar = document.getElementById('tabsBar');
+                const isFocus = document.body.classList.contains('focus-mode');
+                
+                if (isFocus) {
+                    sidebar.classList.add('collapsed');
+                    tabsBar.classList.add('hidden');
+                    document.getElementById('focusBtn').innerHTML = '<i class="ph ph-corners-in"></i>';
+                } else {
+                    sidebar.classList.remove('collapsed');
+                    if (this.openTabs.length > 0) {
+                        tabsBar.classList.remove('hidden');
+                    }
+                    document.getElementById('focusBtn').innerHTML = '<i class="ph ph-corners-out"></i>';
                 }
             }
             
