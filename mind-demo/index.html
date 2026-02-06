@@ -1515,19 +1515,39 @@
                     </div>
                 `;
                 
-                // Tags section
-                const allTags = [...new Set(this.data.notes.flatMap(n => n.tags))];
+                // Tags section - alphabetical groups
+                const allTags = [...new Set(this.data.notes.flatMap(n => n.tags))].sort();
                 if (allTags.length > 0) {
+                    // Group tags by first letter
+                    const groupedTags = {};
+                    allTags.forEach(tag => {
+                        const firstLetter = tag.charAt(0).toUpperCase();
+                        if (!groupedTags[firstLetter]) groupedTags[firstLetter] = [];
+                        groupedTags[firstLetter].push(tag);
+                    });
+                    
                     html += `
                         <div class="sidebar-section">
                             <div class="section-header" data-section="tags">
                                 <span>Tags</span>
                                 <span class="section-toggle">▼</span>
                             </div>
-                            <div class="section-content" id="tagsSection">
-                                <div class="tags-cloud" style="padding: 8px 16px; display: flex; flex-wrap: wrap; gap: 6px;">
-                                    ${allTags.map(tag => `
-                                        <span class="tag" style="cursor: pointer;" data-tag="${tag}">${this.escapeHtml(tag)}</span>
+                            <div class="section-content collapsed" id="tagsSection">
+                                <div class="tags-alphabetical" style="padding: 4px 0;">
+                                    ${Object.keys(groupedTags).sort().map(letter => `
+                                        <div class="tag-letter-group" style="margin-bottom: 4px;">
+                                            <div class="tag-letter-header" data-letter="${letter}" style="padding: 4px 16px; font-size: 11px; font-weight: 600; color: var(--text-tertiary); text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: space-between;">
+                                                <span>${letter}</span>
+                                                <span style="font-size: 10px;">${groupedTags[letter].length}</span>
+                                            </div>
+                                            <div class="tag-letter-tags collapsed" id="tags-${letter}" style="padding-left: 16px;">
+                                                ${groupedTags[letter].map(tag => `
+                                                    <div class="tag-item" data-tag="${tag}" style="padding: 3px 16px; font-size: 13px; cursor: pointer; color: var(--text-secondary);">
+                                                        ${this.escapeHtml(tag)}
+                                                    </div>
+                                                `).join('')}
+                                            </div>
+                                        </div>
                                     `).join('')}
                                 </div>
                             </div>
@@ -1558,6 +1578,24 @@
                 content.querySelectorAll('.bookmark-item').forEach(item => {
                     item.addEventListener('click', () => {
                         this.openNote(item.dataset.noteId);
+                    });
+                });
+                
+                // Tag letter group toggle handlers
+                content.querySelectorAll('.tag-letter-header').forEach(header => {
+                    header.addEventListener('click', () => {
+                        const letter = header.dataset.letter;
+                        const tagsContainer = document.getElementById(`tags-${letter}`);
+                        if (tagsContainer) {
+                            tagsContainer.classList.toggle('collapsed');
+                        }
+                    });
+                });
+                
+                // Tag click handlers
+                content.querySelectorAll('.tag-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        this.filterByTag(item.dataset.tag);
                     });
                 });
                 
@@ -1789,6 +1827,13 @@
                 
                 // Could show search results in a dropdown
                 console.log('Search results:', matchingNotes);
+            }
+            
+            filterByTag(tag) {
+                const matchingNotes = this.data.notes.filter(n => n.tags.includes(tag));
+                // For now, just log — could show filtered view
+                console.log('Notes with tag', tag, ':', matchingNotes);
+                // Could highlight or filter the sidebar
             }
             
             setupAutoSave() {
