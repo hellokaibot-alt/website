@@ -234,6 +234,12 @@
             color: white;
         }
 
+        .folder-header.drag-over {
+            background: var(--accent);
+            color: white;
+            opacity: 0.8;
+        }
+
         .folder-toggle {
             font-size: 10px;
             transition: transform var(--transition);
@@ -1271,7 +1277,7 @@
                     if (!note) return '';
                     const isActive = noteId === this.activeTabId;
                     return `
-                        <div class="tab ${isActive ? 'active' : ''}" data-note-id="${noteId}">
+                        <div class="tab ${isActive ? 'active' : ''}" data-note-id="${noteId}" draggable="true">
                             <span>${this.escapeHtml(note.title || 'Untitled')}</span>
                             <i class="ph ph-x tab-close" data-note-id="${noteId}"></i>
                         </div>
@@ -1287,6 +1293,18 @@
                         } else {
                             this.openNote(tab.dataset.noteId);
                         }
+                    });
+                    
+                    // Tab drag handlers
+                    tab.addEventListener('dragstart', (e) => {
+                        e.dataTransfer.setData('type', 'note');
+                        e.dataTransfer.setData('noteId', tab.dataset.noteId);
+                        e.dataTransfer.effectAllowed = 'move';
+                        tab.style.opacity = '0.5';
+                    });
+                    
+                    tab.addEventListener('dragend', () => {
+                        tab.style.opacity = '1';
                     });
                 });
             }
@@ -1515,9 +1533,10 @@
                         const isCollapsed = this.data.settings.sidebarCollapsed?.[folder.id];
                         
                         return `
-                            <li class="folder-item">
+                            <li class="folder-item" data-folder-id="${folder.id}">
                                 <div class="folder-header ${this.currentFolder === folder.id ? 'active' : ''}" 
                                      data-folder="${folder.id}"
+                                     draggable="true"
                                      style="padding-left: ${8 + level * 16}px">
                                     ${hasChildren ? `<span class="folder-toggle ${isCollapsed ? 'collapsed' : ''}">▼</span>` : '<span class="folder-toggle" style="visibility: hidden;">▼</span>'}
                                     <i class="ph ph-folder"></i>
@@ -1554,6 +1573,95 @@
                         }
                     });
                 });
+                
+                // Setup drag and drop
+                this.setupFolderDragDrop();
+            }
+            
+            setupFolderDragDrop() {
+                const tree = document.getElementById('folderTree');
+                if (!tree) return;
+                
+                // Make notes draggable
+                this.data.notes.forEach(note => {
+                    // Will be set up in render
+                });
+                
+                // Folder drag handlers
+                tree.querySelectorAll('.folder-header').forEach(header => {
+                    const folderId = header.dataset.folder;
+                    
+                    header.addEventListener('dragstart', (e) => {
+                        this.draggedFolder = folderId;
+                        e.dataTransfer.setData('type', 'folder');
+                        e.dataTransfer.setData('folderId', folderId);
+                        e.dataTransfer.effectAllowed = 'move';
+                        header.style.opacity = '0.5';
+                    });
+                    
+                    header.addEventListener('dragend', () => {
+                        this.draggedFolder = null;
+                        header.style.opacity = '1';
+                        tree.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+                    });
+                    
+                    header.addEventListener('dragover', (e) => {
+                        e.preventDefault();
+                        e.dataTransfer.dropEffect = 'move';
+                        header.classList.add('drag-over');
+                    });
+                    
+                    header.addEventListener('dragleave', () => {
+                        header.classList.remove('drag-over');
+                    });
+                    
+                    header.addEventListener('drop', (e) => {
+                        e.preventDefault();
+                        header.classList.remove('drag-over');
+                        
+                        const dropTargetId = header.dataset.folder;
+                        const draggedType = e.dataTransfer.getData('type');
+                        
+                        if (draggedType === 'folder') {
+                            const draggedFolderId = e.dataTransfer.getData('folderId');
+                            this.moveFolder(draggedFolderId, dropTargetId);
+                        } else if (draggedType === 'note') {
+                            const draggedNoteId = e.dataTransfer.getData('noteId');
+                            this.moveNoteToFolder(draggedNoteId, dropTargetId);
+                        }
+                    });
+                });
+            }
+            
+            moveFolder(folderId, newParentId) {
+                if (folderId === newParentId) return; // Can't drop on self
+                if (this.isDescendant(folderId, newParentId)) return; // Can't drop on descendant
+                
+                const folder = this.data.folders.find(f => f.id === folderId);
+                if (folder) {
+                    folder.parentId = newParentId === 'root' ? null : newParentId;
+                    this.saveData();
+                    this.render();
+                }
+            }
+            
+            moveNoteToFolder(noteId, folderId) {
+                const note = this.data.notes.find(n => n.id === noteId);
+                if (note) {
+                    note.folderId = folderId;
+                    this.saveData();
+                    this.render();
+                }
+            }
+            
+            isDescendant(folderId, potentialParentId) {
+                // Check if potentialParentId is a descendant of folderId
+                let current = this.data.folders.find(f => f.id === potentialParentId);
+                while (current && current.parentId) {
+                    if (current.parentId === folderId) return true;
+                    current = this.data.folders.find(f => f.id === current.parentId);
+                }
+                return false;
             }
             
             selectFolder(folderId) {
@@ -1894,6 +2002,44 @@
         
         // ==================== INITIALIZE ====================
         const app = new KnowledgeBase();
+        
+        // ==================== DEMO RESET TIMER ====================
+        (function() {
+            const DEMO_RESET_INTERVAL = 60 * 60 * 1000; // 1 hour
+            const lastReset = localStorage.getItem('mind_demo_last_reset');
+            const now = Date.now();
+            
+            function updateTimer() {
+                const last = parseInt(localStorage.getItem('mind_demo_last_reset') || now);
+                const elapsed = Date.now() - last;
+                const remaining = Math.max(0, DEMO_RESET_INTERVAL - elapsed);
+                const minutes = Math.floor(remaining / 60000);
+                const seconds = Math.floor((remaining % 60000) / 1000);
+                const el = document.getElementById('demoResetTimer');
+                if (el) {
+                    el.textContent = `${minutes}:${seconds.toString().padStart(2, '0')} until reset`;
+                }
+            }
+            
+            function resetDemo() {
+                localStorage.removeItem('mind_data');
+                localStorage.setItem('mind_demo_last_reset', Date.now());
+                location.reload();
+            }
+            
+            // Check if reset needed
+            if (!lastReset || (now - parseInt(lastReset)) > DEMO_RESET_INTERVAL) {
+                resetDemo();
+            }
+            
+            // Update timer every second
+            setInterval(updateTimer, 1000);
+            updateTimer();
+            
+            // Schedule next reset
+            const nextReset = parseInt(lastReset) + DEMO_RESET_INTERVAL - now;
+            setTimeout(resetDemo, Math.max(0, nextReset));
+        })();
     </script>
 </body>
 </html>
