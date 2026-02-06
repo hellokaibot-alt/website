@@ -2804,13 +2804,6 @@
                             </div>
                         </div>
                         
-                        <!-- Summarize Button -->
-                        <div style="display: flex; justify-content: flex-end; margin-bottom: 8px;">
-                            <button class="btn btn-secondary" id="summarizeBtn" title="AI Summarize Note" style="padding: 4px 8px; font-size: 11px; background: transparent; border: 1px solid var(--border); color: var(--text-secondary);">
-                                <i class="ph ph-text-t"></i> Summarize
-                            </button>
-                        </div>
-                        
                         <!-- Note Tabs -->
                         <div class="note-tabs" style="display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 16px;">
                             <button class="note-tab active" data-tab="note" style="padding: 8px 16px; background: transparent; border: none; border-bottom: 2px solid var(--accent); color: var(--text-primary); font-size: 13px; cursor: pointer;">Note</button>
@@ -2832,9 +2825,15 @@
                             <div class="wysiwyg-editor" id="wysiwygEditor" contenteditable="true"></div>
                         </div>
                         <div class="note-tab-content" id="summaryTabContent" style="display: none;">
+                            <!-- AI Summary Button -->
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                                <button class="btn btn-secondary" id="summarizeBtn" title="AI Summarize Note" style="background: transparent; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px 10px; font-size: 12px; color: var(--text-secondary); cursor: pointer;">
+                                    <i class="ph ph-text-t"></i> AI Summary
+                                </button>
+                            </div>
                             <div id="summaryContent" style="padding: 16px; color: var(--text-secondary); font-size: 14px; line-height: 1.6;">
                                 <div id="summaryEmptyState">
-                                    <p style="font-style: italic; color: var(--text-tertiary);">No summary yet. Click "Summarize" to generate one from your note content.</p>
+                                    <p style="font-style: italic; color: var(--text-tertiary);">No summary yet. Click "AI Summary" to generate one from your note content.</p>
                                 </div>
                                 <div id="summaryResult" style="display: none;">
                                     <div id="summaryText"></div>
