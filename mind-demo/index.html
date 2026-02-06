@@ -2821,6 +2821,7 @@
                                     <option value="daily-review">Daily Review</option>
                                     <option value="strategy">Strategy Plan</option>
                                     <option value="meeting">Meeting Notes</option>
+                                    <option value="save-current">+ Save as Template</option>
                                 </select>
                             </div>
                             <div class="wysiwyg-editor" id="wysiwygEditor" contenteditable="true"></div>
@@ -3200,6 +3201,7 @@
                     ],
                     notes: [],
                     tags: [],
+                    customTemplates: [],
                     settings: {
                         theme: 'auto',
                         sidebarCollapsed: {}
@@ -5910,6 +5912,38 @@
                 setTimeout(() => toast.remove(), 4000);
             }
 
+            updateTemplateDropdown() {
+                const select = document.getElementById('templateSelect');
+                const customTemplates = this.data.customTemplates || [];
+                
+                // Build options
+                let html = `
+                    <option value="">Template</option>
+                    <option value="blank">Blank</option>
+                    <option value="trading-journal">Trading Journal</option>
+                    <option value="daily-review">Daily Review</option>
+                    <option value="strategy">Strategy Plan</option>
+                    <option value="meeting">Meeting Notes</option>
+                `;
+                
+                // Add custom templates with delete button indicator
+                customTemplates.forEach(t => {
+                    html += `<option value="${t.id}">${this.escapeHtml(t.name)} 🗑</option>`;
+                });
+                
+                html += `<option value="save-current">+ Save as Template</option>`;
+                
+                select.innerHTML = html;
+            }
+
+            deleteCustomTemplate(templateId) {
+                if (!confirm('Delete this template?')) return;
+                this.data.customTemplates = this.data.customTemplates.filter(t => t.id !== templateId);
+                this.saveData();
+                this.updateTemplateDropdown();
+                this.showToast('Template deleted', 'success');
+            }
+
             toggleFocusMode() {
                 document.body.classList.toggle('distraction-free');
             }
@@ -6906,7 +6940,58 @@
             }
 
             applyTemplate(templateId) {
-                if (!templateId || !this.currentNote) return;
+                if (!templateId || !this.currentNote) {
+                    document.getElementById('templateSelect').value = '';
+                    return;
+                }
+                
+                // Handle save current note as template
+                if (templateId === 'save-current') {
+                    const name = prompt('Template name:', this.currentNote.title || 'New Template');
+                    if (name && name.trim()) {
+                        const content = document.getElementById('wysiwygEditor').innerHTML;
+                        if (!this.data.customTemplates) this.data.customTemplates = [];
+                        this.data.customTemplates.push({
+                            id: 'custom_' + Date.now(),
+                            name: name.trim(),
+                            content: content
+                        });
+                        this.saveData();
+                        this.updateTemplateDropdown();
+                        this.showToast('Template saved!', 'success');
+                    }
+                    document.getElementById('templateSelect').value = '';
+                    return;
+                }
+                
+                // Check for custom template - ask apply or delete
+                const customTemplate = this.data.customTemplates?.find(t => t.id === templateId);
+                if (customTemplate) {
+                    const action = confirm(`Template: ${customTemplate.name}\n\nClick OK to APPLY this template\nClick Cancel to DELETE this template`);
+                    if (!action) {
+                        // Delete
+                        this.data.customTemplates = this.data.customTemplates.filter(t => t.id !== templateId);
+                        this.saveData();
+                        this.updateTemplateDropdown();
+                        this.showToast('Template deleted', 'success');
+                        document.getElementById('templateSelect').value = '';
+                        return;
+                    }
+                    // Apply
+                    const currentContent = document.getElementById('wysiwygEditor').innerText.trim();
+                    if (currentContent.length > 50) {
+                        if (!confirm('This will replace your current note content. Continue?')) {
+                            document.getElementById('templateSelect').value = '';
+                            return;
+                        }
+                    }
+                    document.getElementById('wysiwygEditor').innerHTML = customTemplate.content;
+                    this.currentNote.content = customTemplate.content;
+                    this.saveData();
+                    document.getElementById('templateSelect').value = '';
+                    this.showToast(`Applied ${customTemplate.name} template`, 'success');
+                    return;
+                }
                 
                 const currentContent = document.getElementById('wysiwygEditor').innerText.trim();
                 if (currentContent.length > 50) {
@@ -7000,7 +7085,10 @@
                 };
                 
                 const template = templates[templateId];
-                if (template === undefined) return;
+                if (template === undefined) {
+                    document.getElementById('templateSelect').value = '';
+                    return;
+                }
                 
                 document.getElementById('wysiwygEditor').innerHTML = template;
                 this.currentNote.content = template;
