@@ -4202,6 +4202,10 @@
                 document.getElementById('editorContentWrapper').classList.remove('hidden');
                 document.getElementById('backlinksPanel').classList.remove('hidden');
 
+                // Hide tag results if showing
+                const tagResults = document.getElementById('tagResultsContainer');
+                if (tagResults) tagResults.style.display = 'none';
+
                 // Populate fields
                 document.getElementById('noteTitle').value = note.title;
                 document.getElementById('wysiwygEditor').innerHTML = note.content;
@@ -5274,6 +5278,9 @@
                     this.currentTagFilter = null;
                     this.currentFolder = 'root';
                     this.render();
+                    // Hide tag results if showing
+                    const tagResults = document.getElementById('tagResultsContainer');
+                    if (tagResults) tagResults.style.display = 'none';
                     return;
                 }
 
@@ -5281,46 +5288,93 @@
                 this.currentTagFilter = tag;
                 this.currentFolder = 'tag:' + tag;
                 this.currentNote = null;
-                this.showEmptyState();
 
                 // Update UI
                 document.querySelectorAll('.tag-item-small').forEach(el => {
                     el.classList.toggle('active', el.dataset.tag === tag);
                 });
 
-                document.getElementById('headerTitle').textContent = `Tag: ${tag}`;
+                document.getElementById('headerTitle').textContent = `#${tag}`;
 
                 // Re-render tags to show active state
                 this.renderTagsCloud();
 
-                // Re-render folder tree to show filtered notes
-                this.renderFolderTreeForTag(tag);
+                // Show tag results in main content
+                this.renderTagResults(tag);
             }
 
-            renderFolderTreeForTag(tag) {
-                const tree = document.getElementById('folderTree');
-                tree.innerHTML = '';
-
+            renderTagResults(tag) {
                 const notes = this.data.notes.filter(n => n.tags.includes(tag));
-
-                const ul = document.createElement('ul');
-                ul.className = 'folder-tree';
-
-                notes.forEach(note => {
-                    const li = document.createElement('li');
-                    li.className = 'folder-item';
-                    li.innerHTML = `
-                        <div class="note-item" data-note-id="${note.id}" style="padding-left: 8px;">
-                            <span class="note-icon"><i class="ph ph-file-text"></i></span>
-                            <span class="note-title">${this.escapeHtml(note.title)}</span>
+                
+                // Hide normal editor content
+                document.getElementById('emptyState').classList.remove('hidden');
+                document.getElementById('editorToolbar').classList.add('hidden');
+                document.getElementById('tabsBar').classList.add('hidden');
+                document.getElementById('editorContentWrapper').classList.add('hidden');
+                
+                // Create or get tag results container
+                let resultsContainer = document.getElementById('tagResultsContainer');
+                if (!resultsContainer) {
+                    resultsContainer = document.createElement('div');
+                    resultsContainer.id = 'tagResultsContainer';
+                    resultsContainer.className = 'tag-results-view';
+                    document.querySelector('.main').appendChild(resultsContainer);
+                }
+                
+                // Clear previous and show
+                resultsContainer.style.display = 'block';
+                resultsContainer.innerHTML = `
+                    <div style="padding: 24px; max-width: 900px; margin: 0 auto;">
+                        <div style="margin-bottom: 24px;">
+                            <h2 style="font-size: 24px; font-weight: 600; color: var(--text-primary); margin: 0 0 8px 0; display: flex; align-items: center; gap: 12px;">
+                                <i class="ph ph-tag" style="color: #fbbf24;"></i>
+                                ${this.escapeHtml(tag)}
+                            </h2>
+                            <p style="color: var(--text-secondary); margin: 0;">${notes.length} note${notes.length !== 1 ? 's' : ''}</p>
                         </div>
-                    `;
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
+                            ${notes.map(note => `
+                                <div class="tag-result-card" data-note-id="${note.id}" style="background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 16px; cursor: pointer; transition: all 0.2s;">
+                                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                        <i class="ph ph-file-text" style="color: var(--text-secondary);"></i>
+                                        <span style="font-weight: 500; color: var(--text-primary);">${this.escapeHtml(note.title) || 'Untitled'}</span>
+                                    </div>
+                                    <div style="color: var(--text-secondary); font-size: 14px; line-height: 1.5; margin-bottom: 12px;">
+                                        ${this.escapeHtml(this.stripHtml(note.content).substring(0, 200))}${this.stripHtml(note.content).length > 200 ? '...' : ''}
+                                    </div>
+                                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                                        <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                                            ${note.tags.map(t => `<span style="background: var(--bg-tertiary); color: var(--text-secondary); padding: 2px 8px; border-radius: 12px; font-size: 12px;">#${this.escapeHtml(t)}</span>`).join('')}
+                                        </div>
+                                        <span style="color: var(--text-tertiary); font-size: 12px; display: flex; align-items: center; gap: 4px;">
+                                            <i class="ph ph-folder"></i>
+                                            ${this.getFolderName(note.folderId)}
+                                        </span>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
 
-                    li.querySelector('.note-item').addEventListener('click', () => this.selectNote(note.id));
-                    ul.appendChild(li);
+                // Add hover effect and click handlers
+                resultsContainer.querySelectorAll('.tag-result-card').forEach(card => {
+                    card.addEventListener('mouseenter', () => {
+                        card.style.borderColor = 'var(--accent)';
+                    });
+                    card.addEventListener('mouseleave', () => {
+                        card.style.borderColor = 'var(--border)';
+                    });
+                    card.addEventListener('click', () => {
+                        resultsContainer.style.display = 'none';
+                        this.selectNote(card.dataset.noteId);
+                    });
                 });
+            }
 
-                tree.appendChild(ul);
+            getFolderName(folderId) {
+                const folder = this.data.folders.find(f => f.id === folderId);
+                return folder ? folder.name : 'Unknown';
             }
 
             // ==================== SEARCH ====================
