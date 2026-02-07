@@ -2618,9 +2618,10 @@
                             <div class="form-group">
                                 <label class="form-label">Model Size</label>
                                 <select class="form-select" id="webllmModel">
-                                    <option value="Llama-3.2-1B-Instruct-q4f32_1-MLC" selected>Llama 3.2 1B - Fastest</option>
-                                    <option value="Llama-3.2-3B-Instruct-q4f32_1-MLC">Llama 3.2 3B - Better quality</option>
-                                    <option value="Qwen2.5-0.5B-Instruct-q4f32_1-MLC">Qwen 0.5B - Ultra fast</option>
+                                    <option value="Phi-3-mini-4k-instruct-q4f16_1-MLC" selected>Phi-3 Mini - Fastest, 1.2GB</option>
+                                    <option value="Phi-3-mini-4k-instruct-q4f32_1-MLC">Phi-3 Mini - Balanced, 1.8GB</option>
+                                    <option value="Llama-3-8B-Instruct-q4f16_1-MLC">Llama 3 8B - Best quality, 3.5GB</option>
+                                    <option value="Llama-3-8B-Instruct-q4f32_1-MLC">Llama 3 8B - Largest, 4.5GB</option>
                                 </select>
                                 <small style="color: var(--text-tertiary); font-size: 12px;">
                                     Using WebLLM prebuilt models. Download once, use forever.
@@ -7743,8 +7744,8 @@
                 
                 // Get approximate file size for display
                 const modelSizes = {
-                    "Llama-3.2-1B-Instruct-q4f32_1-MLC": "0.6GB",
-                    "Llama-3.2-3B-Instruct-q4f32_1-MLC": "1.8GB"
+                    "Phi-3-mini-4k-instruct-q4f16_1-MLC": "1.2GB",
+                    "Phi-3-mini-4k-instruct-q4f32_1-MLC": "1.8GB"
                 };
                 const size = modelSizes[selectedModel] || "1.2GB";
                 
