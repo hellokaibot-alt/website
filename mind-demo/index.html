@@ -2619,8 +2619,8 @@
                                 <label class="form-label">Model Size</label>
                                 <select class="form-select" id="webllmModel">
                                     <option value="Llama-3.2-1B-Instruct-q4f32_1-MLC" selected>Small (1B) - Fast, 1.2GB</option>
+                                    <option value="Qwen2.5-1.5B-Instruct-q4f32_1-MLC">Small+ (1.5B) - Fast, 1.5GB</option>
                                     <option value="Llama-3.2-3B-Instruct-q4f32_1-MLC">Medium (3B) - Balanced, 2.0GB</option>
-                                    <option value="Llama-3.1-8B-Instruct-q4f32_1-MLC">Large (8B) - Best quality, 4.5GB</option>
                                 </select>
                                 <small style="color: var(--text-tertiary); font-size: 12px;">
                                     Larger = better quality but slower. Download once, use forever.
@@ -7743,9 +7743,9 @@
                 
                 // Get approximate file size for display
                 const modelSizes = {
-                    "Llama-3.2-1B-Instruct-q4f32_1-MLC": "1.2GB",
-                    "Llama-3.2-3B-Instruct-q4f32_1-MLC": "2.0GB",
-                    "Llama-3.1-8B-Instruct-q4f32_1-MLC": "4.5GB"
+                    "Llama-3.2-1B-Instruct-q4f32_1-MLC": "0.6GB",
+                    "Qwen2.5-1.5B-Instruct-q4f32_1-MLC": "1.0GB",
+                    "Llama-3.2-3B-Instruct-q4f32_1-MLC": "1.8GB"
                 };
                 const size = modelSizes[selectedModel] || "1.2GB";
                 
