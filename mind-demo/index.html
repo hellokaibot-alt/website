@@ -6705,6 +6705,9 @@
 
                 // Selection Toolbar
                 this.setupSelectionToolbar();
+                
+                // Image paste and drop
+                this.setupImagePasteAndDrop();
 
                 // Note Tabs
                 document.querySelectorAll('.note-tab').forEach(tab => {
@@ -7637,15 +7640,15 @@
 
                 // Test Ollama connection
                 document.getElementById('testOllamaConnection')?.addEventListener('click', async () => {
-                    try {
-                        const response = await fetch('http://localhost:11434/api/tags');
-                        if (response.ok) {
-                            document.getElementById('ollamaStatus').textContent = '✅ Connected! Ollama is running.';
-                            document.getElementById('ollamaStatus').style.color = 'var(--success)';
-                        }
-                    } catch (e) {
-                        document.getElementById('ollamaStatus').textContent = '❌ Not connected. Please install and start Ollama.';
-                        document.getElementById('ollamaStatus').style.color = 'var(--danger)';
+                    const statusEl = document.getElementById('ollamaStatus');
+                    statusEl.textContent = 'Testing...';
+                    const result = await this.testOllamaConnection();
+                    if (result.success) {
+                        statusEl.textContent = `✅ Connected! ${result.models.length} models available.`;
+                        statusEl.style.color = 'var(--success)';
+                    } else {
+                        statusEl.textContent = '❌ Not connected. Please install and start Ollama.';
+                        statusEl.style.color = 'var(--danger)';
                     }
                 });
 
@@ -7656,6 +7659,88 @@
                     this.saveData();
                     document.getElementById('aiPanelModal').classList.remove('active');
                     alert('AI settings saved! AI features are ready to use in demo mode.');
+                });
+            }
+
+            // ==================== AI METHODS ====================
+            
+            async testOllamaConnection() {
+                try {
+                    const response = await fetch(`${this.ollamaUrl}/api/tags`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        this.ollamaReady = true;
+                        return { success: true, models: data.models || [] };
+                    }
+                    return { success: false, error: 'Could not connect' };
+                } catch (err) {
+                    return { success: false, error: err.message };
+                }
+            }
+
+            async generateWithOllama(prompt, systemPrompt = '') {
+                if (!this.ollamaReady) {
+                    const test = await this.testOllamaConnection();
+                    if (!test.success) return { error: test.error };
+                }
+                const model = document.getElementById('ollamaModel')?.value || this.ollamaModel;
+                try {
+                    const response = await fetch(`${this.ollamaUrl}/api/generate`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ model, prompt, system: systemPrompt, stream: false })
+                    });
+                    if (response.ok) {
+                        const data = await response.json();
+                        return { success: true, text: data.response };
+                    }
+                    return { error: 'Generation failed' };
+                } catch (err) {
+                    return { error: err.message };
+                }
+            }
+
+            // ==================== IMAGE HANDLING ====================
+            
+            async insertImageFile(file) {
+                if (!file || !file.type.startsWith('image/')) return;
+                const reader = new FileReader();
+                reader.onload = async (event) => {
+                    const base64 = event.target.result;
+                    this.execCommand('insertImage', base64);
+                    this.showToast('Image inserted!', 'success');
+                };
+                reader.readAsDataURL(file);
+            }
+
+            setupImagePasteAndDrop() {
+                const editor = document.getElementById('wysiwygEditor');
+                if (!editor) return;
+                
+                // Paste handler
+                editor.addEventListener('paste', async (e) => {
+                    const items = e.clipboardData?.items;
+                    if (!items) return;
+                    for (const item of items) {
+                        if (item.type.startsWith('image/')) {
+                            e.preventDefault();
+                            const file = item.getAsFile();
+                            if (file) await this.insertImageFile(file);
+                            break;
+                        }
+                    }
+                });
+
+                // Drag and drop handlers
+                editor.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'copy';
+                });
+                editor.addEventListener('drop', async (e) => {
+                    e.preventDefault();
+                    for (const file of e.dataTransfer.files) {
+                        if (file.type.startsWith('image/')) await this.insertImageFile(file);
+                    }
                 });
             }
         }
