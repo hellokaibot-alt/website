@@ -7746,8 +7746,17 @@
                 }
                 
                 try {
-                    const { CreateMLCEngine } = window.mlc; // WebLLM library
-                    this.webllmEngine = await CreateMLCEngine(
+                    // Debug: Check what's available
+                    console.log('WebLLM global check:', { webllm: window.webllm, mlcraft: window.mlcraft, mlc: window.mlc });
+                    
+                    // WebLLM loads as global webllm object
+                    const webllmLib = window.webllm || window.mlcraft;
+                    
+                    if (!webllmLib || !webllmLib.CreateMLCEngine) {
+                        throw new Error('WebLLM library not loaded properly. Available: ' + Object.keys(window).filter(k => k.includes('llm') || k.includes('mlc')).join(', '));
+                    }
+                    
+                    this.webllmEngine = await webllmLib.CreateMLCEngine(
                         selectedModel,
                         {
                             initProgressCallback: (progress) => {
@@ -7770,7 +7779,7 @@
                 } catch (err) {
                     console.error('WebLLM init error:', err);
                     if (statusEl) {
-                        statusEl.innerHTML = '<strong style="color: var(--danger);"><i class="ph ph-warning"></i> Error:</strong> Failed to load AI. Check console for details.';
+                        statusEl.innerHTML = `<strong style="color: var(--danger);"><i class="ph ph-warning"></i> Error:</strong> ${err.message || 'Failed to load AI'}. Try Ollama instead.`;
                     }
                     this.webllmReady = false;
                 }
