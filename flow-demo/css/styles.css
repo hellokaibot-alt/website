@@ -257,6 +257,9 @@ body {
     padding: 16px 20px 16px 36px;
     background: var(--bg-primary);
     border-bottom: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 /* Search & Filters */
@@ -264,7 +267,6 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 12px;
 }
 
 .search-box input {
