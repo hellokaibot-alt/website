@@ -7775,34 +7775,44 @@
                         statusEl.innerHTML = `<strong style="color: var(--accent);"><i class="ph ph-spinner animate-spin"></i> Loading AI...</strong> Downloading ${size}, first time only`;
                     }
                     
-                    // Use WebLLM's prebuilt app config
-                    const appConfig = window.webllm.prebuiltAppConfig || {
-                        model_list: [
+                    // Simple approach - let WebLLM use its default config
+                    try {
+                        this.webllmEngine = await window.webllm.CreateMLCEngine(
+                            selectedModel,
                             {
-                                model: "https://huggingface.co/mlc-ai/Llama-3.2-1B-Instruct-q4f32_1-MLC",
-                                model_id: "Llama-3.2-1B-Instruct-q4f32_1-MLC",
-                                model_lib_url: "https://github.com/mlc-ai/binary-mlc-llm-libs/releases/download/web-llm-model-libs/Llama-3.2-1B-Instruct-q4f32_1-MLC-webgpu.wasm",
-                            },
-                            {
-                                model: "https://huggingface.co/mlc-ai/Llama-3.2-3B-Instruct-q4f32_1-MLC",
-                                model_id: "Llama-3.2-3B-Instruct-q4f32_1-MLC", 
-                                model_lib_url: "https://github.com/mlc-ai/binary-mlc-llm-libs/releases/download/web-llm-model-libs/Llama-3.2-3B-Instruct-q4f32_1-MLC-webgpu.wasm",
-                            }
-                        ]
-                    };
-                    
-                    this.webllmEngine = await window.webllm.CreateMLCEngine(
-                        selectedModel,
-                        {
-                            initProgressCallback: (progress) => {
-                                const percent = Math.round(progress.progress * 100);
-                                if (statusEl) {
-                                    statusEl.innerHTML = `<strong style="color: var(--accent);"><i class="ph ph-spinner animate-spin"></i> Loading AI...</strong> ${percent}%`;
+                                initProgressCallback: (progress) => {
+                                    const percent = Math.round(progress.progress * 100);
+                                    if (statusEl) {
+                                        statusEl.innerHTML = `<strong style="color: var(--accent);"><i class="ph ph-spinner animate-spin"></i> Loading AI...</strong> ${percent}%`;
+                                    }
                                 }
                             }
-                        },
-                        appConfig
-                    );
+                        );
+                    } catch (engineErr) {
+                        // Try with explicit appConfig
+                        console.log("Retrying with explicit config...", engineErr);
+                        const appConfig = {
+                            model_list: [
+                                {
+                                    model: selectedModel,
+                                    model_id: selectedModel,
+                                    model_lib_url: "https://github.com/mlc-ai/binary-mlc-llm-libs/releases/download/web-llm-model-libs/" + selectedModel + "-webgpu.wasm",
+                                }
+                            ]
+                        };
+                        this.webllmEngine = await window.webllm.CreateMLCEngine(
+                            selectedModel,
+                            {
+                                initProgressCallback: (progress) => {
+                                    const percent = Math.round(progress.progress * 100);
+                                    if (statusEl) {
+                                        statusEl.innerHTML = `<strong style="color: var(--accent);"><i class="ph ph-spinner animate-spin"></i> Loading AI...</strong> ${percent}%`;
+                                    }
+                                }
+                            },
+                            appConfig
+                        );
+                    }
                     
                     // Save the selected model to settings
                     this.data.settings.webllmModel = selectedModel;
