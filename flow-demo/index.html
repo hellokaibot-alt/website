@@ -8,7 +8,7 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.0.3/src/all.css">
-    <link rel="stylesheet" href="css/styles.css?v=7">
+    <link rel="stylesheet" href="css/styles.css?v=8">
 </head>
 <body>
     <div class="demo-banner">
@@ -41,12 +41,12 @@
             </div>
         </div>
         <div class="header-right">
-            <button class="btn btn-icon" id="searchBtn" title="Search (Ctrl+K)">🔍</button>
-            <button class="btn btn-icon" id="templateBtn" title="Templates">📄</button>
-            <button class="btn btn-icon" id="labelsBtn" title="Manage Labels">🏷️</button>
-            <button class="btn btn-icon" id="archiveBtn" title="Archive">📦</button>
-            <button class="btn btn-icon" id="settingsBtn" title="Settings">⚙️</button>
-            <button class="btn btn-icon" id="helpBtn" title="Help (?)">❓</button>
+            <button class="btn btn-icon" id="searchBtn" title="Search (Ctrl+K)"><i class="ph ph-magnifying-glass"></i></button>
+            <button class="btn btn-icon" id="templateBtn" title="Templates"><i class="ph ph-copy"></i></button>
+            <button class="btn btn-icon" id="labelsBtn" title="Manage Labels"><i class="ph ph-tag"></i></button>
+            <button class="btn btn-icon" id="archiveBtn" title="Archive"><i class="ph ph-archive"></i></button>
+            <button class="btn btn-icon" id="settingsBtn" title="Settings"><i class="ph ph-gear"></i></button>
+            <button class="btn btn-icon" id="helpBtn" title="Help (?)"><i class="ph ph-question"></i></button>
             <button class="btn btn-primary" id="newBoardBtn">+ New Board</button>
         </div>
     </header>
@@ -57,11 +57,11 @@
             <input type="text" id="searchInput" placeholder="Search cards...">
         </div>
         <div class="filter-chips" id="filterChips">
-            <div class="chip" data-filter="priority-high">🔴 High Priority</div>
-            <div class="chip" data-filter="priority-medium">🟡 Medium Priority</div>
-            <div class="chip" data-filter="priority-low">🟢 Low Priority</div>
-            <div class="chip" data-filter="overdue">⏰ Overdue</div>
-            <div class="chip" data-filter="today">📅 Today</div>
+            <div class="chip" data-filter="priority-high"><i class="ph ph-circle-fill" style="color: var(--priority-high);"></i> High Priority</div>
+            <div class="chip" data-filter="priority-medium"><i class="ph ph-circle-fill" style="color: var(--priority-medium);"></i> Medium Priority</div>
+            <div class="chip" data-filter="priority-low"><i class="ph ph-circle-fill" style="color: var(--priority-low);"></i> Low Priority</div>
+            <div class="chip" data-filter="overdue"><i class="ph ph-clock"></i> Overdue</div>
+            <div class="chip" data-filter="today"><i class="ph ph-calendar"></i> Today</div>
         </div>
     </div>
 
@@ -177,27 +177,27 @@
                     <label class="form-label">Choose Template</label>
                     <div class="template-grid" id="templateGrid">
                         <div class="template-card" data-template="blank">
-                            <div class="template-icon">📄</div>
+                            <div class="template-icon"><i class="ph ph-file"></i></div>
                             <div class="template-name">Blank</div>
                         </div>
                         <div class="template-card" data-template="todo">
-                            <div class="template-icon">✅</div>
+                            <div class="template-icon"><i class="ph ph-check-square"></i></div>
                             <div class="template-name">To Do</div>
                         </div>
                         <div class="template-card" data-template="kanban">
-                            <div class="template-icon">📊</div>
+                            <div class="template-icon"><i class="ph ph-kanban"></i></div>
                             <div class="template-name">Kanban</div>
                         </div>
                         <div class="template-card" data-template="project">
-                            <div class="template-icon">🚀</div>
+                            <div class="template-icon"><i class="ph ph-rocket"></i></div>
                             <div class="template-name">Project</div>
                         </div>
                         <div class="template-card" data-template="routine">
-                            <div class="template-icon">🔄</div>
+                            <div class="template-icon"><i class="ph ph-repeat"></i></div>
                             <div class="template-name">Daily Routine</div>
                         </div>
                         <div class="template-card" data-template="content">
-                            <div class="template-icon">📝</div>
+                            <div class="template-icon"><i class="ph ph-pencil-simple"></i></div>
                             <div class="template-name">Content Plan</div>
                         </div>
                     </div>
@@ -249,19 +249,19 @@
                 <p style="margin-bottom: 16px; color: var(--text-secondary);">Select a template to add to your current board:</p>
                 <div class="template-grid" id="applyTemplateGrid">
                     <div class="template-card" data-template="todo">
-                        <div class="template-icon">✅</div>
+                        <div class="template-icon"><i class="ph ph-check-square"></i></div>
                         <div class="template-name">To Do List</div>
                     </div>
                     <div class="template-card" data-template="sprint">
-                        <div class="template-icon">🏃</div>
+                        <div class="template-icon"><i class="ph ph-person-simple-run"></i></div>
                         <div class="template-name">Sprint Planning</div>
                     </div>
                     <div class="template-card" data-template="bug">
-                        <div class="template-icon">🐛</div>
+                        <div class="template-icon"><i class="ph ph-bug"></i></div>
                         <div class="template-name">Bug Tracker</div>
                     </div>
                     <div class="template-card" data-template="goals">
-                        <div class="template-icon">🎯</div>
+                        <div class="template-icon"><i class="ph ph-target"></i></div>
                         <div class="template-name">Goals</div>
                     </div>
                 </div>
@@ -293,10 +293,10 @@
                 <div class="help-section">
                     <h3>Data Management</h3>
                     <div class="form-group">
-                        <button class="btn" id="exportBtn">📤 Export Data (JSON)</button>
+                        <button class="btn" id="exportBtn"><i class="ph ph-export"></i> Export Data (JSON)</button>
                     </div>
                     <div class="form-group">
-                        <button class="btn" id="importBtn">📥 Import Data</button>
+                        <button class="btn" id="importBtn"><i class="ph ph-import"></i> Import Data</button>
                         <input type="file" id="importFile" accept=".json" style="display: none;">
                     </div>
                     <div class="form-group">
@@ -404,6 +404,6 @@
     <div class="toast-container" id="toastContainer"></div>
 
     
-    <script src="js/app.js?v=5"></script>
+    <script src="js/app.js?v=8"></script>
 </body>
 </html>

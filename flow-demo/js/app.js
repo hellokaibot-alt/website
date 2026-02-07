@@ -53,9 +53,9 @@
             },
             routine: {
                 columns: [
-                    { id: 'morning', name: '🌅 Morning', cards: [] },
-                    { id: 'afternoon', name: '☀️ Afternoon', cards: [] },
-                    { id: 'evening', name: '🌙 Evening', cards: [] }
+                    { id: 'morning', name: 'Morning', cards: [] },
+                    { id: 'afternoon', name: 'Afternoon', cards: [] },
+                    { id: 'evening', name: 'Evening', cards: [] }
                 ]
             },
             content: {
@@ -650,11 +650,11 @@
                     ` : ''}
                     <div class="card-title">${escapeHtml(card.title)}</div>
                     <div class="card-meta">
-                        ${card.priority ? `<span class="card-badge priority-${card.priority}">⚡ ${card.priority}</span>` : ''}
-                        ${card.dueDate ? `<span class="card-badge ${overdue ? 'overdue' : ''}">📅 ${formatDate(card.dueDate)}${overdue ? ' (overdue)' : ''}</span>` : ''}
-                        ${card.recurring ? `<span class="recurring-badge">🔄 ${card.recurring}</span>` : ''}
-                        ${totalChecklist ? `<span class="card-badge">✓ ${completedChecklist}/${totalChecklist}</span>` : ''}
-                        ${card.attachments?.length ? `<span class="card-badge">📎 ${card.attachments.length}</span>` : ''}
+                        ${card.priority ? `<span class="card-badge priority-${card.priority}"><i class="ph ph-lightning"></i> ${card.priority}</span>` : ''}
+                        ${card.dueDate ? `<span class="card-badge ${overdue ? 'overdue' : ''}"><i class="ph ph-calendar"></i> ${formatDate(card.dueDate)}${overdue ? ' (overdue)' : ''}</span>` : ''}
+                        ${card.recurring ? `<span class="recurring-badge"><i class="ph ph-repeat"></i> ${card.recurring}</span>` : ''}
+                        ${totalChecklist ? `<span class="card-badge"><i class="ph ph-check"></i> ${completedChecklist}/${totalChecklist}</span>` : ''}
+                        ${card.attachments?.length ? `<span class="card-badge"><i class="ph ph-paperclip"></i> ${card.attachments.length}</span>` : ''}
                     </div>
                 </div>
             `;
@@ -708,8 +708,8 @@
                             <span class="column-count">${cards.length}</span>
                         </div>
                         <div class="column-actions">
-                            <button class="column-btn" data-action="rename" title="Rename">✏️</button>
-                            <button class="column-btn" data-action="delete" title="Delete">🗑️</button>
+                            <button class="column-btn" data-action="rename" title="Rename"><i class="ph ph-pencil-simple"></i></button>
+                            <button class="column-btn" data-action="delete" title="Delete"><i class="ph ph-trash"></i></button>
                         </div>
                     </div>
                     <div class="column-content" data-column-id="${column.id}">
@@ -1078,7 +1078,7 @@
                 <div class="checklist-item ${item.checked ? 'checked' : ''}" 
                      draggable="true" 
                      data-index="${index}">
-                    <span class="checklist-drag-handle">☰</span>
+                    <span class="checklist-drag-handle"><i class="ph ph-dots-six-vertical"></i></span>
                     <input type="checkbox" ${item.checked ? 'checked' : ''} data-index="${index}">
                     <span>${escapeHtml(item.text)}</span>
                     <button class="delete-item" data-index="${index}">×</button>
@@ -1115,7 +1115,7 @@
             const container = document.getElementById('attachmentList');
             container.innerHTML = currentCardAttachments.map((att, index) => `
                 <div class="attachment-item">
-                    <span class="attachment-icon">📎</span>
+                    <span class="attachment-icon"><i class="ph ph-paperclip"></i></span>
                     <span class="attachment-name">${escapeHtml(att.name)}</span>
                     <button class="attachment-delete" data-index="${index}">×</button>
                 </div>
@@ -1501,7 +1501,7 @@
             });
             
             document.getElementById('clearAllBtn').addEventListener('click', () => {
-                if (confirm('⚠️ This will DELETE ALL DATA. Are you sure?')) {
+                if (confirm('This will DELETE ALL DATA. Are you sure?')) {
                     if (confirm('Really? This cannot be undone!')) {
                         localStorage.removeItem('taskmaster_data');
                         location.reload();
