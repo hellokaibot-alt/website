@@ -5423,27 +5423,39 @@
             }
 
             async insertImage() {
+                // Focus editor first
+                const editor = document.getElementById('wysiwygEditor');
+                if (editor) {
+                    editor.focus();
+                }
+                
                 const input = document.getElementById('fileInput');
                 input.onchange = async (e) => {
                     const file = e.target.files[0];
                     if (!file) return;
-
-                    const reader = new FileReader();
-                    reader.onload = async (event) => {
-                        const base64 = event.target.result;
-                        const id = 'img_' + Date.now();
-
-                        // Save to IndexedDB if large
-                        if (base64.length > 50000) {
-                            await this.saveAttachment(id, base64);
-                            this.execCommand('insertImage', base64);
-                        } else {
-                            this.execCommand('insertImage', base64);
-                        }
-                    };
-                    reader.readAsDataURL(file);
+                    await this.insertImageFile(file);
                 };
                 input.click();
+            }
+
+            async insertImageFile(file) {
+                if (!file || !file.type.startsWith('image/')) return;
+
+                const reader = new FileReader();
+                reader.onload = async (event) => {
+                    const base64 = event.target.result;
+                    const id = 'img_' + Date.now();
+
+                    // Save to IndexedDB if large
+                    if (base64.length > 50000) {
+                        await this.saveAttachment(id, base64);
+                    }
+                    
+                    // Insert image at cursor position
+                    this.execCommand('insertImage', base64);
+                    this.showToast('Image inserted!', 'success');
+                };
+                reader.readAsDataURL(file);
             }
 
             setupAutoSave() {
@@ -6705,6 +6717,47 @@
 
                 // Selection Toolbar
                 this.setupSelectionToolbar();
+
+                // Image paste handler
+                document.getElementById('wysiwygEditor').addEventListener('paste', async (e) => {
+                    const items = e.clipboardData?.items;
+                    if (!items) return;
+                    
+                    for (const item of items) {
+                        if (item.type.startsWith('image/')) {
+                            e.preventDefault();
+                            const file = item.getAsFile();
+                            if (file) {
+                                await this.insertImageFile(file);
+                            }
+                            break;
+                        }
+                    }
+                });
+
+                // Image drag and drop handlers
+                const editor = document.getElementById('wysiwygEditor');
+                editor.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'copy';
+                    editor.style.background = 'var(--bg-hover)';
+                });
+                
+                editor.addEventListener('dragleave', () => {
+                    editor.style.background = '';
+                });
+                
+                editor.addEventListener('drop', async (e) => {
+                    e.preventDefault();
+                    editor.style.background = '';
+                    
+                    const files = e.dataTransfer.files;
+                    for (const file of files) {
+                        if (file.type.startsWith('image/')) {
+                            await this.insertImageFile(file);
+                        }
+                    }
+                });
 
                 // Note Tabs
                 document.querySelectorAll('.note-tab').forEach(tab => {
