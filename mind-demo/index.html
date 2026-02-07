@@ -2590,18 +2590,18 @@
                         <div class="form-group">
                             <label class="form-label">AI Provider</label>
                             <div style="display: flex; flex-direction: column; gap: 12px;">
-                                <label class="ai-provider-option" style="padding: 16px; border: 2px solid var(--accent); border-radius: var(--radius); cursor: pointer; display: flex; align-items: flex-start; gap: 12px;">
-                                    <input type="radio" name="aiProvider" value="webllm" checked style="margin-top: 2px;">
+                                <label class="ai-provider-option" style="padding: 16px; border: 2px solid var(--border); border-radius: var(--radius); cursor: pointer; display: flex; align-items: flex-start; gap: 12px;">
+                                    <input type="radio" name="aiProvider" value="webllm" style="margin-top: 2px;">
                                     <div style="flex: 1;">
-                                        <div style="font-weight: 600; margin-bottom: 4px;"><i class="ph ph-rocket"></i> WebLLM (Recommended)</div>
-                                        <div style="font-size: 13px; color: var(--text-secondary);">Runs in browser. No installation. One-time 1.9GB download.</div>
+                                        <div style="font-weight: 600; margin-bottom: 4px;"><i class="ph ph-rocket"></i> WebLLM (Browser)</div>
+                                        <div style="font-size: 13px; color: var(--text-secondary);">Runs in browser. One-time download. ⚠️ May fail if browser storage is full.</div>
                                     </div>
                                 </label>
-                                <label class="ai-provider-option" style="padding: 16px; border: 2px solid var(--border); border-radius: var(--radius); cursor: pointer; display: flex; align-items: flex-start; gap: 12px;">
-                                    <input type="radio" name="aiProvider" value="ollama" style="margin-top: 2px;">
+                                <label class="ai-provider-option" style="padding: 16px; border: 2px solid var(--accent); border-radius: var(--radius); cursor: pointer; display: flex; align-items: flex-start; gap: 12px;">
+                                    <input type="radio" name="aiProvider" value="ollama" checked style="margin-top: 2px;">
                                     <div style="flex: 1;">
-                                        <div style="font-weight: 600; margin-bottom: 4px;"><i class="ph ph-lightning"></i> Ollama Desktop</div>
-                                        <div style="font-size: 13px; color: var(--text-secondary);">Better performance. Requires desktop app.</div>
+                                        <div style="font-weight: 600; margin-bottom: 4px;"><i class="ph ph-lightning"></i> Ollama Desktop ⭐ Recommended</div>
+                                        <div style="font-size: 13px; color: var(--text-secondary);">Best performance. No browser storage needed. Requires free Ollama app.</div>
                                     </div>
                                 </label>
                                 <label class="ai-provider-option" style="padding: 16px; border: 2px solid var(--border); border-radius: var(--radius); cursor: pointer; display: flex; align-items: flex-start; gap: 12px;">
@@ -7815,7 +7815,7 @@
                     console.error('WebLLM init error:', err);
                     let errorMsg = err.message;
                     if (err.name === 'QuotaExceededError' || errorMsg.includes('Quota')) {
-                        errorMsg = 'Storage full. Try a smaller model (Gemma 2B is only 0.5GB) or clear browser data.';
+                        errorMsg = 'Browser storage full. We recommend using Ollama instead - it's already installed on your Mac and works better than WebLLM.';
                     }
                     if (statusEl) {
                         statusEl.innerHTML = `<strong style="color: var(--danger);"><i class="ph ph-warning"></i> Error:</strong> ${errorMsg}`;
