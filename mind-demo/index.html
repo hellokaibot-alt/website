@@ -5,7 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Mind</title>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm@0.2.46/lib/index.js"></script>
+    <script type="module">
+        import * as webllm from 'https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm@0.2.46/lib/index.js';
+        window.webllm = webllm;
+    </script>
     <style>
         /* ==================== CSS VARIABLES & RESET ==================== */
         :root {
@@ -7746,17 +7749,12 @@
                 }
                 
                 try {
-                    // Debug: Check what's available
-                    console.log('WebLLM global check:', { webllm: window.webllm, mlcraft: window.mlcraft, mlc: window.mlc });
-                    
-                    // WebLLM loads as global webllm object
-                    const webllmLib = window.webllm || window.mlcraft;
-                    
-                    if (!webllmLib || !webllmLib.CreateMLCEngine) {
-                        throw new Error('WebLLM library not loaded properly. Available: ' + Object.keys(window).filter(k => k.includes('llm') || k.includes('mlc')).join(', '));
+                    // WebLLM loads as global webllm object from module
+                    if (!window.webllm) {
+                        throw new Error('WebLLM not loaded. Please use Ollama instead - it\'s already installed on your Mac and works better.');
                     }
                     
-                    this.webllmEngine = await webllmLib.CreateMLCEngine(
+                    this.webllmEngine = await window.webllm.CreateMLCEngine(
                         selectedModel,
                         {
                             initProgressCallback: (progress) => {
