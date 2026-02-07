@@ -1672,6 +1672,31 @@
                     }, 2000);
                 }
             }
+            
+            // Theme Toggle
+            const themeToggleBtn = document.getElementById('themeToggleBtn');
+            const currentTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', currentTheme);
+            updateThemeIcon(currentTheme);
+            
+            themeToggleBtn.addEventListener('click', () => {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                updateThemeIcon(newTheme);
+            });
+            
+            function updateThemeIcon(theme) {
+                const icon = themeToggleBtn.querySelector('i');
+                if (theme === 'dark') {
+                    icon.classList.remove('ph-moon');
+                    icon.classList.add('ph-sun');
+                } else {
+                    icon.classList.remove('ph-sun');
+                    icon.classList.add('ph-moon');
+                }
+            }
         });
         
         // Demo Auto-Reset
