@@ -814,6 +814,80 @@ body {
     color: var(--text-primary);
 }
 
+/* Custom Labels */
+.custom-labels-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.custom-label-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+}
+
+.custom-label-color {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+}
+
+.custom-label-name {
+    flex: 1;
+    padding: 4px 8px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg-primary);
+    font-size: 14px;
+}
+
+.custom-label-delete {
+    background: none;
+    border: none;
+    color: var(--text-tertiary);
+    cursor: pointer;
+    font-size: 18px;
+    padding: 0 4px;
+    line-height: 1;
+}
+
+.custom-label-delete:hover {
+    color: var(--danger);
+}
+
+.add-custom-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.add-custom-label input[type="color"] {
+    width: 40px;
+    height: 32px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    padding: 2px;
+}
+
+.add-custom-label input[type="text"] {
+    flex: 1;
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg-secondary);
+    font-size: 14px;
+}
+
 /* View Header */
 .view-header {
     display: flex;
