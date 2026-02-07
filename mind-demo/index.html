@@ -6,8 +6,14 @@
     <title>Mind</title>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <script type="module">
-        import * as webllm from 'https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm@0.2.46/lib/index.js';
-        window.webllm = webllm;
+        try {
+            const webllm = await import('https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm@0.2.46/lib/index.js');
+            window.webllm = webllm;
+            console.log('WebLLM loaded successfully:', webllm);
+        } catch (err) {
+            console.error('Failed to load WebLLM:', err);
+            window.webllmLoadError = err;
+        }
     </script>
     <style>
         /* ==================== CSS VARIABLES & RESET ==================== */
@@ -7745,13 +7751,30 @@
                 
                 const statusEl = document.getElementById('aiStatusMessage');
                 if (statusEl) {
-                    statusEl.innerHTML = `<strong style="color: var(--accent);"><i class="ph ph-spinner animate-spin"></i> Loading AI...</strong> Downloading ${size}, first time only`;
+                    statusEl.innerHTML = `<strong style="color: var(--accent);"><i class="ph ph-spinner animate-spin"></i> Loading AI...</strong> Checking WebLLM...`;
                 }
                 
+                // Wait a moment for module to load
+                await new Promise(resolve => setTimeout(resolve, 500));
+                
                 try {
-                    // WebLLM loads as global webllm object from module
+                    // Check if WebLLM loaded
                     if (!window.webllm) {
-                        throw new Error('WebLLM not loaded. Please use Ollama instead - it\'s already installed on your Mac and works better.');
+                        console.log('window.webllm not found, waiting more...');
+                        // Try waiting a bit more
+                        await new Promise(resolve => setTimeout(resolve, 2000));
+                    }
+                    
+                    if (!window.webllm) {
+                        throw new Error('WebLLM library failed to load from CDN. This may be a network issue or browser compatibility issue.');
+                    }
+                    
+                    if (!window.webllm.CreateMLCEngine) {
+                        throw new Error('WebLLM loaded but CreateMLCEngine not found. Available: ' + Object.keys(window.webllm).join(', '));
+                    }
+                    
+                    if (statusEl) {
+                        statusEl.innerHTML = `<strong style="color: var(--accent);"><i class="ph ph-spinner animate-spin"></i> Loading AI...</strong> Downloading ${size}, first time only`;
                     }
                     
                     this.webllmEngine = await window.webllm.CreateMLCEngine(
@@ -7777,7 +7800,7 @@
                 } catch (err) {
                     console.error('WebLLM init error:', err);
                     if (statusEl) {
-                        statusEl.innerHTML = `<strong style="color: var(--danger);"><i class="ph ph-warning"></i> Error:</strong> ${err.message || 'Failed to load AI'}. Try Ollama instead.`;
+                        statusEl.innerHTML = `<strong style="color: var(--danger);"><i class="ph ph-warning"></i> Error:</strong> ${err.message}`;
                     }
                     this.webllmReady = false;
                 }
