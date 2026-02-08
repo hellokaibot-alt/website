@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>i_am_Hicks — Define yourself</title>
-    <meta name="description" content="Beautiful, offline-first productivity tools. MIND for notes and knowledge. FLOW for tasks and focus. Buy once, own forever. No subscriptions.">
+    <meta name="description" content="Beautiful, offline-first AI-powered productivity tools. Mind_ai for notes and knowledge. Flow_ai for tasks and focus. Buy once, own forever. No subscriptions.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -101,7 +101,8 @@
 
         .nav-logo span {
             font-weight: 300;
-            opacity: 0.7;
+            opacity: 1;
+            color: var(--text-secondary);
         }
 
         .nav-links {
@@ -220,63 +221,12 @@
                 radial-gradient(ellipse 50% 30% at 80% 70%, rgba(59, 130, 246, 0.06) 0%, transparent 50%),
                 radial-gradient(ellipse 40% 40% at 50% 50%, rgba(139, 92, 246, 0.03) 0%, transparent 60%);
             pointer-events: none;
-            animation: pulse-glow 8s ease-in-out infinite;
-        }
-
-        @keyframes pulse-glow {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.8; transform: scale(1.05); }
         }
 
         .hero-content {
             position: relative;
             z-index: 1;
             max-width: 900px;
-        }
-
-        /* Floating animation for hero elements */
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-12px); }
-        }
-
-        @keyframes float-delayed {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-8px); }
-        }
-
-        @keyframes bob-rotate {
-            0%, 100% { transform: translateY(0px) rotate(-2deg); }
-            50% { transform: translateY(-15px) rotate(2deg); }
-        }
-
-        .hero-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: rgba(139, 92, 246, 0.1);
-            border: 1px solid rgba(139, 92, 246, 0.2);
-            color: var(--accent-mind);
-            padding: 10px 20px;
-            border-radius: 100px;
-            font-size: 14px;
-            font-weight: 500;
-            margin-bottom: 40px;
-            animation: float 4s ease-in-out infinite;
-        }
-
-        .hero-badge::before {
-            content: '';
-            width: 8px;
-            height: 8px;
-            background: linear-gradient(135deg, var(--accent-mind), var(--accent-flow));
-            border-radius: 50%;
-            animation: pulse-dot 2s infinite;
-        }
-
-        @keyframes pulse-dot {
-            0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.4); }
-            50% { opacity: 0.8; transform: scale(1.2); box-shadow: 0 0 0 8px rgba(139, 92, 246, 0); }
         }
 
         .hero h1 {
@@ -289,12 +239,13 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            animation: bob-rotate 6s ease-in-out infinite;
         }
 
         .hero h1 span {
             font-weight: 300;
-            opacity: 0.8;
+            opacity: 1;
+            color: #d0d0e0;
+            -webkit-text-fill-color: #d0d0e0;
         }
 
         .hero-tagline {
@@ -305,7 +256,6 @@
             letter-spacing: 0.1em;
             text-transform: uppercase;
             margin-bottom: 24px;
-            animation: float-delayed 5s ease-in-out infinite;
         }
 
         .hero-subhead {
@@ -481,7 +431,7 @@
             max-width: 1200px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(520px, 1fr));
             gap: 32px;
         }
 
@@ -530,6 +480,13 @@
             height: 4px;
         }
 
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 24px;
+        }
+
         .product-icon {
             width: 72px;
             height: 72px;
@@ -538,7 +495,6 @@
             align-items: center;
             justify-content: center;
             font-size: 36px;
-            margin-bottom: 28px;
             transition: transform 0.3s ease;
         }
 
@@ -554,6 +510,26 @@
         .product-card.flow .product-icon {
             background: linear-gradient(135deg, var(--accent-flow) 0%, #60a5fa 100%);
             box-shadow: 0 12px 32px rgba(59, 130, 246, 0.3);
+        }
+
+        .ai-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(59, 130, 246, 0.15));
+            border: 1px solid rgba(139, 92, 246, 0.25);
+            padding: 8px 16px;
+            border-radius: 100px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #c4b5fd;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .ai-badge::before {
+            content: '✦';
+            color: var(--accent-mind);
         }
 
         .product-card h3 {
@@ -584,6 +560,197 @@
             margin-bottom: 24px;
             font-size: 15px;
             line-height: 1.6;
+        }
+
+        /* Product Mockup Styles */
+        .product-mockup {
+            background: var(--bg-primary);
+            border-radius: 16px;
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .mockup-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.02);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .mockup-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .mockup-dot.red { background: #ff5f57; }
+        .mockup-dot.yellow { background: #febc2e; }
+        .mockup-dot.green { background: #28c840; }
+
+        .mockup-content {
+            padding: 20px;
+            min-height: 180px;
+        }
+
+        /* Mind Mockup */
+        .mind-mockup .mockup-sidebar {
+            display: flex;
+            gap: 16px;
+        }
+
+        .mockup-nav {
+            width: 60px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .mockup-nav-item {
+            height: 36px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .mockup-nav-item.active {
+            background: var(--accent-mind);
+        }
+
+        .mockup-main {
+            flex: 1;
+        }
+
+        .mockup-note-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .mockup-note-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 12px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            border-left: 3px solid var(--accent-mind);
+        }
+
+        .mockup-note-item.ai-highlight {
+            background: linear-gradient(90deg, rgba(139, 92, 246, 0.15), var(--bg-tertiary));
+            border-left-color: #c4b5fd;
+        }
+
+        .mockup-note-title {
+            height: 10px;
+            background: var(--text-secondary);
+            border-radius: 3px;
+            flex: 1;
+        }
+
+        .mockup-note-title.short { width: 60%; }
+
+        .mockup-ai-suggestion {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(59, 130, 246, 0.1));
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 10px;
+            margin-top: 12px;
+        }
+
+        .mockup-ai-suggestion span {
+            font-size: 11px;
+            color: #c4b5fd;
+        }
+
+        /* Flow Mockup */
+        .flow-mockup .mockup-board {
+            display: flex;
+            gap: 12px;
+        }
+
+        .mockup-column {
+            flex: 1;
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            padding: 12px;
+        }
+
+        .mockup-column-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .mockup-column-title {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+        }
+
+        .mockup-column-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-flow);
+        }
+
+        .mockup-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 8px;
+        }
+
+        .mockup-card-title {
+            height: 8px;
+            background: var(--text-secondary);
+            border-radius: 2px;
+            margin-bottom: 8px;
+        }
+
+        .mockup-card-meta {
+            display: flex;
+            gap: 6px;
+        }
+
+        .mockup-tag {
+            height: 6px;
+            width: 30px;
+            background: var(--accent-flow);
+            border-radius: 3px;
+            opacity: 0.6;
+        }
+
+        .mockup-ai-insight {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(139, 92, 246, 0.1));
+            border: 1px solid rgba(59, 130, 246, 0.25);
+            border-radius: 8px;
+            margin-top: 8px;
+        }
+
+        .mockup-ai-insight span {
+            font-size: 10px;
+            color: #93c5fd;
         }
 
         .product-features {
@@ -694,6 +861,92 @@
         .btn-demo:hover {
             background: var(--bg-secondary);
             border-color: var(--border-hover);
+        }
+
+        /* Comparison Section */
+        .comparison {
+            padding: 100px 40px;
+            background: var(--bg-primary);
+            position: relative;
+        }
+
+        .comparison-content {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr 1fr;
+            gap: 0;
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid var(--border-light);
+            background: var(--bg-card);
+        }
+
+        .comparison-header {
+            display: contents;
+        }
+
+        .comparison-header > div {
+            padding: 24px;
+            font-weight: 600;
+            font-size: 16px;
+            text-align: center;
+            background: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .comparison-header .mind-ai-header {
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(139, 92, 246, 0.1));
+            color: var(--accent-mind);
+        }
+
+        .comparison-row {
+            display: contents;
+        }
+
+        .comparison-row > div {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border-light);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+
+        .comparison-row:last-child > div {
+            border-bottom: none;
+        }
+
+        .comparison-feature {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .comparison-yes {
+            justify-content: center;
+            color: #10b981;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        .comparison-no {
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 16px;
+        }
+
+        .comparison-mind-ai {
+            justify-content: center;
+            background: rgba(139, 92, 246, 0.05);
+            color: var(--accent-mind);
+            font-weight: 600;
+        }
+
+        .comparison-cta {
+            text-align: center;
+            margin-top: 40px;
         }
 
         /* Bundle Section */
@@ -984,7 +1237,8 @@
 
         .footer-logo span {
             font-weight: 300;
-            opacity: 0.7;
+            opacity: 1;
+            color: var(--text-secondary);
         }
 
         .footer-tagline {
@@ -1092,6 +1346,16 @@
                 padding: 32px;
             }
 
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .comparison-header,
+            .comparison-row {
+                display: flex;
+                flex-direction: column;
+            }
+
             .features-grid {
                 grid-template-columns: 1fr;
             }
@@ -1142,11 +1406,9 @@
         <div class="nav-content">
             <a href="/" class="nav-logo"><span>i_am_</span>Hicks</a>
             <div class="nav-links">
-                <a href="#products">Products</a>
-                <a href="#features">Features</a>
-                <a href="#faq">FAQ</a>
-                <a href="/about/">About</a>
-                <a href="https://gumroad.com" class="nav-cta">Buy Now</a>
+                <a href="#mind">Mind_ai</a>
+                <a href="#flow">Flow_ai</a>
+                <a href="#about">About Us</a>
             </div>
         </div>
     </nav>
@@ -1154,12 +1416,9 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-content">
-            <div class="hero-badge">
-                Now Available
-            </div>
             <h1><span>i_am_</span>Hicks</h1>
             <p class="hero-tagline">Define yourself</p>
-            <p class="hero-subhead">Beautiful, offline-first productivity tools you actually own. No subscriptions. No surveillance. Just focus.</p>
+            <p class="hero-subhead">AI-powered productivity tools you actually own. No subscriptions. No surveillance. Just focus.</p>
             
             <div class="hero-cta-group">
                 <a href="https://gumroad.com" class="btn btn-primary">Buy Now — $49 Bundle</a>
@@ -1169,11 +1428,11 @@
             <div class="hero-apps">
                 <a href="/mind-demo/" class="hero-app-link mind">
                     <span class="icon">🧠</span>
-                    <span>Try MIND Demo</span>
+                    <span>Try Mind_ai Demo</span>
                 </a>
                 <a href="/flow-demo/" class="hero-app-link flow">
                     <span class="icon">⚡</span>
-                    <span>Try FLOW Demo</span>
+                    <span>Try Flow_ai Demo</span>
                 </a>
             </div>
         </div>
@@ -1189,23 +1448,62 @@
     <!-- Products Section -->
     <section class="products" id="products">
         <div class="section-header reveal">
-            <h2>Two apps. Infinite focus.</h2>
-            <p>Everything you need to think clearly and execute relentlessly.</p>
+            <h2>Two apps. Infinite intelligence.</h2>
+            <p>AI-powered tools to capture ideas, organize knowledge, and execute relentlessly.</p>
         </div>
 
         <div class="products-grid">
-            <!-- MIND -->
-            <div class="product-card mind reveal">
-                <div class="product-icon">🧠</div>
-                <h3>MIND</h3>
+            <!-- Mind_ai -->
+            <div class="product-card mind reveal" id="mind">
+                <div class="product-header">
+                    <div class="product-icon">🧠</div>
+                    <span class="ai-badge">AI Powered</span>
+                </div>
+                <h3>Mind_ai</h3>
                 <p class="tagline">i am Clear</p>
-                <p>Your second brain, actually private. Notes, bookmarks, and knowledge — organized and searchable.</p>
+                <p>Your AI-enhanced second brain. Smart notes, bookmarks, and knowledge — organized, searchable, and intelligently connected.</p>
                 
+                <!-- Visual Mockup -->
+                <div class="product-mockup mind-mockup">
+                    <div class="mockup-header">
+                        <div class="mockup-dot red"></div>
+                        <div class="mockup-dot yellow"></div>
+                        <div class="mockup-dot green"></div>
+                    </div>
+                    <div class="mockup-content">
+                        <div class="mockup-sidebar">
+                            <div class="mockup-nav">
+                                <div class="mockup-nav-item active">📝</div>
+                                <div class="mockup-nav-item">🔖</div>
+                                <div class="mockup-nav-item">🏷️</div>
+                            </div>
+                            <div class="mockup-main">
+                                <div class="mockup-note-list">
+                                    <div class="mockup-note-item">
+                                        <div class="mockup-note-title"></div>
+                                    </div>
+                                    <div class="mockup-note-item ai-highlight">
+                                        <div class="mockup-note-title short"></div>
+                                    </div>
+                                    <div class="mockup-note-item">
+                                        <div class="mockup-note-title"></div>
+                                    </div>
+                                </div>
+                                <div class="mockup-ai-suggestion">
+                                    <span>✦ AI suggests: Connect to "Project Ideas"</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <ul class="product-features">
-                    <li>Rich text editor, no markdown to learn</li>
-                    <li>Save bookmarks with full-text search</li>
-                    <li>Nested folders & tag-based organization</li>
-                    <li>100% offline — data never leaves device</li>
+                    <li>Rich text editor with AI-powered writing assistance</li>
+                    <li>Smart tagging — AI auto-suggests relevant tags</li>
+                    <li>Intelligent note connections and knowledge graphs</li>
+                    <li>Save bookmarks with AI-generated summaries</li>
+                    <li>Full-text search with semantic understanding</li>
+                    <li>100% offline — AI runs locally on your device</li>
                     <li>Export to Markdown / JSON anytime</li>
                 </ul>
 
@@ -1215,24 +1513,78 @@
                 </div>
 
                 <div class="product-actions">
-                    <a href="https://gumroad.com" class="btn btn-mind">Buy MIND</a>
+                    <a href="https://gumroad.com" class="btn btn-mind">Buy Mind_ai</a>
                     <a href="/mind-demo/" class="btn btn-demo">Try Demo</a>
-                    <a href="/mind/" class="btn btn-secondary">Learn More</a>
                 </div>
             </div>
 
-            <!-- FLOW -->
-            <div class="product-card flow reveal">
-                <div class="product-icon">⚡</div>
-                <h3>FLOW</h3>
-                <p class="tagline">i am Focus</p>
-                <p>The Kanban board that actually ships. Manage projects, track tasks, plan your work.</p>
+            <!-- Flow_ai -->
+            <div class="product-card flow reveal" id="flow">
+                <div class="product-header">
+                    <div class="product-icon">⚡</div>
+                    <span class="ai-badge">AI Powered</span>
+                </div>
+                <h3>Flow_ai</h3>
+                <p class="tagline">i am Focused</p>
+                <p>The intelligent Kanban board that ships. AI task prioritization, smart scheduling, and automated insights to keep you in flow.</p>
                 
+                <!-- Visual Mockup -->
+                <div class="product-mockup flow-mockup">
+                    <div class="mockup-header">
+                        <div class="mockup-dot red"></div>
+                        <div class="mockup-dot yellow"></div>
+                        <div class="mockup-dot green"></div>
+                    </div>
+                    <div class="mockup-content">
+                        <div class="mockup-board">
+                            <div class="mockup-column">
+                                <div class="mockup-column-header">
+                                    <span class="mockup-column-title">To Do</span>
+                                    <div class="mockup-column-dot"></div>
+                                </div>
+                                <div class="mockup-card">
+                                    <div class="mockup-card-title"></div>
+                                    <div class="mockup-card-meta">
+                                        <div class="mockup-tag"></div>
+                                    </div>
+                                </div>
+                                <div class="mockup-card">
+                                    <div class="mockup-card-title"></div>
+                                </div>
+                            </div>
+                            <div class="mockup-column">
+                                <div class="mockup-column-header">
+                                    <span class="mockup-column-title">Doing</span>
+                                    <div class="mockup-column-dot"></div>
+                                </div>
+                                <div class="mockup-card">
+                                    <div class="mockup-card-title"></div>
+                                    <div class="mockup-card-meta">
+                                        <div class="mockup-tag"></div>
+                                        <div class="mockup-tag" style="background: #10b981;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mockup-column">
+                                <div class="mockup-column-header">
+                                    <span class="mockup-column-title">Done</span>
+                                    <div class="mockup-column-dot"></div>
+                                </div>
+                                <div class="mockup-ai-insight">
+                                    <span>⚡ Focus: 3 tasks due today</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <ul class="product-features">
                     <li>Infinite Kanban boards with drag-and-drop</li>
+                    <li>AI task prioritization based on deadlines & urgency</li>
+                    <li>Smart scheduling suggestions and time estimates</li>
+                    <li>Automated progress insights and bottlenecks</li>
                     <li>Recurring tasks & calendar view</li>
-                    <li>Custom labels, priorities & checklists</li>
-                    <li>Works offline — no internet required</li>
+                    <li>Works offline — AI runs locally on your device</li>
                     <li>Export/Import — own your data</li>
                 </ul>
 
@@ -1242,9 +1594,8 @@
                 </div>
 
                 <div class="product-actions">
-                    <a href="https://gumroad.com" class="btn btn-flow">Buy FLOW</a>
+                    <a href="https://gumroad.com" class="btn btn-flow">Buy Flow_ai</a>
                     <a href="/flow-demo/" class="btn btn-demo">Try Demo</a>
-                    <a href="/flow/" class="btn btn-secondary">Learn More</a>
                 </div>
             </div>
         </div>
@@ -1257,18 +1608,86 @@
         </div>
     </section>
 
-    <!-- Bundle Section -->
-    <section class="bundle">
+    <!-- Comparison Section -->
+    <section class="comparison" id="comparison">
         <div class="wave-divider-top">
             <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
                 <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" style="fill: var(--bg-secondary);"></path>
             </svg>
         </div>
 
+        <div class="section-header reveal">
+            <h2>Why Mind_ai Wins</h2>
+            <p>See how we compare to the alternatives.</p>
+        </div>
+
+        <div class="comparison-content reveal">
+            <div class="comparison-grid">
+                <div class="comparison-header">
+                    <div>Feature</div>
+                    <div class="mind-ai-header">Mind_ai</div>
+                    <div>Notion / Obsidian</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-feature">One-time purchase</div>
+                    <div class="comparison-mind-ai">✓ Included</div>
+                    <div class="comparison-no">Subscription</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-feature">Works offline completely</div>
+                    <div class="comparison-mind-ai">✓ Native</div>
+                    <div class="comparison-yes">✓</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-feature">AI features included</div>
+                    <div class="comparison-mind-ai">✓ Built-in</div>
+                    <div class="comparison-no">Extra cost</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-feature">Local AI (privacy-first)</div>
+                    <div class="comparison-mind-ai">✓ Yes</div>
+                    <div class="comparison-no">Cloud only</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-feature">No account required</div>
+                    <div class="comparison-mind-ai">✓ Instant use</div>
+                    <div class="comparison-no">Signup needed</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-feature">Portable (single file)</div>
+                    <div class="comparison-mind-ai">✓ One HTML</div>
+                    <div class="comparison-no">App install</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-feature">Data ownership</div>
+                    <div class="comparison-mind-ai">✓ 100% Yours</div>
+                    <div class="comparison-yes">✓</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-feature">Automatic syncing</div>
+                    <div class="comparison-no">Manual export</div>
+                    <div class="comparison-yes">✓ Cloud</div>
+                </div>
+            </div>
+
+            <div class="comparison-cta">
+                <a href="https://gumroad.com" class="btn btn-mind">Get Mind_ai — $29</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bundle Section -->
+    <section class="bundle">
+        <div class="wave-divider-top">
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M985.66,92.83C906.67,72,823.78,31,743.84,14.19c-82.26-17.34-168.06-16.33-250.45.39-57.84,11.73-114,31.07-172,41.86A600.21,600.21,0,0,1,0,27.35V120H1200V95.8C1132.19,118.92,1055.71,111.31,985.66,92.83Z" style="fill: var(--bg-secondary);"></path>
+            </svg>
+        </div>
+
         <div class="bundle-content reveal">
             <div class="bundle-badge">Best Value</div>
             <h2>The Complete Package</h2>
-            <p>Get both MIND and FLOW. Everything you need to capture ideas and execute on them.</p>
+            <p>Get both Mind_ai and Flow_ai. Everything you need to capture ideas, organize knowledge, and execute with AI assistance.</p>
             
             <div class="bundle-price">
                 <span class="current">$49</span>
@@ -1297,7 +1716,12 @@
             <div class="feature-card reveal">
                 <div class="feature-icon">🔒</div>
                 <h3>i am Private</h3>
-                <p>Your data stays on your device. No cloud syncing. No data mining. No "analytics." Just pure, private productivity.</p>
+                <p>Your data stays on your device. No cloud syncing. No data mining. AI runs locally — your thoughts never leave your machine.</p>
+            </div>
+            <div class="feature-card reveal">
+                <div class="feature-icon">🤖</div>
+                <h3>i am Intelligent</h3>
+                <p>Built-in AI features without the price tag. Smart suggestions, auto-tagging, writing assistance — all running offline.</p>
             </div>
             <div class="feature-card reveal">
                 <div class="feature-icon">💰</div>
@@ -1319,11 +1743,6 @@
                 <h3>i am Focused</h3>
                 <p>Thoughtfully crafted interfaces that make you want to use them. Beautiful by default. No clutter. Just focus.</p>
             </div>
-            <div class="feature-card reveal">
-                <div class="feature-icon">🚀</div>
-                <h3>i am Professional</h3>
-                <p>Built by a 20-year UI/UX veteran who actually uses these tools daily. Every feature solves a real problem.</p>
-            </div>
         </div>
     </section>
 
@@ -1342,7 +1761,7 @@
             </div>
             <div class="stat-item">
                 <div class="stat-number">2</div>
-                <div class="stat-label">Powerful Apps</div>
+                <div class="stat-label">AI Apps</div>
             </div>
             <div class="stat-item">
                 <div class="stat-number">100%</div>
@@ -1369,6 +1788,10 @@
         
         <div class="faq-grid">
             <div class="faq-item reveal">
+                <h4>How does the AI work offline?</h4>
+                <p>We use lightweight, locally-run AI models that execute directly in your browser. Your data never leaves your device, and you get intelligent features without an internet connection or API costs.</p>
+            </div>
+            <div class="faq-item reveal">
                 <h4>How do I install these apps?</h4>
                 <p>Simple. Download the HTML file, save it anywhere on your computer, and double-click to open in your browser. That's it. No installers, no admin rights, no fuss.</p>
             </div>
@@ -1392,28 +1815,29 @@
     </section>
 
     <!-- Footer -->
-    <footer>
+    <footer id="about">
         <div class="footer-content">
             <div class="footer-brand">
                 <div class="footer-logo"><span>i_am_</span>Hicks</div>
-                <p class="footer-tagline">Beautiful, offline-first productivity tools that respect your privacy and your wallet.</p>
+                <p class="footer-tagline">Beautiful, offline-first AI productivity tools that respect your privacy and your wallet.</p>
             </div>
             <div class="footer-links">
                 <div class="footer-links-column">
-                    <h4>Products</h4>
-                    <a href="/mind/">MIND</a>
-                    <a href="/flow/">FLOW</a>
-                    <a href="https://gumroad.com">Buy Bundle</a>
+                    <h4>Navigation</h4>
+                    <a href="/">Home</a>
+                    <a href="#mind">Mind_ai</a>
+                    <a href="#flow">Flow_ai</a>
+                    <a href="#about">About Us</a>
                 </div>
                 <div class="footer-links-column">
                     <h4>Resources</h4>
-                    <a href="/mind-demo/">MIND Demo</a>
-                    <a href="/flow-demo/">FLOW Demo</a>
+                    <a href="/mind-demo/">Mind_ai Demo</a>
+                    <a href="/flow-demo/">Flow_ai Demo</a>
                     <a href="#faq">FAQ</a>
                 </div>
                 <div class="footer-links-column">
-                    <h4>Company</h4>
-                    <a href="/about/">About</a>
+                    <h4>Get Started</h4>
+                    <a href="https://gumroad.com">Buy Bundle</a>
                     <a href="mailto:hello@iamhicks.com">Contact</a>
                 </div>
             </div>
