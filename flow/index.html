@@ -251,6 +251,88 @@
             margin-bottom: 0;
         }
         
+        /* AI Feature Section */
+        .ai-section {
+            padding: 120px 24px;
+            background: linear-gradient(135deg, var(--dark) 0%, #1f2d4f 100%);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ai-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at center, rgba(59,130,246,0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        
+        .ai-content {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .ai-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: #60a5fa;
+            padding: 10px 20px;
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+        
+        .ai-section h2 {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: clamp(36px, 5vw, 48px);
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .ai-section p {
+            color: var(--text-secondary);
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+        
+        .ai-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-top: 40px;
+        }
+        
+        .ai-feature {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: left;
+        }
+        
+        .ai-feature h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #60a5fa;
+        }
+        
+        .ai-feature p {
+            font-size: 14px;
+            margin: 0;
+        }
+        
         /* Features */
         .features-section {
             padding: 100px 24px;
@@ -276,43 +358,125 @@
         
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 32px;
         }
         
         .feature-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 28px;
-            transition: all 0.2s;
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
         }
         
         .feature-card:hover {
             border-color: var(--text-gray);
+            transform: translateY(-4px);
+        }
+        
+        .feature-mockup {
+            background: var(--dark);
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .mockup-browser {
+            background: var(--bg-card);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .mockup-header {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .mockup-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        
+        .mockup-dot.red { background: #ff5f56; }
+        .mockup-dot.yellow { background: #ffbd2e; }
+        .mockup-dot.green { background: #27c93f; }
+        
+        .mockup-body {
+            padding: 16px;
+            min-height: 120px;
+        }
+        
+        .mockup-kanban {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .mockup-column {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            padding: 8px;
+        }
+        
+        .mockup-column-header {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-white);
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .mockup-task {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 4px;
+            padding: 6px;
+            margin-bottom: 4px;
+            font-size: 9px;
+        }
+        
+        .mockup-ai {
+            background: rgba(59, 130, 246, 0.15);
+            border-left: 3px solid #60a5fa;
+            padding: 8px 10px;
+            border-radius: 0 6px 6px 0;
+            margin-top: 8px;
+        }
+        
+        .mockup-ai-text {
+            font-size: 10px;
+            color: #60a5fa;
+        }
+        
+        .feature-info {
+            padding: 24px;
         }
         
         .feature-icon {
-            width: 48px;
-            height: 48px;
+            width: 44px;
+            height: 44px;
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 20px;
-            font-size: 24px;
+            margin-bottom: 16px;
+            font-size: 20px;
         }
         
         .feature-card h3 {
             font-size: 18px;
             font-weight: 600;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
         }
         
         .feature-card p {
             color: var(--text-secondary);
-            font-size: 15px;
+            font-size: 14px;
             line-height: 1.6;
         }
         
@@ -347,40 +511,6 @@
             color: var(--text-secondary);
             font-size: 16px;
             line-height: 1.7;
-        }
-        
-        /* User Guide Preview */
-        .guide-section {
-            padding: 100px 24px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        .guide-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 32px;
-            margin-bottom: 24px;
-        }
-        
-        .guide-card h3 {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        
-        .guide-card ol {
-            margin-left: 20px;
-            color: var(--text-secondary);
-        }
-        
-        .guide-card li {
-            margin-bottom: 8px;
-            line-height: 1.6;
         }
         
         /* Bundle */
@@ -457,10 +587,10 @@
 
     <section class="hero">
         <div class="hero-badge">
-            <span>⚡</span> FLOW — i am Focus
+            <span>⚡</span> FLOW — AI-Powered Tasks
         </div>
-        <h1>Tasks that actually<br><span>flow</span></h1>
-        <p class="hero-subtitle">A beautiful Kanban task manager that works offline. No subscriptions. No cloud lock-in. Just you and your workflow.</p>
+        <h1>Tasks that actually<br><span>flow with AI</span></h1>
+        <p class="hero-subtitle">An intelligent Kanban task manager with built-in AI assistance. Prioritize smarter, schedule better, get more done — all 100% offline.</p>
         <div class="hero-price">$29 <span>one-time</span></div>
         <div class="cta-group">
             <a href="#buy" class="btn btn-primary">Buy FLOW — $29</a>
@@ -470,12 +600,38 @@
 
     <section class="pitch-section">
         <div class="pitch-content">
-            <h2>Most productivity software is subscription-based, tracks your data, and stops working without internet.</h2>
+            <h2>Most task managers just store your to-dos. FLOW helps you get them done.</h2>
             <div class="pitch-box">
-                <p><strong>We built the alternative.</strong></p>
-                <p>FLOW is a Kanban task manager that actually respects you. It's $29 once — not $10/month forever.</p>
-                <p>It works completely offline. Your tasks never leave your machine unless you want them to. And it looks beautiful because design matters.</p>
-                <p>It's for people who are tired of renting their tools and want to own their productivity stack. $29 once. Forever yours.</p>
+                <p><strong>AI-powered prioritization. Smart scheduling. All offline.</strong></p>
+                <p>FLOW isn't just a Kanban board — it's an intelligent task manager that helps you focus on what matters. AI suggests priorities, identifies bottlenecks, and helps you schedule your work — all without sending your data anywhere.</p>
+                <p>$29 once. No monthly fees. Your tasks stay private while AI helps you be more productive.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="ai-section">
+        <div class="ai-content">
+            <div class="ai-badge">✨ Powered by Local AI</div>
+            <h2>AI that helps you focus on what matters</h2>
+            <p>No cloud processing. No API keys. No subscription. Just intelligent task assistance that runs entirely on your device.</p>
+            
+            <div class="ai-features">
+                <div class="ai-feature">
+                    <h4>🎯 Smart Prioritization</h4>
+                    <p>AI analyzes your tasks and suggests what to work on next based on deadlines, dependencies, and your work patterns.</p>
+                </div>
+                <div class="ai-feature">
+                    <h4>📅 Intelligent Scheduling</h4>
+                    <p>Get AI suggestions for when to schedule tasks. "You have 3 hours free Thursday morning — perfect for deep work."</p>
+                </div>
+                <div class="ai-feature">
+                    <h4>⚠️ Bottleneck Detection</h4>
+                    <p>AI identifies tasks that are blocking others and flags them for attention before they become problems.</p>
+                </div>
+                <div class="ai-feature">
+                    <h4>📊 Productivity Insights</h4>
+                    <p>Get weekly AI-generated reports on your productivity patterns and suggestions for improvement.</p>
+                </div>
             </div>
         </div>
     </section>
@@ -483,108 +639,183 @@
     <section class="features-section">
         <div class="section-header">
             <h2>Everything you need to stay in flow</h2>
-            <p>Beautiful Kanban boards, powerful organization, complete privacy</p>
+            <p>Beautiful Kanban boards enhanced by intelligent assistance</p>
         </div>
         
         <div class="features-grid">
             <div class="feature-card">
-                <div class="feature-icon">📊</div>
-                <h3>Kanban Boards</h3>
-                <p>Visual task management with customizable columns. Drag and drop tasks as they progress. See your workflow at a glance.</p>
+                <div class="feature-mockup">
+                    <div class="mockup-browser">
+                        <div class="mockup-header">
+                            <div class="mockup-dot red"></div>
+                            <div class="mockup-dot yellow"></div>
+                            <div class="mockup-dot green"></div>
+                        </div>
+                        <div class="mockup-body">
+                            <div class="mockup-kanban">
+                                <div class="mockup-column">
+                                    <div class="mockup-column-header">To Do</div>
+                                    <div class="mockup-task">Design review</div>
+                                    <div class="mockup-task">Update docs</div>
+                                </div>
+                                <div class="mockup-column">
+                                    <div class="mockup-column-header">Doing</div>
+                                    <div class="mockup-task">Build feature</div>
+                                </div>
+                                <div class="mockup-column">
+                                    <div class="mockup-column-header">Done</div>
+                                    <div class="mockup-task">Research</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="feature-info">
+                    <div class="feature-icon">📊</div>
+                    <h3>Visual Kanban Boards</h3>
+                    <p>Drag-and-drop task management with customizable columns. See your workflow at a glance.</p>
+                </div>
             </div>
             
             <div class="feature-card">
-                <div class="feature-icon">🏷️</div>
-                <h3>Custom Labels</h3>
-                <p>Color-code and categorize tasks with custom labels. Filter by priority, type, or any system you create.</p>
+                <div class="feature-mockup">
+                    <div class="mockup-browser">
+                        <div class="mockup-header">
+                            <div class="mockup-dot red"></div>
+                            <div class="mockup-dot yellow"></div>
+                            <div class="mockup-dot green"></div>
+                        </div>
+                        <div class="mockup-body">
+                            <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                                <span style="background: rgba(239,68,68,0.3); color: #f87171; padding: 3px 10px; border-radius: 10px; font-size: 10px;">Urgent</span>
+                                <span style="background: rgba(34,197,94,0.3); color: #4ade80; padding: 3px 10px; border-radius: 10px; font-size: 10px;">Feature</span>
+                                <span style="background: rgba(59,130,246,0.3); color: #60a5fa; padding: 3px 10px; border-radius: 10px; font-size: 10px;">Bug</span>
+                            </div>
+                            <div class="mockup-ai" style="margin-top: 12px;">
+                                <div class="mockup-ai-text">✨ 3 urgent tasks due today</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="feature-info">
+                    <div class="feature-icon">🏷️</div>
+                    <h3>AI-Powered Labels</h3>
+                    <p>Color-code tasks with custom labels. AI suggests priorities and flags urgent items automatically.</p>
+                </div>
             </div>
             
             <div class="feature-card">
-                <div class="feature-icon">📅</div>
-                <h3>Due Dates & Calendar</h3>
-                <p>Set deadlines and view tasks in calendar mode. Never miss important dates. Get a visual overview of your schedule.</p>
+                <div class="feature-mockup">
+                    <div class="mockup-browser">
+                        <div class="mockup-header">
+                            <div class="mockup-dot red"></div>
+                            <div class="mockup-dot yellow"></div>
+                            <div class="mockup-dot green"></div>
+                        </div>
+                        <div class="mockup-body">
+                            <div style="background: rgba(255,255,255,0.05); border-radius: 6px; padding: 10px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                    <span style="font-size: 10px; font-weight: 600;">📅 This Week</span>
+                                    <span style="font-size: 9px; color: var(--text-secondary);">12 tasks</span>
+                                </div>
+                                <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px;">
+                                    <div style="aspect-ratio: 1; background: rgba(59,130,246,0.5); border-radius: 2px;"></div>
+                                    <div style="aspect-ratio: 1; background: rgba(59,130,246,0.3); border-radius: 2px;"></div>
+                                    <div style="aspect-ratio: 1; background: rgba(59,130,246,0.8); border-radius: 2px;"></div>
+                                    <div style="aspect-ratio: 1; background: rgba(59,130,246,0.4); border-radius: 2px;"></div>
+                                    <div style="aspect-ratio: 1; background: rgba(59,130,246,0.6); border-radius: 2px;"></div>
+                                    <div style="aspect-ratio: 1; background: rgba(59,130,246,0.2); border-radius: 2px;"></div>
+                                    <div style="aspect-ratio: 1; background: rgba(59,130,246,0.3); border-radius: 2px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="feature-info">
+                    <div class="feature-icon">📅</div>
+                    <h3>Calendar + AI Scheduling</h3>
+                    <p>View tasks in calendar mode with AI-suggested scheduling. Never miss a deadline.</p>
+                </div>
             </div>
             
             <div class="feature-card">
-                <div class="feature-icon">🔔</div>
-                <h3>Recurring Tasks</h3>
-                <p>Set up daily, weekly, or monthly recurring tasks. Automate your routines while keeping control.</p>
+                <div class="feature-mockup">
+                    <div class="mockup-browser">
+                        <div class="mockup-header">
+                            <div class="mockup-dot red"></div>
+                            <div class="mockup-dot yellow"></div>
+                            <div class="mockup-dot green"></div>
+                        </div>
+                        <div class="mockup-body">
+                            <div class="mockup-task" style="display: flex; align-items: center; gap: 6px;">
+                                <span style="font-size: 10px;">🔄</span>
+                                <span style="font-size: 10px;">Weekly Report</span>
+                            </div>
+                            <div style="font-size: 9px; color: var(--text-secondary); margin-top: 8px;">
+                                Repeats every Friday
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="feature-info">
+                    <div class="feature-icon">🔔</div>
+                    <h3>Recurring Tasks</h3>
+                    <p>Set up daily, weekly, or monthly recurring tasks. Automate routines while keeping control.</p>
+                </div>
             </div>
             
             <div class="feature-card">
-                <div class="feature-icon">✈️</div>
-                <h3>Works Offline</h3>
-                <p>On planes, in remote cabins, during outages. Your tasks don't need WiFi. Access everything anywhere.</p>
+                <div class="feature-mockup">
+                    <div class="mockup-browser">
+                        <div class="mockup-header">
+                            <div class="mockup-dot red"></div>
+                            <div class="mockup-dot yellow"></div>
+                            <div class="mockup-dot green"></div>
+                        </div>
+                        <div class="mockup-body" style="display: flex; align-items: center; justify-content: center;">
+                            <div style="text-align: center;">
+                                <div style="font-size: 32px; margin-bottom: 8px;">✈️</div>
+                                <div style="font-size: 11px; color: var(--text-secondary);">No internet required</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="feature-info">
+                    <div class="feature-icon">🔒</div>
+                    <h3>100% Offline + Private</h3>
+                    <p>AI runs locally on your device. Your tasks never leave your machine. Works anywhere.</p>
+                </div>
             </div>
             
             <div class="feature-card">
-                <div class="feature-icon">🔒</div>
-                <h3>Privacy First</h3>
-                <p>No account required. No cloud sync unless YOU set it up. No tracking, ever. Your tasks stay local.</p>
+                <div class="feature-mockup">
+                    <div class="mockup-browser">
+                        <div class="mockup-header">
+                            <div class="mockup-dot red"></div>
+                            <div class="mockup-dot yellow"></div>
+                            <div class="mockup-dot green"></div>
+                        </div>
+                        <div class="mockup-body">
+                            <div style="font-size: 10px; color: var(--text-secondary); margin-bottom: 8px;">⚡ This Week's Impact:</div>
+                            <div style="display: flex; gap: 16px;">
+                                <div>
+                                    <div style="font-size: 20px; font-weight: 700;">24</div>
+                                    <div style="font-size: 9px; color: var(--text-secondary);">Completed</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 20px; font-weight: 700;">8</div>
+                                    <div style="font-size: 9px; color: var(--text-secondary);">Pending</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="feature-info">
+                    <div class="feature-icon">📊</div>
+                    <h3>AI Productivity Insights</h3>
+                    <p>Get weekly AI-generated reports on your productivity patterns and personalized suggestions.</p>
+                </div>
             </div>
-            
-            <div class="feature-card">
-                <div class="feature-icon">🎨</div>
-                <h3>Beautiful Design</h3>
-                <p>Clean, modern interface inspired by the best. Dark and light modes. Typography that doesn't strain your eyes.</p>
-            </div>
-            
-            <div class="feature-card">
-                <div class="feature-icon">⚡</div>
-                <h3>Lightning Fast</h3>
-                <p>No loading spinners. No "syncing..." messages. Instant response because everything is stored locally.</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="guide-section">
-        <div class="section-header">
-            <h2>Quick Start Guide</h2>
-            <p>From download to productive in 3 minutes</p>
-        </div>
-        
-        <div class="guide-card">
-            <h3><span>1️⃣</span> Installation</h3>
-            <ol>
-                <li>Download FLOW after purchase</li>
-                <li>Unzip the file</li>
-                <li>Open <code>index.html</code> in any modern browser</li>
-                <li>That's it — no installation, no account setup</li>
-            </ol>
-        </div>
-        
-        <div class="guide-card">
-            <h3><span>2️⃣</span> Creating Your First Board</h3>
-            <ol>
-                <li>Click "+ New Board" in the header</li>
-                <li>Name your board (e.g., "Work Projects", "Personal Tasks")</li>
-                <li>Choose a template or start blank</li>
-                <li>Customize columns (To Do, In Progress, Done, etc.)</li>
-            </ol>
-        </div>
-        
-        <div class="guide-card">
-            <h3><span>3️⃣</span> Adding Tasks</h3>
-            <ol>
-                <li>Click "+ Add a card" in any column</li>
-                <li>Type your task name</li>
-                <li>Click the card to add details, due date, labels</li>
-                <li>Drag cards between columns as they progress</li>
-            </ol>
-        </div>
-        
-        <div class="guide-card">
-            <h3><span>4️⃣</span> Organizing with Labels</h3>
-            <ol>
-                <li>Open a task card</li>
-                <li>Click "Labels" to add or create new labels</li>
-                <li>Use color coding (red = urgent, blue = personal, etc.)</li>
-                <li>Filter your board by clicking label buttons at the top</li>
-            </ol>
-        </div>
-        
-        <div class="cta-group">
-            <a href="/flow-demo/" class="btn btn-secondary">Try the Demo</a>
         </div>
     </section>
 
