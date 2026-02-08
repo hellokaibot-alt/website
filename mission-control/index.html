@@ -605,7 +605,8 @@
                     if (!match) return `<div class="log-line">${this.escapeHtml(line)}</div>`;
                     
                     const [, timestamp, level, message] = match;
-                    const time = new Date(timestamp).toLocaleTimeString();
+                    // Show GMT/UTC time
+                    const time = timestamp.replace('T', ' ').replace(/\.\d+Z$/, ' GMT');
                     let levelClass = 'info';
                     if (level.includes('error')) levelClass = 'error';
                     else if (level.includes('warn')) levelClass = 'warning';
