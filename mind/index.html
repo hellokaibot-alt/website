@@ -251,6 +251,88 @@
             margin-bottom: 0;
         }
         
+        /* AI Feature Section */
+        .ai-section {
+            padding: 120px 24px;
+            background: linear-gradient(135deg, var(--dark) 0%, #2d1f4f 100%);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ai-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(ellipse at center, rgba(139,92,246,0.15) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        
+        .ai-content {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .ai-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(139, 92, 246, 0.2);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            color: #a78bfa;
+            padding: 10px 20px;
+            border-radius: 100px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+        
+        .ai-section h2 {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: clamp(36px, 5vw, 48px);
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .ai-section p {
+            color: var(--text-secondary);
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+        
+        .ai-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-top: 40px;
+        }
+        
+        .ai-feature {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: left;
+        }
+        
+        .ai-feature h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #a78bfa;
+        }
+        
+        .ai-feature p {
+            font-size: 14px;
+            margin: 0;
+        }
+        
         /* Features */
         .features-section {
             padding: 100px 24px;
@@ -276,43 +358,119 @@
         
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 32px;
         }
         
         .feature-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 28px;
-            transition: all 0.2s;
+            border-radius: 16px;
+            overflow: hidden;
+            transition: all 0.3s ease;
         }
         
         .feature-card:hover {
             border-color: var(--text-gray);
+            transform: translateY(-4px);
+        }
+        
+        .feature-mockup {
+            background: var(--dark);
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .mockup-browser {
+            background: var(--bg-card);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .mockup-header {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .mockup-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        
+        .mockup-dot.red { background: #ff5f56; }
+        .mockup-dot.yellow { background: #ffbd2e; }
+        .mockup-dot.green { background: #27c93f; }
+        
+        .mockup-body {
+            padding: 16px;
+            min-height: 120px;
+        }
+        
+        .mockup-note {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 6px;
+            padding: 12px;
+        }
+        
+        .mockup-title {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-white);
+        }
+        
+        .mockup-line {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            margin-bottom: 6px;
+        }
+        
+        .mockup-line.short { width: 60%; }
+        .mockup-line.shorter { width: 40%; }
+        
+        .mockup-ai {
+            background: rgba(139, 92, 246, 0.15);
+            border-left: 3px solid #a78bfa;
+            padding: 10px 12px;
+            border-radius: 0 6px 6px 0;
+            margin-top: 10px;
+        }
+        
+        .mockup-ai-text {
+            font-size: 11px;
+            color: #a78bfa;
+        }
+        
+        .feature-info {
+            padding: 24px;
         }
         
         .feature-icon {
-            width: 48px;
-            height: 48px;
+            width: 44px;
+            height: 44px;
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 20px;
-            font-size: 24px;
+            margin-bottom: 16px;
+            font-size: 20px;
         }
         
         .feature-card h3 {
             font-size: 18px;
             font-weight: 600;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
         }
         
         .feature-card p {
             color: var(--text-secondary);
-            font-size: 15px;
+            font-size: 14px;
             line-height: 1.6;
         }
         
@@ -347,40 +505,6 @@
             color: var(--text-secondary);
             font-size: 16px;
             line-height: 1.7;
-        }
-        
-        /* User Guide Preview */
-        .guide-section {
-            padding: 100px 24px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        .guide-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 32px;
-            margin-bottom: 24px;
-        }
-        
-        .guide-card h3 {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        
-        .guide-card ol {
-            margin-left: 20px;
-            color: var(--text-secondary);
-        }
-        
-        .guide-card li {
-            margin-bottom: 8px;
-            line-height: 1.6;
         }
         
         /* Bundle */
@@ -512,10 +636,10 @@
 
     <section class="hero">
         <div class="hero-badge">
-            <span>🧠</span> MIND — i am Clear
+            <span>🧠</span> MIND — AI-Powered Knowledge
         </div>
-        <h1>Your second brain,<br><span>actually private</span></h1>
-        <p class="hero-subtitle">A beautiful, offline-first knowledge base that puts you in control of your thoughts — forever.</p>
+        <h1>Your second brain,<br><span>powered by AI</span></h1>
+        <p class="hero-subtitle">A beautiful, offline-first knowledge base with built-in AI assistance. Ask questions, get summaries, find connections — all 100% private.</p>
         <div class="hero-price">$29 <span>one-time</span></div>
         <div class="cta-group">
             <a href="#buy" class="btn btn-primary">Buy MIND — $29</a>
@@ -525,121 +649,210 @@
 
     <section class="pitch-section">
         <div class="pitch-content">
-            <h2>Most productivity software is subscription-based, tracks your data, and stops working without internet.</h2>
+            <h2>Most note-taking apps are just digital filing cabinets. MIND actually thinks with you.</h2>
             <div class="pitch-box">
-                <p><strong>We built the alternative.</strong></p>
-                <p>MIND is a knowledge base that actually respects you. It's $29 once — not $10/month forever.</p>
-                <p>It works completely offline. Your data never leaves your machine unless you want it to. And it looks beautiful because design matters.</p>
-                <p>It's for people who are tired of renting their tools and want to own their productivity stack. $29 once. Forever yours.</p>
+                <p><strong>Local AI. No API keys. No subscriptions.</strong></p>
+                <p>MIND isn't just a place to dump notes — it's an AI-powered thinking partner that runs entirely on your machine. Ask it to summarize your research, find connections between ideas, or suggest tags — all without sending your data anywhere.</p>
+                <p>$29 once. No monthly fees. Your thoughts stay yours, enhanced by AI that actually respects your privacy.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="ai-section">
+        <div class="ai-content">
+            <div class="ai-badge">✨ Powered by Local AI</div>
+            <h2>AI that actually understands your notes</h2>
+            <p>No cloud processing. No API keys. No subscription. Just intelligent assistance that runs entirely on your device.</p>
+            
+            <div class="ai-features">
+                <div class="ai-feature">
+                    <h4>📝 Smart Summaries</h4>
+                    <p>Select any note and ask for a summary. Perfect for distilling research or catching up on long reading lists.</p>
+                </div>
+                <div class="ai-feature">
+                    <h4>🔗 Find Connections</h4>
+                    <p>Discover links between ideas you didn't know existed. AI surfaces related notes automatically.</p>
+                </div>
+                <div class="ai-feature">
+                    <h4>🏷️ Auto-Tagging</h4>
+                    <p>Let AI suggest relevant tags based on content. Organize faster without the manual work.</p>
+                </div>
+                <div class="ai-feature">
+                    <h4>❓ Ask Your Knowledge Base</h4>
+                    <p>Ask natural language questions across all your notes. "What did I write about marketing last month?"</p>
+                </div>
             </div>
         </div>
     </section>
 
     <section class="features-section">
         <div class="section-header">
-            <h2>Everything you need, nothing you don't</h2>
-            <p>Beautiful, focused, and designed for how you actually think</p>
+            <h2>Everything you need to think clearly</h2>
+            <p>Beautiful tools enhanced by intelligent assistance</p>
         </div>
         
         <div class="features-grid">
             <div class="feature-card">
-                <div class="feature-icon">📝</div>
-                <h3>Rich Text Editor</h3>
-                <p>WYSIWYG editing with formatting, lists, and media. No markdown syntax to memorize. Just write.</p>
+                <div class="feature-mockup">
+                    <div class="mockup-browser">
+                        <div class="mockup-header">
+                            <div class="mockup-dot red"></div>
+                            <div class="mockup-dot yellow"></div>
+                            <div class="mockup-dot green"></div>
+                        </div>
+                        <div class="mockup-body">
+                            <div class="mockup-note">
+                                <div class="mockup-title">Meeting Notes — Q4 Planning</div>
+                                <div class="mockup-line"></div>
+                                <div class="mockup-line short"></div>
+                                <div class="mockup-line short"></div>
+                                <div class="mockup-ai">
+                                    <div class="mockup-ai-text">✨ AI: Summarize key decisions?</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="feature-info">
+                    <div class="feature-icon">📝</div>
+                    <h3>Rich Text + AI Writing</h3>
+                    <p>WYSIWYG editor with built-in AI assistance. Get suggestions, summaries, and rewrites without leaving your note.</p>
+                </div>
             </div>
             
             <div class="feature-card">
-                <div class="feature-icon">🏷️</div>
-                <h3>Smart Tagging</h3>
-                <p>Multi-tag filtering lets you find anything instantly. Click "Work" + "Urgent" to see only urgent work items.</p>
+                <div class="feature-mockup">
+                    <div class="mockup-browser">
+                        <div class="mockup-header">
+                            <div class="mockup-dot red"></div>
+                            <div class="mockup-dot yellow"></div>
+                            <div class="mockup-dot green"></div>
+                        </div>
+                        <div class="mockup-body">
+                            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                <span style="background: rgba(139,92,246,0.3); color: #a78bfa; padding: 4px 12px; border-radius: 12px; font-size: 11px;">#research</span>
+                                <span style="background: rgba(34,197,94,0.3); color: #4ade80; padding: 4px 12px; border-radius: 12px; font-size: 11px;">#product</span>
+                                <span style="background: rgba(245,158,11,0.3); color: #fbbf24; padding: 4px 12px; border-radius: 12px; font-size: 11px;">#ideas</span>
+                                <div class="mockup-ai" style="margin-top: 12px; width: 100%;">
+                                    <div class="mockup-ai-text">✨ AI suggests: #strategy #planning</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="feature-info">
+                    <div class="feature-icon">🏷️</div>
+                    <h3>Smart Tagging</h3>
+                    <p>Multi-tag filtering with AI-powered suggestions. Find anything instantly with natural language search.</p>
+                </div>
             </div>
             
             <div class="feature-card">
-                <div class="feature-icon">📁</div>
-                <h3>Hierarchical Organization</h3>
-                <p>Notes → Folders → Tags. Structure that scales from a few ideas to a complete knowledge library.</p>
+                <div class="feature-mockup">
+                    <div class="mockup-browser">
+                        <div class="mockup-header">
+                            <div class="mockup-dot red"></div>
+                            <div class="mockup-dot yellow"></div>
+                            <div class="mockup-dot green"></div>
+                        </div>
+                        <div class="mockup-body">
+                            <div style="display: flex; gap: 16px;">
+                                <div style="flex: 1;">
+                                    <div style="font-size: 10px; color: var(--text-secondary); margin-bottom: 6px;">📁 Work</div>
+                                    <div style="background: rgba(255,255,255,0.05); border-radius: 4px; padding: 6px; margin-bottom: 4px;">
+                                        <div style="font-size: 10px;">Projects</div>
+                                    </div>
+                                </div>
+                                <div style="flex: 1;">
+                                    <div style="font-size: 10px; color: var(--text-secondary); margin-bottom: 6px;">📁 Personal</div>
+                                    <div style="background: rgba(255,255,255,0.05); border-radius: 4px; padding: 6px;">
+                                        <div style="font-size: 10px;">Journal</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="feature-info">
+                    <div class="feature-icon">📁</div>
+                    <h3>Hierarchical Organization</h3>
+                    <p>Notes → Folders → Tags. Structure that scales from a few ideas to a complete knowledge library.</p>
+                </div>
             </div>
             
             <div class="feature-card">
-                <div class="feature-icon">🔍</div>
-                <h3>Instant Search</h3>
-                <p>Full-text search across all your notes. Find that idea you had months ago in milliseconds.</p>
+                <div class="feature-mockup">
+                    <div class="mockup-browser">
+                        <div class="mockup-header">
+                            <div class="mockup-dot red"></div>
+                            <div class="mockup-dot yellow"></div>
+                            <div class="mockup-dot green"></div>
+                        </div>
+                        <div class="mockup-body">
+                            <div style="background: rgba(255,255,255,0.1); border-radius: 20px; padding: 8px 14px; display: flex; align-items: center; gap: 8px;">
+                                <span style="font-size: 12px;">🔍</span>
+                                <span style="font-size: 11px; color: var(--text-secondary);">"marketing strategy notes..."</span>
+                            </div>
+                            <div style="margin-top: 12px; font-size: 10px; color: var(--text-secondary);">
+                                Found 3 results in 0.1s
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="feature-info">
+                    <div class="feature-icon">🔍</div>
+                    <h3>AI-Powered Search</h3>
+                    <p>Full-text search with natural language understanding. Find ideas even when you can't remember exact words.</p>
+                </div>
             </div>
             
             <div class="feature-card">
-                <div class="feature-icon">✈️</div>
-                <h3>Works Offline</h3>
-                <p>On planes, in remote cabins, during outages. Your knowledge doesn't need WiFi.</p>
+                <div class="feature-mockup">
+                    <div class="mockup-browser">
+                        <div class="mockup-header">
+                            <div class="mockup-dot red"></div>
+                            <div class="mockup-dot yellow"></div>
+                            <div class="mockup-dot green"></div>
+                        </div>
+                        <div class="mockup-body" style="display: flex; align-items: center; justify-content: center;">
+                            <div style="text-align: center;">
+                                <div style="font-size: 32px; margin-bottom: 8px;">✈️</div>
+                                <div style="font-size: 11px; color: var(--text-secondary);">No internet required</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="feature-info">
+                    <div class="feature-icon">🔒</div>
+                    <h3>100% Offline + Private</h3>
+                    <p>AI runs locally on your device. Your notes never leave your machine. Works on planes, anywhere.</p>
+                </div>
             </div>
             
             <div class="feature-card">
-                <div class="feature-icon">🔒</div>
-                <h3>Privacy First</h3>
-                <p>No account required. No cloud sync unless YOU set it up. No tracking, ever. Your data stays local.</p>
+                <div class="feature-mockup">
+                    <div class="mockup-browser">
+                        <div class="mockup-header">
+                            <div class="mockup-dot red"></div>
+                            <div class="mockup-dot yellow"></div>
+                            <div class="mockup-dot green"></div>
+                        </div>
+                        <div class="mockup-body">
+                            <div style="font-size: 10px; color: var(--text-secondary); margin-bottom: 8px;">Export Options:</div>
+                            <div style="display: flex; gap: 8px;">
+                                <span style="background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 4px; font-size: 10px;">Markdown</span>
+                                <span style="background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 4px; font-size: 10px;">JSON</span>
+                                <span style="background: rgba(255,255,255,0.1); padding: 4px 10px; border-radius: 4px; font-size: 10px;">HTML</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="feature-info">
+                    <div class="feature-icon">📤</div>
+                    <h3>Export Anytime</h3>
+                    <p>Your data is always yours. Export to Markdown, JSON, or HTML. Import from Obsidian or Notion.</p>
+                </div>
             </div>
-            
-            <div class="feature-card">
-                <div class="feature-icon">📤</div>
-                <h3>Bidirectional Markdown</h3>
-                <p>Import .md files from Obsidian or Notion. Paste Markdown and it converts to rich text. Export anytime. Your data flows both ways.</p>
-            </div>
-            
-            <div class="feature-card">
-                <div class="feature-icon">🌓</div>
-                <h3>Dark & Light Mode</h3>
-                <p>Easy on the eyes, day or night. Switch instantly based on your preference or system setting.</p>
-            </div>
-        </div>
-    </section>
-
-    <section class="guide-section">
-        <div class="section-header">
-            <h2>Quick Start Guide</h2>
-            <p>From download to productive in 3 minutes</p>
-        </div>
-        
-        <div class="guide-card">
-            <h3><span>1️⃣</span> Installation</h3>
-            <ol>
-                <li>Download MIND after purchase</li>
-                <li>Unzip the file</li>
-                <li>Open <code>index.html</code> in any modern browser</li>
-                <li>That's it — no installation, no account setup</li>
-            </ol>
-        </div>
-        
-        <div class="guide-card">
-            <h3><span>2️⃣</span> Creating Your First Note</h3>
-            <ol>
-                <li>Click "+ New Note" in the sidebar</li>
-                <li>Give it a title</li>
-                <li>Start typing — auto-saves as you write</li>
-                <li>Add tags by typing #tagname anywhere in the note</li>
-            </ol>
-        </div>
-        
-        <div class="guide-card">
-            <h3><span>3️⃣</span> Organizing with Folders</h3>
-            <ol>
-                <li>Right-click in the sidebar → "New Folder"</li>
-                <li>Drag notes into folders</li>
-                <li>Create nested folders for complex organization</li>
-                <li>Use tags across folders for cross-cutting themes</li>
-            </ol>
-        </div>
-        
-        <div class="guide-card">
-            <h3><span>4️⃣</span> Finding Anything</h3>
-            <ol>
-                <li>Use the search bar for instant full-text search</li>
-                <li>Click a tag to see all notes with that tag</li>
-                <li>Click multiple tags to filter further</li>
-                <li>Browse folders for structured exploration</li>
-            </ol>
-        </div>
-        
-        <div class="cta-group">
-            <a href="/mind-demo/" class="btn btn-secondary">Try the Demo</a>
         </div>
     </section>
 
